@@ -15,6 +15,12 @@ class PlatformAdmins extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
+            'business_id' => [
+                'type'       => 'INT',
+                'unsigned'   => true,
+                'null'       => false,
+                'comment'    => 'FK → business.id',
+            ],
             'name' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '255',
@@ -49,6 +55,11 @@ class PlatformAdmins extends Migration
             ],
         ]);
         $this->forge->addKey('id', true);
+
+        // Índice y FK business_id → business.id
+        $this->forge->addKey('business_id');
+
+        $this->forge->addForeignKey('business_id', 'business', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->createTable('platform_admins');
     }
 
