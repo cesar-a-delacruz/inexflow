@@ -4,11 +4,13 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class business extends Migration
+class Business extends Migration
 {
     public function up()
     {
-         $this->forge->addField([
+        $this->db->disableForeignKeyChecks();
+
+        $this->forge->addField([
             'id' => [
                 'type'           => 'INT',
                 'constraint'     => 5,
@@ -56,25 +58,29 @@ class business extends Migration
                 'type' => 'INT',
                 'unsigned' => true,
                 'null'     => true,
-                'comment' => 'FK → app_user.id',
             ],
             'created_at'=>[
                 'type'=>'TIMESTAMP',
+                'null' => true,
             ],
-            'update_at'=>[
+            'updated_at'=>[
                 'type'=>'TIMESTAMP',
+                'null' => true,
             ],
-            'delete_at'=>[
+            'deleted_at'=>[
                 'type'=>'TIMESTAMP',
+                'null' => true,
             ],
         ]);
         $this->forge->addKey('id', true);
         
         // Índice y FK a app_user.id
         $this->forge->addKey('registered_by');
-        $this->forge->addForeignKey('registered_by', 'app_user', 'id', 'CASCADE', 'SET NULL');
+        $this->forge->addForeignKey('registered_by', 'app_user', 'id', 'SET NULL', 'CASCADE');
         
         $this->forge->createTable('business');
+
+         $this->db->enableForeignKeyChecks();
     }
 
     public function down()
