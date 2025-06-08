@@ -60,14 +60,14 @@ class AppUser extends Migration
         $this->forge->addUniqueKey('email', 'unique_email');
         $this->forge->addForeignKey('business_id', 'business', 'id', 'SET NULL', 'CASCADE');
         $this->forge->createTable('app_user', true);
-        
-         $this->db->enableForeignKeyChecks();
+
+        $this->db->enableForeignKeyChecks();
     }
 
     public function down()
     {
         $this->forge->dropTable('app_user');
 
-        $this->$forge->dropTable('app_user', true);
+        $this->forge->dropTable('app_user', true);
     }
 }
