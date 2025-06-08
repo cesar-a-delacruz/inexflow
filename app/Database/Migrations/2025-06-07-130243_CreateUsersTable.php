@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class AppUser extends Migration
+class CreateUsersTable extends Migration
 {
     public function up()
     {
@@ -58,16 +58,14 @@ class AppUser extends Migration
         ]);
         $this->forge->addKey('id', true);
         $this->forge->addUniqueKey('email', 'unique_email');
-        $this->forge->addForeignKey('business_id', 'business', 'id', 'SET NULL', 'CASCADE');
-        $this->forge->createTable('app_user', true);
+        $this->forge->addForeignKey('business_id', 'businesses', 'id', 'SET NULL', 'CASCADE');
+        $this->forge->createTable('users', true);
 
         $this->db->enableForeignKeyChecks();
     }
 
     public function down()
     {
-        $this->forge->dropTable('app_user');
-
-        $this->forge->dropTable('app_user', true);
+        $this->forge->dropTable('users');
     }
 }

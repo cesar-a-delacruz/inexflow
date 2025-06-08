@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class BusinessModel extends Model
 {
-    protected $table            = 'business';
+    protected $table            = 'businesses';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'object';
@@ -61,12 +61,12 @@ class BusinessModel extends Model
     // Relación con el usuario registrador
     public function registrar()
     {
-        return $this->belongsTo(AppUserModel::class, 'registered_by');
+        return $this->belongsTo(UserModel::class, 'registered_by');
     }
 
     // Relación con usuarios asociados
     public function users()
     {
-        return $this->hasMany(AppUserModel::class, 'business_id');
+        return $this->hasMany(UserModel::class, 'business_id');
     }
 }
