@@ -4,9 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class AppUserModel extends Model
+class UserModel extends Model
 {
-    protected $table            = 'app_user';
+    protected $table            = 'users';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'object';
@@ -36,7 +36,7 @@ class AppUserModel extends Model
 
     // Validation
     protected $validationRules      = [
-        'email'    => 'valid_email|is_unique[app_user.email]',
+        'email'    => 'valid_email|is_unique[users.email]',
         'password' => 'min_length[8]',
         'role'     => 'in_list[admin,businessman]'
     ];

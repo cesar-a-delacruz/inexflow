@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class Business extends Migration
+class CreateBusinessesTable extends Migration
 {
     public function up()
     {
@@ -38,53 +38,53 @@ class Business extends Migration
                 'constraint' => '255',
                 'comment' => 'NIT/RUC',
             ],
-            'address'=>[
-                'type' => 'TEXT',   
+            'address' => [
+                'type' => 'TEXT',
             ],
-            'logo_url'=>[
+            'logo_url' => [
                 'type' => 'VARCHAR',
                 'constraint' => '500'
             ],
-            'onboarding_completed'=>[
+            'onboarding_completed' => [
                 'type' => 'BOOLEAN',
                 'default' => false,
             ],
-            'status'=>[
+            'status' => [
                 'type' => 'ENUM',
                 'constraint' => ['active', 'inactive', 'suspended'],
                 'default'    => 'active',
             ],
-             'registered_by'=>[
+            'registered_by' => [
                 'type' => 'INT',
                 'unsigned' => true,
                 'null'     => true,
             ],
-            'created_at'=>[
-                'type'=>'TIMESTAMP',
+            'created_at' => [
+                'type' => 'TIMESTAMP',
                 'null' => true,
             ],
-            'updated_at'=>[
-                'type'=>'TIMESTAMP',
+            'updated_at' => [
+                'type' => 'TIMESTAMP',
                 'null' => true,
             ],
-            'deleted_at'=>[
-                'type'=>'TIMESTAMP',
+            'deleted_at' => [
+                'type' => 'TIMESTAMP',
                 'null' => true,
             ],
         ]);
         $this->forge->addKey('id', true);
-        
+
         // Índice y FK a app_user.id
         $this->forge->addKey('registered_by');
-        $this->forge->addForeignKey('registered_by', 'app_user', 'id', 'SET NULL', 'CASCADE');
-        
-        $this->forge->createTable('business');
+        $this->forge->addForeignKey('registered_by', 'users', 'id', 'SET NULL', 'CASCADE');
 
-         $this->db->enableForeignKeyChecks();
+        $this->forge->createTable('businesses');
+
+        $this->db->enableForeignKeyChecks();
     }
 
     public function down()
     {
-        $this->forge->dropTable('business');
+        $this->forge->dropTable('businesses');
     }
 }
