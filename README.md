@@ -27,3 +27,9 @@ php spark migrate
 ```bash
 php spark make:model AppUserModel
 ```
+
+### Crear una migration
+
+```bash
+php spark make:migration CreateTablenombretabla
+```
