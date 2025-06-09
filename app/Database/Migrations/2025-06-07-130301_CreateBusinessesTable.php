@@ -13,7 +13,6 @@ class CreateBusinessesTable extends Migration
         $this->forge->addField([
             'id' => [
                 'type'           => 'INT',
-                'constraint'     => 5,
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
