@@ -1,5 +1,4 @@
 <?= $this->extend('layouts/default') ?>
-<?= $this->section('title') ?>Perfil del Usuario<?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
 <div class="top">

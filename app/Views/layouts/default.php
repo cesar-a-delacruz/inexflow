@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INEXflow C1: <?= $this->renderSection('title') ?></title>
+    <title>INEXflow C1: <?= $title ?></title>
 </head>
 <body>
     <?= $this->renderSection('content') ?>
