@@ -2,8 +2,8 @@
 
 <?= $this->section('content') ?>
 <div class="top">
-    <h1>Perfil del Usuario</h1>
-    <button>Editar Perfil</button>
+    <h1><?= $title ?></h1>
+    <a href="/user/<?= $user->id ?>/edit">Editar Perfil</a>
 </div>
 <div class="card">
     <div class="field">
