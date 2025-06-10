@@ -23,6 +23,15 @@ class UserController extends BaseController
         $data['user'] = $this->model->find($id);
         return view('/User/edit', $data);
     }
+    public function update($id = null)
+    {
+        $post = $this->request->getPost(['name', 'email']);
+        $this->model->update($id, [
+            'name' => trim($post['name']),
+            'email' => trim($post['email']),
+        ]);
+        return redirect()->to("/user/$id");
+    }
     public function new()
     {
         return view('/User/new');

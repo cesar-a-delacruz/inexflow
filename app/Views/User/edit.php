@@ -2,7 +2,10 @@
 
 <?= $this->section('content') ?>
 <h1><?= $title ?></h1>
-<form action="">
+<form action="/user/<?= $user->id ?>" method="POST">
+    <input type="hidden" name="_method" value="PUT">
+    <input type="hidden" name="user_id" value="<?= $user->id ?>">
+
     <div class="field">
         <label for="name">Nombre:</label>
         <input type="text" id="name" name="name" value="<?= $user->name?>">
