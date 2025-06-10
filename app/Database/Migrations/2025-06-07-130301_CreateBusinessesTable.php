@@ -8,78 +8,65 @@ class CreateBusinessesTable extends Migration
 {
     public function up()
     {
-        $this->db->disableForeignKeyChecks();
-
         $this->forge->addField([
             'id' => [
-                'type'           => 'INT',
-                'unsigned'       => true,
-                'auto_increment' => true,
+                'type'       => 'BINARY',
+                'constraint' => 16,
+                'null'       => false,
+                'comment'    => 'UUID'
             ],
             'business_name' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '255',
+                'constraint' => 255,
+                'null'       => false,
             ],
             'owner_name' => [
-                'type' => 'VARCHAR',
-                'constraint' => '255',
+                'type'       => 'VARCHAR',
+                'constraint' => 255,
+                'null'       => false,
             ],
             'owner_email' => [
-                'type' => 'VARCHAR',
-                'constraint' => '255',
+                'type'       => 'VARCHAR',
+                'constraint' => 255,
+                'null'       => false,
             ],
             'owner_phone' => [
-                'type' => 'VARCHAR',
-                'constraint' => '50',
-            ],
-            'tax_id' => [
-                'type' => 'VARCHAR',
-                'constraint' => '255',
-                'comment' => 'NIT/RUC',
-            ],
-            'address' => [
-                'type' => 'TEXT',
-            ],
-            'logo_url' => [
-                'type' => 'VARCHAR',
-                'constraint' => '500'
-            ],
-            'onboarding_completed' => [
-                'type' => 'BOOLEAN',
-                'default' => false,
+                'type'       => 'VARCHAR',
+                'constraint' => 50,
+                'null'       => true,
             ],
             'status' => [
-                'type' => 'ENUM',
-                'constraint' => ['active', 'inactive', 'suspended'],
+                'type'       => 'ENUM',
+                'constraint' => ['active', 'inactive'],
                 'default'    => 'active',
+                'null'       => false,
             ],
             'registered_by' => [
-                'type' => 'INT',
-                'unsigned' => true,
-                'null'     => true,
+                'type'       => 'BINARY',
+                'constraint' => 16,
+                'null'       => false,
+                'comment'    => 'UUID'
             ],
             'created_at' => [
-                'type' => 'TIMESTAMP',
-                'null' => true,
+                'type'    => 'DATETIME',
+                'null'    => false,
             ],
             'updated_at' => [
-                'type' => 'TIMESTAMP',
-                'null' => true,
+                'type'    => 'DATETIME',
+                'null'    => false,
             ],
             'deleted_at' => [
-                'type' => 'TIMESTAMP',
+                'type' => 'DATETIME',
                 'null' => true,
             ],
         ]);
-        $this->forge->addKey('id', true);
 
-        // Índice y FK a app_user.id
-        $this->forge->addKey('registered_by');
-        $this->forge->addForeignKey('registered_by', 'users', 'id', 'SET NULL', 'CASCADE');
+        $this->forge->addKey('id', true);
+        $this->forge->addKey('status', false, false, 'idx_status');
+        $this->forge->addKey('owner_email', false, false, 'idx_owner_email');
+        $this->forge->addForeignKey('registered_by', 'users', 'id', 'CASCADE', 'RESTRICT');
 
         $this->forge->createTable('businesses');
-
-        $this->db->enableForeignKeyChecks();
     }
 
     public function down()
