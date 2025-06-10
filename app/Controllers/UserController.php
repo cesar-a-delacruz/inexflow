@@ -11,11 +11,11 @@ class UserController extends BaseController
     public function __construct() {
         $this->model = new UserModel();
     }
-    public function index()
+    public function show($id = null)
     {
         $data['title'] = 'Perfil del Usuario';
-        $data['user'] = $this->model->find(2);
-        return view('/User/index', $data);
+        $data['user'] = $this->model->find($id);
+        return view('/User/show', $data);
     }
     public function new()
     {
