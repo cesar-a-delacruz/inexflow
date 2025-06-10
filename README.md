@@ -9,6 +9,16 @@ Esta es una aplicación web para la administración financiera de negocios en la
 - flow = cashflow (flujo de caja en inglés)
 - C1 = (número de la provincia)
 
+## Dependencias
+
+### ramsey/uuid
+
+Biblioteca para generar y manipular Objetos de tipo UUID
+
+```bash
+composer require ramsey/uuid
+```
+
 ## comandos de spark
 
 ### Instalar las dependencias
@@ -42,16 +52,22 @@ php spark make:migration CreateTablenombretabla
 Tabla principal de negocios (TENANTS)
 
 ```sql
-- id (PK) -- tenant_id principal
-- business_name VARCHAR(255) NOT NULL
-- owner_name VARCHAR(255) NOT NULL
-- owner_email VARCHAR(255) NOT NULL
-- owner_phone VARCHAR(50)
-- business_type ENUM('retail', 'restaurant', 'services', 'other')
-- status ENUM('active', 'inactive') DEFAULT 'active'
-- registered_by (FK → users.id)
-- created_at TIMESTAMP
-- updated_at TIMESTAMP
+CREATE TABLE businesses
+(
+    id            BINARY(16) PRIMARY KEY                                                            NOT NULL, -- UUID
+    business_name VARCHAR(255)                                                                      NOT NULL,
+    owner_name    VARCHAR(255)                                                                      NOT NULL,
+    owner_email   VARCHAR(255)                                                                      NOT NULL,
+    owner_phone   VARCHAR(50)                                                                       NULL,
+    status        ENUM ('active', 'inactive') DEFAULT 'active'                                      NOT NULL,
+    registered_by BINARY(16)                                                                        NOT NULL, -- UUID
+    created_at    DATETIME                    DEFAULT CURRENT_TIMESTAMP                             NOT NULL,
+    updated_at    DATETIME                    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
+    deleted_at    DATETIME                                                                          NULL,
+    INDEX idx_status (status),                                                                                -- Busqueda por estatus mas rapida;
+    INDEX idx_owner_email (owner_email),                                                                      -- Busqueda por email mas rapida;
+    FOREIGN KEY (registered_by) REFERENCES users (id) ON DELETE CASCADE
+);
 ```
 
 ### 1.2 users
@@ -59,15 +75,21 @@ Tabla principal de negocios (TENANTS)
 Usuarios del sistema
 
 ```sql
-- id (PK)
-- business_id (FK → businesses.id) NULL -- NULL para admin
-- name VARCHAR(255) NOT NULL
-- email VARCHAR(255) UNIQUE NOT NULL
-- password VARCHAR(255) NOT NULL
-- role ENUM('admin', 'businessman') -- Solo 2 roles en MVP
-- is_active BOOLEAN DEFAULT TRUE
-- created_at TIMESTAMP
-- updated_at TIMESTAMP
+CREATE TABLE users
+(
+    id            BINARY(16) PRIMARY KEY                                                              NOT NULL, -- UUID
+    business_id   BINARY(16)                                                                          NULL,     -- UUID
+    name          VARCHAR(255)                                                                        NOT NULL,
+    email         VARCHAR(255)                                                                        NOT NULL,
+    password_hash CHAR(60)                                                                            NOT NULL, -- bcrypt hash
+    role          ENUM ('admin', 'businessman') DEFAULT 'businessman'                                 NOT NULL,
+    is_active     BOOLEAN                       DEFAULT TRUE                                          NOT NULL, -- Para desactivar sin eliminar
+    created_at    DATETIME                      DEFAULT CURRENT_TIMESTAMP                             NOT NULL,
+    updated_at    DATETIME                      DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
+    deleted_at    DATETIME                                                                            NULL
+    UNIQUE KEY uk_business_email (business_id, email);
+    FOREIGN KEY (business_id) REFERENCES businesses (id) ON DELETE CASCADE;
+);
 ```
 
 ### 1.3 categories
@@ -75,12 +97,21 @@ Usuarios del sistema
 Categorías simples por negocio
 
 ```sql
-- id (PK)
-- business_id (FK → businesses.id)
-- name VARCHAR(100) NOT NULL -- "Ventas", "Compras", "Gastos Operativos"
-- type ENUM('income', 'expense') -- Solo ingreso o gasto
-- is_active BOOLEAN DEFAULT TRUE
-- created_at TIMESTAMP
+CREATE TABLE categories
+(
+    business_id     BINARY(16)                                                     NOT NULL,
+    category_number SMALLINT UNSIGNED                                              NOT NULL,
+    name            VARCHAR(255)                                                   NOT NULL,
+    type            ENUM ('income', 'expense')                                     NOT NULL,
+    is_active       BOOLEAN  DEFAULT TRUE                                          NOT NULL,
+    created_at      DATETIME DEFAULT CURRENT_TIMESTAMP                             NOT NULL,
+    updated_at      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
+    deleted_at      DATETIME                                                       NULL,
+    PRIMARY KEY (business_id, category_number),
+    UNIQUE KEY uk_business_category_name (business_id, name), -- Para evitar duplicar categorio por negocio
+    INDEX idx_business_type (business_id, type),              -- Busqueda por tipo mas rapida
+    FOREIGN KEY (business_id) REFERENCES businesses (id) ON DELETE CASCADE
+);
 ```
 
 ### 1.4 transactions
@@ -88,17 +119,25 @@ Categorías simples por negocio
 Tabla unificada para todos los movimientos de dinero
 
 ```sql
-- id (PK)
-- business_id (FK → businesses.id)
-- category_id (FK → categories.id)
-- amount DECIMAL(10,2) NOT NULL
-- description VARCHAR(255) NOT NULL
-- transaction_date DATE NOT NULL
-- payment_method ENUM('cash', 'card', 'transfer') DEFAULT 'cash'
-- notes TEXT
-- created_by (FK → users.id)
-- created_at TIMESTAMP
-- updated_at TIMESTAMP
+CREATE TABLE transactions
+(
+    business_id        BINARY(16)                                                                              NOT NULL,
+    transaction_number INT UNSIGNED                                                                            NOT NULL,
+    category_number    SMALLINT UNSIGNED                                                                       NOT NULL,
+    amount             DECIMAL(10, 2)                                                                          NOT NULL,
+    description        VARCHAR(255)                                                                            NOT NULL,
+    transaction_date   DATE                                                                                    NOT NULL,
+    payment_method     ENUM ('cash', 'card', 'transfer') DEFAULT 'cash'                                        NOT NULL,
+    notes              TEXT,
+    created_at         DATETIME                          DEFAULT CURRENT_TIMESTAMP                             NOT NULL,
+    updated_at         DATETIME                          DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
+    deleted_at         DATETIME                                                                                NULL,
+    PRIMARY KEY (business_id, transaction_number),
+    INDEX idx_business_date (business_id, transaction_date),    -- Para reportes por fecha
+    INDEX idx_business_category (business_id, category_number), -- Para reportes por categoria
+    FOREIGN KEY (business_id) REFERENCES businesses (id) ON DELETE CASCADE,
+    FOREIGN KEY (business_id, category_number) REFERENCES categories (business_id, category_number) ON DELETE CASCADE
+);
 ```
 
 ## 2 LOS INGRESOS/GASTOS BÁSICOS

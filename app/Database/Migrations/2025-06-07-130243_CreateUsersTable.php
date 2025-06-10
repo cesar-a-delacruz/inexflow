@@ -8,59 +8,57 @@ class CreateUsersTable extends Migration
 {
     public function up()
     {
-        $this->db->disableForeignKeyChecks();
-
         $this->forge->addField([
             'id' => [
-                'type'           => 'INT',
-                'unsigned'       => true,
-                'auto_increment' => true,
-            ],
-            'business_id' => [
-                'type'     => 'INT',
-                'unsigned' => true,
-                'null'     => true,
+                'type'       => 'BINARY',
+                'constraint' => 16,
+                'null'       => false,
+                'comment'    => 'UUID'
             ],
             'name' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 255,
+                'null'       => false,
             ],
             'email' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 255,
+                'null'       => false,
             ],
-            'password' => [
-                'type'       => 'VARCHAR',
-                'constraint' => 255,
+            'password_hash' => [
+                'type'       => 'CHAR',
+                'constraint' => 60,
+                'null'       => false,
+                'comment'    => 'bcrypt hash'
             ],
             'role' => [
                 'type'       => 'ENUM',
                 'constraint' => ['admin', 'businessman'],
                 'default'    => 'businessman',
+                'null'       => false,
             ],
             'is_active' => [
                 'type'    => 'BOOLEAN',
                 'default' => true,
+                'null'    => false,
+                'comment' => 'Para desactivar sin eliminar'
             ],
             'created_at' => [
-                'type' => 'TIMESTAMP',
-                'null' => true,
+                'type'    => 'DATETIME',
+                'null'    => false,
             ],
             'updated_at' => [
-                'type' => 'TIMESTAMP',
-                'null' => true,
+                'type'    => 'DATETIME',
+                'null'    => false,
             ],
             'deleted_at' => [
-                'type' => 'TIMESTAMP',
+                'type' => 'DATETIME',
                 'null' => true,
             ],
         ]);
-        $this->forge->addKey('id', true);
-        $this->forge->addUniqueKey('email', 'unique_email');
-        $this->forge->addForeignKey('business_id', 'businesses', 'id', 'SET NULL', 'CASCADE');
-        $this->forge->createTable('users', true);
 
-        $this->db->enableForeignKeyChecks();
+        $this->forge->addKey('id', true);
+        $this->forge->createTable('users');
     }
 
     public function down()

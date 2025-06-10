@@ -8,27 +8,27 @@ class CreateTableTransactions extends Migration
 {
     public function up()
     {
-        $this->db->disableForeignKeyChecks();
-
         $this->forge->addField([
-            'id' => [
-                'type'           => 'INT',
-                'unsigned'       => true,
-                'auto_increment' => true,
-            ],
             'business_id' => [
-                'type'     => 'INT',
-                'unsigned' => true,
-                'null'     => true,  // Cambiado a true para consistencia con SET NULL
+                'type'       => 'BINARY',
+                'constraint' => 16,
+                'null'       => false,
             ],
-            'category_id' => [
-                'type'     => 'INT',
-                'unsigned' => true,
-                'null'     => true,
+            'transaction_number' => [
+                'type'           => 'INT',
+                'constraint'     => 10,
+                'unsigned'       => true,
+                'null'           => false,
+            ],
+            'category_number' => [
+                'type'           => 'SMALLINT',
+                'constraint'     => 5,
+                'unsigned'       => true,
+                'null'           => false,
             ],
             'amount' => [
                 'type'       => 'DECIMAL',
-                'constraint' => [10,2],
+                'constraint' => '10,2',
                 'null'       => false,
             ],
             'description' => [
@@ -48,44 +48,43 @@ class CreateTableTransactions extends Migration
             ],
             'notes' => [
                 'type' => 'TEXT',
-                'null' => true,  // Especificado explícitamente
-            ],
-            'created_by' => [
-                'type'     => 'INT',
-                'unsigned' => true,
-                'null'     => true,  // Cambiado a true para consistencia con SET NULL
+                'null' => true,
             ],
             'created_at' => [
-                'type'    => 'TIMESTAMP',
+                'type'    => 'DATETIME',
                 'null'    => false,
             ],
             'updated_at' => [
-                'type'      => 'TIMESTAMP',
-                'null'      => false,
+                'type'    => 'DATETIME',
+                'null'    => false,
+            ],
+            'deleted_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
             ],
         ]);
 
-        // Agregar índices
-        $this->forge->addKey('id', true);
-        $this->forge->addKey('business_id');
-        $this->forge->addKey('category_id');
-        $this->forge->addKey('created_by');
-        $this->forge->addKey('transaction_date');  // Útil para consultas por fecha
+        // Primary key compuesta
+        $this->forge->addKey(['business_id', 'transaction_number'], true);
 
-        // Agregar claves foráneas
-        $this->forge->addForeignKey('business_id', 'businesses', 'id', 'SET NULL', 'CASCADE');
-        $this->forge->addForeignKey('category_id', 'categories', 'id', 'SET NULL', 'CASCADE');
-        $this->forge->addForeignKey('created_by', 'users', 'id', 'SET NULL', 'CASCADE');
+        // Índices para reportes
+        $this->forge->addKey(['business_id', 'transaction_date'], false, false, 'idx_business_date');
+        $this->forge->addKey(['business_id', 'category_number'], false, false, 'idx_business_category');
 
-        $this->forge->createTable('transactions', true);
+        // Foreign keys
+        $this->forge->addForeignKey('business_id', 'businesses', 'id', 'CASCADE', 'RESTRICT');
 
-        $this->db->enableForeignKeyChecks();
+        $this->forge->createTable('transactions');
+
+        // Foreign key compuesta para categorías
+        $this->db->query('ALTER TABLE transactions ADD CONSTRAINT fk_business_category 
+                         FOREIGN KEY (business_id, category_number) 
+                         REFERENCES categories(business_id, category_number) 
+                         ON DELETE CASCADE');
     }
 
     public function down()
     {
-        $this->db->disableForeignKeyChecks();
-        $this->forge->dropTable('transactions', true);
-        $this->db->enableForeignKeyChecks();
+        $this->forge->dropTable('transactions');
     }
 }
