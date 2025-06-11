@@ -4,6 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 use App\Entities\User;
+use CodeIgniter\Database\Exceptions\DatabaseException;
 
 class UserModel extends Model
 {
@@ -14,7 +15,7 @@ class UserModel extends Model
     protected $useSoftDeletes   = true;
 
     protected $allowedFields = [
-        'id',
+        // 'id',
         'name',
         'email',
         'password_hash',
@@ -34,7 +35,7 @@ class UserModel extends Model
     protected $validationRules = [
         'name'     => 'required|max_length[255]',
         'email'    => 'required|valid_email|max_length[255]',
-        'password_hash' => 'permit_empty|max_length[60]',
+        'password_hash' => 'required|max_length[60]',
         'role'     => 'required|in_list[admin,businessman]',
         'business_id' => 'permit_empty',
         'is_active' => 'permit_empty|in_list[0,1]'
@@ -50,49 +51,71 @@ class UserModel extends Model
             'valid_email' => 'Debe proporcionar un email válido',
             'max_length' => 'El email no puede exceder 255 caracteres'
         ],
+        'password_hash' => [
+            'required' => 'la contrasena no puede star basia',
+            'max_length' => 'la contrasena no puede sre mas grande que 60 caracteres',
+        ],
         'role' => [
             'required' => 'El rol es requerido',
             'in_list' => 'El rol debe ser admin o businessman'
+        ],
+        'business_id' => [],
+        'is_active' => [
+            'in_list' => 'Solo puede estar desactivado o activado'
         ]
     ];
 
     protected $skipValidation = false;
-    protected $cleanValidationRules = true;
-
-    // Callbacks
-    protected $allowCallbacks = true;
-    protected $beforeInsert   = ['generateUuid', 'hashPassword'];
-    protected $afterInsert    = [];
-    protected $beforeUpdate   = ['hashPassword'];
-    protected $afterUpdate    = [];
-    protected $beforeFind     = [];
-    protected $afterFind      = [];
-    protected $beforeDelete   = [];
-    protected $afterDelete    = [];
 
     /**
-     * Genera UUID antes de insertar
+     * Crear un nuevo usuario con validación de Entity
      */
-    protected function generateUuid(array $data)
+    public function createUser(User $user): int|false
     {
-        if (empty($data['data']['id'])) {
-            // Crear el UUID como objeto UuidInterface
-            // El cast lo convertirá a binario automáticamente al guardar
-            $data['data']['id'] = \Ramsey\Uuid\Uuid::uuid4();
+
+        // Verificar email único
+        if ($this->userEmailExists($user->email)) {
+            throw new \InvalidArgumentException('El email ya está registrado');
         }
-        return $data;
+
+        try {
+            // $data = $business->toArray();
+            $result = $this->insert($user);
+
+            if ($result === false) {
+                throw new DatabaseException('Error al insertar el usuario: ' . implode(', ', $this->errors()));
+            }
+
+            return $result;
+        } catch (\Exception $e) {
+            log_message('error', 'Error creando usuario: ' . $e->getMessage());
+            throw $e;
+        }
     }
 
     /**
-     * Hashea la contraseña si está presente
+     * Actualizar un usuario existente
      */
-    protected function hashPassword(array $data)
+    public function updateUser(int $id, User $user): bool
     {
-        if (isset($data['data']['password']) && !empty($data['data']['password'])) {
-            $data['data']['password_hash'] = password_hash($data['data']['password'], PASSWORD_DEFAULT);
-            unset($data['data']['password']);
+
+        // Verificar que el negocio existe
+        $existing = $this->find($id);
+        if (!$existing) {
+            throw new \InvalidArgumentException('Usuario no encontrado');
         }
-        return $data;
+
+        // Verificar email único (excluyendo el actual)
+        if ($user->email !== $existing->email && $this->emailExists($user->email)) {
+            throw new \InvalidArgumentException('El email ya está registrado');
+        }
+
+        try {
+            return $this->update($id, $user);
+        } catch (\Exception $e) {
+            log_message('error', 'Error actualizando usuario: ' . $e->getMessage());
+            throw $e;
+        }
     }
 
     /**
@@ -104,17 +127,29 @@ class UserModel extends Model
     }
 
     /**
+     * Verificar si un email ya existe
+     */
+    private function userEmailExists(string $email): bool
+    {
+        return $this->where('email', $email)->countAllResults() > 0;
+    }
+
+    /**
+     * Verificar si un name ya existe
+     */
+    private function userNameExists(string $name): bool
+    {
+        return $this->where('name', $name)->countAllResults() > 0;
+    }
+
+    /**
      * Busca un usuario por email y business_id
      */
-    public function findByEmailAndBusiness(string $email, $businessId = null): ?User
+    public function findByEmailAndBusiness(string $email, int $businessId): ?User
     {
         $builder = $this->where('email', $email);
 
         if ($businessId) {
-            // Si businessId es string UUID, convertirlo
-            if (is_string($businessId) && \Ramsey\Uuid\Uuid::isValid($businessId)) {
-                $businessId = \Ramsey\Uuid\Uuid::fromString($businessId);
-            }
             $builder->where('business_id', $businessId);
         } else {
             $builder->where('business_id IS NULL');
@@ -125,6 +160,7 @@ class UserModel extends Model
 
     /**
      * Obtiene usuarios por rol
+     * @return array<User>
      */
     public function findByRole(string $role): array
     {
@@ -133,6 +169,7 @@ class UserModel extends Model
 
     /**
      * Obtiene usuarios activos
+     * @return array<User>
      */
     public function findActive(): array
     {
@@ -141,26 +178,20 @@ class UserModel extends Model
 
     /**
      * Obtiene usuarios por business_id
+     * @return array<User>
      */
-    public function findByBusiness($businessId): array
+    public function findByBusiness(int $businessId): array
     {
-        // Si businessId es string UUID, convertirlo
-        if (is_string($businessId) && \Ramsey\Uuid\Uuid::isValid($businessId)) {
-            $businessId = \Ramsey\Uuid\Uuid::fromString($businessId);
-        }
 
         return $this->where('business_id', $businessId)->findAll();
     }
 
     /**
      * Busca usuarios por business_id y rol
+     * @return array<User>
      */
-    public function findByBusinessAndRole($businessId, string $role): array
+    public function findByBusinessAndRole(int $businessId, string $role): array
     {
-        // Si businessId es string UUID, convertirlo
-        if (is_string($businessId) && \Ramsey\Uuid\Uuid::isValid($businessId)) {
-            $businessId = \Ramsey\Uuid\Uuid::fromString($businessId);
-        }
 
         return $this->where('business_id', $businessId)
             ->where('role', $role)
@@ -178,13 +209,8 @@ class UserModel extends Model
     /**
      * Activa o desactiva un usuario
      */
-    public function toggleActive($id): bool
+    public function toggleActive(int $id): bool
     {
-        // Si id es string UUID, convertirlo
-        if (is_string($id) && \Ramsey\Uuid\Uuid::isValid($id)) {
-            $id = \Ramsey\Uuid\Uuid::fromString($id);
-        }
-
         $user = $this->find($id);
         if (!$user) {
             return false;
@@ -196,14 +222,9 @@ class UserModel extends Model
     /**
      * Cambia la contraseña de un usuario
      */
-    public function changePassword($id, string $newPassword): bool
+    public function changePassword(int $id, string $newPassword): bool
     {
-        // Si id es string UUID, convertirlo
-        if (is_string($id) && \Ramsey\Uuid\Uuid::isValid($id)) {
-            $id = \Ramsey\Uuid\Uuid::fromString($id);
-        }
-
-        return $this->update($id, ['password' => $newPassword]);
+        return $this->update($id, ['password_hash' => $newPassword]);
     }
 
     /**
@@ -214,18 +235,11 @@ class UserModel extends Model
         $builder = $this->where('email', $email);
 
         if ($excludeId) {
-            // Si excludeId es string UUID, convertirlo
-            if (is_string($excludeId) && \Ramsey\Uuid\Uuid::isValid($excludeId)) {
-                $excludeId = \Ramsey\Uuid\Uuid::fromString($excludeId);
-            }
             $builder->where('id !=', $excludeId);
         }
 
         if ($businessId) {
-            // Si businessId es string UUID, convertirlo
-            if (is_string($businessId) && \Ramsey\Uuid\Uuid::isValid($businessId)) {
-                $businessId = \Ramsey\Uuid\Uuid::fromString($businessId);
-            }
+
             $builder->where('business_id', $businessId);
         } else {
             $builder->where('business_id IS NULL');
@@ -247,50 +261,5 @@ class UserModel extends Model
             'businessmen' => $this->where('role', 'businessman')->countAllResults(),
             'deleted' => $this->onlyDeleted()->countAllResults()
         ];
-    }
-
-    /**
-     * Búsqueda avanzada de usuarios
-     */
-    public function search(array $filters = []): array
-    {
-        $builder = $this;
-
-        if (!empty($filters['name'])) {
-            $builder = $builder->like('name', $filters['name']);
-        }
-
-        if (!empty($filters['email'])) {
-            $builder = $builder->like('email', $filters['email']);
-        }
-
-        if (!empty($filters['role'])) {
-            $builder = $builder->where('role', $filters['role']);
-        }
-
-        if (isset($filters['is_active'])) {
-            $builder = $builder->where('is_active', $filters['is_active']);
-        }
-
-        if (!empty($filters['business_id'])) {
-            // Si business_id es string UUID, convertirlo
-            if (is_string($filters['business_id']) && \Ramsey\Uuid\Uuid::isValid($filters['business_id'])) {
-                $filters['business_id'] = \Ramsey\Uuid\Uuid::fromString($filters['business_id']);
-            }
-            $builder = $builder->where('business_id', $filters['business_id']);
-        }
-
-        // Ordenamiento
-        $orderBy = $filters['order_by'] ?? 'created_at';
-        $orderDir = $filters['order_dir'] ?? 'DESC';
-        $builder = $builder->orderBy($orderBy, $orderDir);
-
-        // Paginación
-        if (!empty($filters['limit'])) {
-            $offset = $filters['offset'] ?? 0;
-            $builder = $builder->limit($filters['limit'], $offset);
-        }
-
-        return $builder->findAll();
     }
 }
