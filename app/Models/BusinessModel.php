@@ -69,28 +69,46 @@ class BusinessModel extends Model
 
     protected $skipValidation = false;
 
+    // Callbacks
+    protected $allowCallbacks = true;
+    protected $beforeInsert   = [];
+    protected $afterInsert    = [];
+    protected $beforeUpdate   = [];
+    protected $afterUpdate    = [];
+    protected $beforeFind     = [];
+    protected $afterFind      = [];
+    protected $beforeDelete   = [];
+    protected $afterDelete    = [];
+
+    // protected function generateUuid(array $data)
+    // {
+    //     if (empty($data['data']['id'])) {
+    //         $data['data']['id'] = Uuid::uuid4()->getBytes();
+    //     }
+    //     return $data;
+    // }
 
     /**
      * Crear un nuevo negocio con validación de Entity
      */
-    public function createBusiness(Business $business, $returnID = true): bool|int|string|UuidInterface
+    public function createBusiness(Business $business, $returnID = true): bool|int|UuidInterface
     {
 
-        // Verificar email único
         if ($this->emailExists($business->owner_email)) {
             throw new \InvalidArgumentException('El email ya está registrado');
         }
 
         try {
-            $result = $this->insert($business, $returnID);
+
+            if ($business->id === null) $business->id = generate_uuid();
+
+            $result = $this->insert($business);
 
             if ($result === false) {
                 throw new DatabaseException('Error al insertar el negocio: ' . implode(', ', $this->errors()));
             }
 
-            if ($returnID && is_string($result) && strlen($result) === 16) {
-                return Uuid::fromBytes($result);
-            }
+            if ($returnID) return $business->id;
 
             return $result;
         } catch (\Exception $e) {
@@ -102,11 +120,13 @@ class BusinessModel extends Model
     /**
      * Actualizar un negocio existente
      */
-    public function updateBusiness(int $id, Business $business): bool
+    public function updateBusiness(UuidInterface|string $id, Business $business): bool
     {
 
-        // Verificar que el negocio existe
-        $existing = $this->find($id);
+        $bytes = uuid_to_bytes($id);
+
+        $existing = $this->find($bytes);
+
         if (!$existing) {
             throw new \InvalidArgumentException('Negocio no encontrado');
         }
@@ -117,8 +137,7 @@ class BusinessModel extends Model
         }
 
         try {
-            $data = $business->toArray();
-            return $this->update($id, $data);
+            return $this->update($bytes, $business);
         } catch (\Exception $e) {
             log_message('error', 'Error actualizando negocio: ' . $e->getMessage());
             throw $e;
@@ -127,11 +146,10 @@ class BusinessModel extends Model
 
     /**
      * Obtener negocio por ID
-     * @return array<Business>
      */
-    public function getBusiness(UuidInterface $id): array
+    public function getBusiness(UuidInterface|string $id): ?Business
     {
-        return $this->find($id);
+        return $this->find(uuid_to_bytes($id));
     }
 
     /**
@@ -147,9 +165,9 @@ class BusinessModel extends Model
      * Obtener negocios por usuario registrador
      * @return array<Business>
      */
-    public function getBusinessesByUser(int $userId): array
+    public function getBusinessesByUser(UuidInterface|string $userId): array
     {
-        return $this->where('registered_by', $userId)->findAll();
+        return $this->where('registered_by', uuid_to_bytes($userId))->findAll();
     }
 
     /**
@@ -171,7 +189,7 @@ class BusinessModel extends Model
 
     /**
      * Cambiar estado de un negocio
-     * @param string $status 'active', 'inactive'
+     * @param string|'active'|'inactive' $status
      */
     public function changeStatus(int $id, string $status): bool
     {
@@ -185,17 +203,17 @@ class BusinessModel extends Model
     /**
      * Eliminar negocio (soft delete)
      */
-    public function deleteBusiness(int $id): bool
+    public function deleteBusiness(UuidInterface|string $id): bool
     {
-        return $this->delete($id);
+        return $this->delete(uuid_to_bytes($id));
     }
 
     /**
      * Restaurar negocio eliminado
      */
-    public function restoreBusiness(int $id): bool
+    public function restoreBusiness(UuidInterface|string $id): bool
     {
-        return $this->update($id, ['deleted_at' => null]);
+        return $this->update(uuid_to_bytes($id), ['deleted_at' => null]);
     }
 
     /**
@@ -224,7 +242,6 @@ class BusinessModel extends Model
 
     /**
      * Obtener negocios con paginación
-     * @return array<Business>
      */
     public function getBusinessesPaginated(int $page = 1, int $perPage = 10): array
     {

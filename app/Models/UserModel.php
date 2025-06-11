@@ -5,6 +5,7 @@ namespace App\Models;
 use CodeIgniter\Model;
 use App\Entities\User;
 use CodeIgniter\Database\Exceptions\DatabaseException;
+use Ramsey\Uuid\UuidInterface;
 
 class UserModel extends Model
 {
@@ -70,7 +71,7 @@ class UserModel extends Model
     /**
      * Crear un nuevo usuario con validación de Entity
      */
-    public function createUser(User $user): int|false
+    public function createUser(User $user, $returnID = true): bool|int|UuidInterface
     {
 
         // Verificar email único
@@ -79,12 +80,15 @@ class UserModel extends Model
         }
 
         try {
-            // $data = $business->toArray();
+            if ($user->id === null) $user->id = generate_uuid();
+
             $result = $this->insert($user);
 
             if ($result === false) {
-                throw new DatabaseException('Error al insertar el usuario: ' . implode(', ', $this->errors()));
+                throw new DatabaseException('Error al insertar el negocio: ' . implode(', ', $this->errors()));
             }
+
+            if ($returnID) return $user->id;
 
             return $result;
         } catch (\Exception $e) {
@@ -96,11 +100,12 @@ class UserModel extends Model
     /**
      * Actualizar un usuario existente
      */
-    public function updateUser(int $id, User $user): bool
+    public function updateUser(UuidInterface|string $id, User $user): bool
     {
+        $bytes = uuid_to_bytes($id);
 
-        // Verificar que el negocio existe
-        $existing = $this->find($id);
+        $existing = $this->find($bytes);
+
         if (!$existing) {
             throw new \InvalidArgumentException('Usuario no encontrado');
         }
@@ -111,7 +116,7 @@ class UserModel extends Model
         }
 
         try {
-            return $this->update($id, $user);
+            return $this->update($bytes, $user);
         } catch (\Exception $e) {
             log_message('error', 'Error actualizando usuario: ' . $e->getMessage());
             throw $e;
@@ -137,7 +142,7 @@ class UserModel extends Model
     /**
      * Verificar si un name ya existe
      */
-    private function userNameExists(string $name): bool
+    public function userNameExists(string $name): bool
     {
         return $this->where('name', $name)->countAllResults() > 0;
     }
@@ -180,20 +185,19 @@ class UserModel extends Model
      * Obtiene usuarios por business_id
      * @return array<User>
      */
-    public function findByBusiness(int $businessId): array
+    public function findByBusiness(UuidInterface|string $businessId): array
     {
-
-        return $this->where('business_id', $businessId)->findAll();
+        return $this->where('business_id', uuid_to_bytes($businessId))->findAll();
     }
 
     /**
      * Busca usuarios por business_id y rol
      * @return array<User>
      */
-    public function findByBusinessAndRole(int $businessId, string $role): array
+    public function findByBusinessAndRole(UuidInterface|string $businessId, string $role): array
     {
 
-        return $this->where('business_id', $businessId)
+        return $this->where('business_id', uuid_to_bytes($businessId))
             ->where('role', $role)
             ->findAll();
     }
@@ -209,43 +213,25 @@ class UserModel extends Model
     /**
      * Activa o desactiva un usuario
      */
-    public function toggleActive(int $id): bool
+    public function toggleActive(UuidInterface|string $id): bool
     {
-        $user = $this->find($id);
+        $bytes = uuid_to_bytes($id);
+
+        $user = $this->find($bytes);
+
         if (!$user) {
             return false;
         }
 
-        return $this->update($id, ['is_active' => !$user->is_active]);
+        return $this->update($bytes, ['is_active' => !$user->is_active]);
     }
 
     /**
      * Cambia la contraseña de un usuario
      */
-    public function changePassword(int $id, string $newPassword): bool
+    public function changePassword(UuidInterface|string $id, string $newPassword): bool
     {
-        return $this->update($id, ['password_hash' => $newPassword]);
-    }
-
-    /**
-     * Verifica si un email existe (excluyendo un ID específico)
-     */
-    public function emailExists(string $email, $excludeId = null, $businessId = null): bool
-    {
-        $builder = $this->where('email', $email);
-
-        if ($excludeId) {
-            $builder->where('id !=', $excludeId);
-        }
-
-        if ($businessId) {
-
-            $builder->where('business_id', $businessId);
-        } else {
-            $builder->where('business_id IS NULL');
-        }
-
-        return $builder->countAllResults() > 0;
+        return $this->update(uuid_to_bytes($id), ['password_hash' => $newPassword]);
     }
 
     /**
