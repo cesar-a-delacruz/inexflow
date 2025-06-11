@@ -18,7 +18,8 @@ class UserController extends BaseController
     {
         $data['title'] = 'Perfil del Usuario';
         $user = $this->model->find($id);
-        $user->business = new BusinessModel()->find($user->business_id)->business_name;
+        $user->business = ($user->business_id)
+        ? new BusinessModel()->find($user->business_id)->business_name : 'No Aplica';
         $data['user'] = $user;
         return view('/User/show', $data);
     }
