@@ -25,11 +25,13 @@ class UserController extends BaseController
     }
     public function update($id = null)
     {
-        $post = $this->request->getPost(['name', 'email']);
-        $this->model->update($id, [
-            'name' => trim($post['name']),
-            'email' => trim($post['email']),
-        ]);
+        $user_update = (object) $this->request->getPost(['name', 'email']);
+        $user = $this->model->find($id);
+        $row = [];
+        foreach ($user_update as $key => $value) {
+            if ($value != $user->$key) $row[$key] = $value;
+        }
+        $this->model->update($id, $row);
         return redirect()->to("/user/$id");
     }
     public function new()
