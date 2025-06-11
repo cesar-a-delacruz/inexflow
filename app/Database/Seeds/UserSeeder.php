@@ -10,6 +10,7 @@ class UserSeeder extends Seeder
     {
         $data = [
             [
+                'business_id' => null,
                 'name' => 'root admin',
                 'email' => 'root.admin@email.com',
                 'password' => '1234',
@@ -17,6 +18,7 @@ class UserSeeder extends Seeder
                 'is_active' => true,
             ],
             [
+                'business_id' => 1,
                 'name' => 'business owner',
                 'email' => 'business.owner@email.com',
                 'password' => '12345678',

@@ -19,7 +19,7 @@ class BusinessSeeder extends Seeder
                 'logo_url' => 'https://1000marcas.net/wp-content/uploads/2019/11/Instagram-Logo.jpg',
                 'onboarding_completed' => false,
                 'status' => 'active',
-                'registered_by'=> 1,
+                'registered_by'=> null,
             ],
             [
                 'business_name' => 'business b',
@@ -31,7 +31,7 @@ class BusinessSeeder extends Seeder
                 'logo_url' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/LEGO_logo.svg/2048px-LEGO_logo.svg.png',
                 'onboarding_completed' => false,
                 'status' => 'active',
-                'registered_by'=> 1,
+                'registered_by'=> null,
             ],
         ];
         $this->db->table('businesses')->insertBatch($data);
