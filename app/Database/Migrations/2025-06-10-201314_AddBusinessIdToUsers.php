@@ -12,7 +12,7 @@ class AddBusinessIdToUsers extends Migration
         $this->forge->addColumn('users', [
             'business_id' => [
                 'type'       => 'BINARY',
-                'constraint' => 16,
+                'constraint'       => 16,
                 'null'       => true,
                 'after'      => 'role'
             ],

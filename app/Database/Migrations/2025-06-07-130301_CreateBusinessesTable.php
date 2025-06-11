@@ -11,9 +11,8 @@ class CreateBusinessesTable extends Migration
         $this->forge->addField([
             'id' => [
                 'type'       => 'BINARY',
-                'constraint' => 16,
+                'constraint'       => 16,
                 'null'       => false,
-                'comment'    => 'UUID'
             ],
             'business_name' => [
                 'type'       => 'VARCHAR',
@@ -45,7 +44,6 @@ class CreateBusinessesTable extends Migration
                 'type'       => 'BINARY',
                 'constraint' => 16,
                 'null'       => false,
-                'comment'    => 'UUID'
             ],
             'created_at' => [
                 'type'    => 'DATETIME',
@@ -63,7 +61,7 @@ class CreateBusinessesTable extends Migration
 
         $this->forge->addKey('id', true);
         $this->forge->addKey('status', false, false, 'idx_status');
-        $this->forge->addKey('owner_email', false, false, 'idx_owner_email');
+        $this->forge->addKey('owner_email', false, true, 'idx_owner_email');
         $this->forge->addForeignKey('registered_by', 'users', 'id', 'CASCADE', 'RESTRICT');
 
         $this->forge->createTable('businesses');

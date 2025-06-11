@@ -11,9 +11,8 @@ class CreateUsersTable extends Migration
         $this->forge->addField([
             'id' => [
                 'type'       => 'BINARY',
-                'constraint' => 16,
-                'null'       => false,
-                'comment'    => 'UUID'
+                'constraint'       => 16,
+                'null' => false,
             ],
             'name' => [
                 'type'       => 'VARCHAR',
@@ -58,6 +57,8 @@ class CreateUsersTable extends Migration
         ]);
 
         $this->forge->addKey('id', true);
+        $this->forge->addKey('name', false, false, 'idx_status');
+        $this->forge->addKey('email', false, true, 'idx_owner_email');
         $this->forge->createTable('users');
     }
 
