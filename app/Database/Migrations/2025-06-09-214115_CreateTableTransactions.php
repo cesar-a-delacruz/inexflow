@@ -11,7 +11,7 @@ class CreateTableTransactions extends Migration
         $this->forge->addField([
             'business_id' => [
                 'type'       => 'BINARY',
-                'constraint' => 16,
+                'constraint'       => 16,
                 'null'       => false,
             ],
             'transaction_number' => [

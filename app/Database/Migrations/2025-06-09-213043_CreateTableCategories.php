@@ -11,7 +11,7 @@ class CreateTableCategories extends Migration
         $this->forge->addField([
             'business_id' => [
                 'type'       => 'BINARY',
-                'constraint' => 16,
+                'constraint'       => 16,
                 'null'       => false,
             ],
             'category_number' => [
