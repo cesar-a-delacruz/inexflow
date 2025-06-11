@@ -8,6 +8,5 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/user/(:num)', 'UserController::show/$1');
 $routes->put('/user/(:num)', 'UserController::update/$1');
 $routes->get('/user/new', 'UserController::new');
-$routes->get('user/login', 'UserController::login');
-$routes->get('user/dashboard', 'UserController::dashboard');
-$routes->get('user/traders', 'UserController::traders');
+$routes->get('/', 'UserController::login');
+$routes->get('user/index', 'UserController::index');
