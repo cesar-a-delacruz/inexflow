@@ -22,12 +22,6 @@ class UserController extends BaseController
         $data['user'] = $user;
         return view('/User/show', $data);
     }
-    public function edit($id = null)
-    {
-        $data['title'] = 'Editar Perfil';
-        $data['user'] = $this->model->find($id);
-        return view('/User/edit', $data);
-    }
     public function update($id = null)
     {
         $post = $this->request->getPost(['name', 'email']);
