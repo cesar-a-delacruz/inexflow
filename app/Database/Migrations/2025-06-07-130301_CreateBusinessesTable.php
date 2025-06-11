@@ -61,7 +61,7 @@ class CreateBusinessesTable extends Migration
 
         $this->forge->addKey('id', true);
         $this->forge->addKey('status', false, false, 'idx_status');
-        $this->forge->addKey('owner_email', false, true, 'idx_owner_email');
+        $this->forge->addUniqueKey('owner_email', 'idx_owner_email');
         $this->forge->addForeignKey('registered_by', 'users', 'id', 'CASCADE', 'RESTRICT');
 
         $this->forge->createTable('businesses');
