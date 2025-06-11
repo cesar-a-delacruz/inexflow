@@ -4,17 +4,22 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
-use App\Models\UserModel;
+use App\Models\{UserModel, BusinessModel};
 
 class UserController extends BaseController
 {
+    protected UserModel $model;
+
     public function __construct() {
         $this->model = new UserModel();
     }
+
     public function show($id = null)
     {
         $data['title'] = 'Perfil del Usuario';
-        $data['user'] = $this->model->find($id);
+        $user = $this->model->find($id);
+        $user->business = new BusinessModel()->find($user->business_id)->business_name;
+        $data['user'] = $user;
         return view('/User/show', $data);
     }
     public function edit($id = null)
