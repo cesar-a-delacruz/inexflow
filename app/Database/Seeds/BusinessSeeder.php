@@ -14,6 +14,7 @@ class BusinessSeeder extends Seeder
     {
         $model = new BusinessModel();
         $model->createBusiness(new Business([
+            'id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
             'business_name' => 'business a',
             'owner_name' => 'markus diaz',
             'owner_email' => 'markdi01@gmail.com',
@@ -22,9 +23,10 @@ class BusinessSeeder extends Seeder
             'address' => 'Changuinola',
             'logo_url' => 'https://1000marcas.net/wp-content/uploads/2019/11/Instagram-Logo.jpg',
             'status' => 'active',
-            'registered_by'=> Uuid::fromInteger('1'),
+            'registered_by'=> Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
         ]));
         $model->createBusiness(new Business([
+            'id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '2'),
             'business_name' => 'business b',
             'owner_name' => 'michael jackson',
             'owner_email' => 'mich07@gmail.com',
@@ -34,7 +36,7 @@ class BusinessSeeder extends Seeder
             'logo_url' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/LEGO_logo.svg/2048px-LEGO_logo.svg.png',
             'onboarding_completed' => false,
             'status' => 'active',
-            'registered_by'=> Uuid::fromInteger('1'),
+            'registered_by'=> Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
         ]));
     }
 }

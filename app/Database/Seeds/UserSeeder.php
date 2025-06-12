@@ -13,7 +13,7 @@ class UserSeeder extends Seeder
     {
         $model = new UserModel();
         $model->createUser(new User([
-            'id' => Uuid::fromInteger('1'),
+            'id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
             'business_id' => null,
             'name' => 'root admin',
             'email' => 'root.admin@email.com',
@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
             'is_active' => 1,
         ]));
         $model->createUser(new User([
-            'id' => Uuid::fromInteger('2'),
+            'id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '2'),
             'business_id' => null,
             'name' => 'business owner',
             'email' => 'business.owner@email.com',
