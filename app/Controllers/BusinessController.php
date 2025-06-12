@@ -47,4 +47,15 @@ class BusinessController extends BaseController
         $data['business'] = $this->model->getBusinessesByUser(uuid_to_bytes($user_id))[0];
         return view('/Business/show', $data);
     }
+    public function update($user_id = null)
+    {
+        $business_update = (object) $this->request->getPost(['business_name', 'owner_name', 'owner_email', 'owner_phone', 'business_id']);
+        $business = $this->model->find(uuid_to_bytes($business_update->business_id));
+        $row = [];
+        foreach ($business_update as $key => $value) {
+            if ($value != $business->$key) $row[$key] = $value;
+        }
+        $this->model->update(uuid_to_bytes($business_update->business_id), $row);
+        return redirect()->to("/user/$user_id/business");
+    }
 }

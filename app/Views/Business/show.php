@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 <h1><?= $title ?></h1>
-<form action="/user/<?= $user_id ?>" method="POST">
+<form action="/user/<?= $user_id ?>/business" method="POST">
     <input type="hidden" name="_method" value="PUT">
     <input type="hidden" name="business_id" value="<?= $business->id ?>">
     
@@ -16,7 +16,7 @@
     </div>
     <div class="field">
         <label for="owner_email" class="form-label">Correo del Dueño:</label>
-        <input type="email" id="owner_email" name="owner_email" value="<?= $business->owner_email ?>" class="form-control"`disabled>
+        <input type="email" id="owner_email" name="owner_email" value="<?= $business->owner_email ?>" class="form-control" disabled>
     </div>
     <div class="field">
         <label for="owner_phone" class="form-label">Número del Dueño:</label>
