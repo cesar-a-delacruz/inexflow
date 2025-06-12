@@ -14,22 +14,9 @@ class UuidCast extends BaseCast
      */
     public static function set($value, array $params = [])
     {
-        if ($value === null) {
-            return null;
-        }
+        if ($value === null) return null;
 
-        if ($value instanceof UuidInterface) {
-            return $value->getBytes();
-        }
-
-        if (is_string($value) && strlen($value) === 36 && Uuid::isValid($value)) {
-            return Uuid::fromString($value)->getBytes();
-        }
-
-        if (is_string($value) && strlen($value) === 16) {
-            return $value;
-        }
-        return null;
+        return uuid_to_bytes($value);
     }
 
     /**
@@ -37,22 +24,8 @@ class UuidCast extends BaseCast
      */
     public static function get($value, array $params = [])
     {
-        if ($value === null) {
-            return null;
-        }
+        if ($value === null) return null;
 
-        if ($value instanceof UuidInterface) {
-            return $value;
-        }
-
-        if (is_string($value) && strlen($value) === 36 && Uuid::isValid($value)) {
-            return Uuid::fromString($value);
-        }
-
-        if (is_string($value) && strlen($value) === 16) {
-            return Uuid::fromBytes($value);
-        }
-
-        return null;
+        return uuid_to_object($value);
     }
 }

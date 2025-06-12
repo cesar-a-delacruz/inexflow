@@ -3,6 +3,7 @@
 namespace App\Entities;
 
 use CodeIgniter\Entity\Entity;
+use Ramsey\Uuid\Uuid;
 
 class User extends Entity
 {
