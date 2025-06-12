@@ -4,36 +4,49 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
-use App\Models\UserModel;
+use App\Models\{UserModel, BusinessModel};
 
 class UserController extends BaseController
 {
+    protected UserModel $model;
+
     public function __construct() {
         $this->model = new UserModel();
     }
+    
     public function show($id = null)
     {
         $data['title'] = 'Perfil del Usuario';
-        $data['user'] = $this->model->find($id);
+        $user = $this->model->find($id);
+        $user->business = ($user->business_id)
+        ? new BusinessModel()->find($user->business_id)->business_name : 'No Aplica';
+        $data['user'] = $user;
         return view('/User/show', $data);
-    }
-    public function edit($id = null)
-    {
-        $data['title'] = 'Editar Perfil';
-        $data['user'] = $this->model->find($id);
-        return view('/User/edit', $data);
     }
     public function update($id = null)
     {
-        $post = $this->request->getPost(['name', 'email']);
-        $this->model->update($id, [
-            'name' => trim($post['name']),
-            'email' => trim($post['email']),
-        ]);
+        $user_update = (object) $this->request->getPost(['name', 'email']);
+        $user = $this->model->find($id);
+        $row = [];
+        foreach ($user_update as $key => $value) {
+            if ($value != $user->$key) $row[$key] = $value;
+        }
+        $this->model->update($id, $row);
         return redirect()->to("/user/$id");
     }
     public function new()
     {
         return view('/User/new');
     }
+    public function login()
+    {
+        $data['title'] = 'Iniciar Sesión';
+        return view('/User/login', $data);
+    }
+    public function index()
+    {
+        $data['title'] = 'Lista Usuarios';
+        return view('/User/index', $data);
+    }
+
 }

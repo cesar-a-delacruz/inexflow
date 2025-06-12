@@ -69,25 +69,6 @@ class BusinessModel extends Model
 
     protected $skipValidation = false;
 
-    // Callbacks
-    protected $allowCallbacks = true;
-    protected $beforeInsert   = [];
-    protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
-    protected $afterUpdate    = [];
-    protected $beforeFind     = [];
-    protected $afterFind      = [];
-    protected $beforeDelete   = [];
-    protected $afterDelete    = [];
-
-    // protected function generateUuid(array $data)
-    // {
-    //     if (empty($data['data']['id'])) {
-    //         $data['data']['id'] = Uuid::uuid4()->getBytes();
-    //     }
-    //     return $data;
-    // }
-
     /**
      * Crear un nuevo negocio con validación de Entity
      */
