@@ -21,6 +21,13 @@
 </form>
 
 <button class="edit btn btn-primary" onclick="activateInputs()" >Editar Perfil</button>
+
+<?php if ($user->business == 'NULO'): ?>
+    <a href="" class="btn btn-secondary">Crear Negocio</a>
+<?php else: ?>
+    <a href="" class="btn btn-secondary">Ver Negocio</a>
+<?php endif; ?>
+
 <script>
     function activateInputs() {
         const inputs = document.querySelectorAll('div.field > input');
