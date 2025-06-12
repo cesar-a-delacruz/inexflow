@@ -46,7 +46,7 @@ class User extends Entity
 
     public function getPasswordHash(): ?string
     {
-        return $this->attributes['password'] ?? null;
+        return $this->attributes['password_hash'] ?? null;
     }
 
     public function verifyPassword(string $password): bool
