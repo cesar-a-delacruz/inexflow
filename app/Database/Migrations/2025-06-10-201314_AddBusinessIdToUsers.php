@@ -27,13 +27,13 @@ class AddBusinessIdToUsers extends Migration
 
     public function down()
     {
-        // Eliminar foreign key
-        $this->forge->dropForeignKey('users', 'users_business_id_foreign');
+        // // Eliminar foreign key
+        // $this->forge->dropForeignKey('users', 'users_business_id_foreign');
 
-        // Eliminar unique key
-        $this->forge->dropKey('users', 'uk_business_email');
+        // // Eliminar unique key
+        // $this->forge->dropKey('users', 'uk_business_email');
 
-        // Eliminar columna
-        $this->forge->dropColumn('users', 'business_id');
+        // // Eliminar columna
+        // $this->forge->dropColumn('users', 'business_id');
     }
 }
