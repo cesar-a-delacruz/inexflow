@@ -3,8 +3,9 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use CodeIgniter\HTTP\ResponseInterface;
+use App\Entities\User;
 use App\Models\{UserModel, BusinessModel};
+use Ramsey\Uuid\Uuid;
 
 class UserController extends BaseController
 {
@@ -17,7 +18,7 @@ class UserController extends BaseController
     public function show($id = null)
     {
         $data['title'] = 'Perfil del Usuario';
-        $user = $this->model->find($id);
+        $user = $this->model->find(uuid_to_bytes($id));
         $user->business = ($user->business_id)
         ? new BusinessModel()->find($user->business_id)->business_name : 'No Aplica';
         $data['user'] = $user;
@@ -36,7 +37,21 @@ class UserController extends BaseController
     }
     public function new()
     {
-        return view('/User/new');
+        $data['title'] = 'Registrar Usuario';
+        return view('/User/new', $data);
+    }
+    public function create()
+    {
+        $user_insert = (object) $this->request->getPost(['name', 'email', 'password', 'role']);
+        $this->model->createUser(new User([
+            'id' => Uuid::uuid3(Uuid::NAMESPACE_URL, strval(($this->model->getStats()['total'] + 1))),
+            'business_id' => null,
+            'name' => $user_insert->name,
+            'email' => $user_insert->email,
+            'password' => $user_insert->password,
+            'role' => $user_insert->role,
+        ]));
+        return redirect()->to('user/');
     }
     public function login()
     {
