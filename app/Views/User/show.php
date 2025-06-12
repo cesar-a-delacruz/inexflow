@@ -25,7 +25,7 @@
 <?php if ($user->business == 'NULO'): ?>
     <a href="/user/<?= $user->id ?>/business/new" class="btn btn-secondary">Crear Negocio</a>
 <?php else: ?>
-    <a href="" class="btn btn-secondary">Ver Negocio</a>
+    <a href="/user/<?= $user->id ?>/business" class="btn btn-secondary">Ver Negocio</a>
 <?php endif; ?>
 
 <script>

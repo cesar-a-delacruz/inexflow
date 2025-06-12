@@ -22,7 +22,7 @@ class BusinessController extends BaseController
     public function new($user_id = null)
     {
         $data['title'] = 'Registrar Negocio';
-        $data['user'] = new UserModel()->find(uuid_to_bytes($user_id));
+        $data['user'] = $this->user_model->find(uuid_to_bytes($user_id));
         return view('/Business/new', $data);
     }
     public function create()
@@ -39,5 +39,12 @@ class BusinessController extends BaseController
         ]));
         $this->user_model->update(uuid_to_bytes($business_insert->user_id), ['business_id' => uuid_to_bytes($business_id)]);
         return redirect()->to("user/$business_insert->user_id");
+    }
+    public function show($user_id = null)
+    {
+        $data['title'] = 'Datos del Negocio';
+        $data['user_id'] = $user_id;
+        $data['business'] = $this->model->getBusinessesByUser(uuid_to_bytes($user_id))[0];
+        return view('/Business/show', $data);
     }
 }

@@ -16,3 +16,4 @@ $routes->get('user/', 'UserController::index');
 // Rutas del negocio
 $routes->get('user/(:uuid)/business/new', 'BusinessController::new/$1');
 $routes->post('user/(:uuid)', 'BusinessController::create');
+$routes->get('user/(:uuid)/business', 'BusinessController::show/$1');
