@@ -19,3 +19,11 @@ $routes->get('user/(:uuid)/business/new', 'BusinessController::new/$1');
 $routes->post('user/(:uuid)', 'BusinessController::create');
 $routes->get('user/(:uuid)/business', 'BusinessController::show/$1');
 $routes->put('user/(:uuid)/business', 'BusinessController::update/$1');
+
+//Rutas de Login
+$routes->get('/','LoginController::index');
+$routes->get('login','LoginController::index');
+$routes->post('login','LoginController::procesarLogin');
+$routes->get('logout', 'LoginController::logout'); 
+
+$routes->get('dashboard/admin', 'DashboardController::index');
