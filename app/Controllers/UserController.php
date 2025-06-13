@@ -19,9 +19,8 @@ class UserController extends BaseController
     
     public function index()
     {
-        $current_page = session()->get('current_page');
-        if ($current_page === null) return redirect()->to('/');
-        if (session()->get('role') !== 'admin') return redirect()->to($current_page);
+        $invalid_session = $this->checkSession(null);
+        if ($invalid_session !== false) return $invalid_session;
         session()->set('current_page', 'user/');
 
         $data['title'] = 'Lista de Usuarios';
@@ -38,8 +37,8 @@ class UserController extends BaseController
     }
     public function new()
     {
-        $current_page = session()->get('current_page');
-        if ($current_page === null) return redirect()->to('/');
+        $invalid_session = $this->checkSession(null);
+        if ($invalid_session !== false) return $invalid_session;
         session()->set('current_page', 'user/new');
 
         $data['title'] = 'Registrar Usuario';
@@ -47,9 +46,8 @@ class UserController extends BaseController
     }
     public function show($id = null)
     {
-        $current_page = session()->get('current_page');
-        if ($current_page === null) return redirect()->to('/');
-        if (session()->get('id') !== $id) return redirect()->to($current_page);
+        $invalid_session = $this->checkSession($id);
+        if ($invalid_session !== false) return $invalid_session;
         session()->set('current_page', 'user/'.$id);
         
         $data['title'] = 'Perfil del Usuario';
@@ -122,6 +120,25 @@ class UserController extends BaseController
             return redirect()->back()->with('error', 'Contraseña incorrecta.');
         } else if (!$user->isActive()) {
             return redirect()->back()->with('error', 'Cuenta inactiva. Contacte al administrador.');
+        }
+        return false;
+    }
+    private function checkSession($id) {
+        $current_page = session()->get('current_page');
+        if ($current_page === null) {
+            return redirect()->to('/');
+        }
+        switch ($id) {
+            case !null:
+                if (session()->get('id') !== $id) {
+                    return redirect()->to($current_page);
+                }
+                break;
+            case null:
+                if (session()->get('role') !== 'admin') {
+                    return redirect()->to($current_page);
+                }
+                break;
         }
         return false;
     }

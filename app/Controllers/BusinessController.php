@@ -20,9 +20,8 @@ class BusinessController extends BaseController
 
     public function new($user_id = null)
     {
-        $current_page = session()->get('current_page');
-        if ($current_page === null) return redirect()->to('/');
-        if (session()->get('role') !== 'admin') return redirect()->to($current_page);
+        $invalid_session = $this->checkSession($user_id);
+        if ($invalid_session !== false) return $invalid_session;
         session()->set('current_page', 'user/'.$user_id.'/business/new');
 
         $data['title'] = 'Registrar Negocio';
@@ -31,9 +30,8 @@ class BusinessController extends BaseController
     }
     public function show($user_id = null)
     {
-        $current_page = session()->get('current_page');
-        if ($current_page === null) return redirect()->to('/');
-        if (session()->get('id') !== $user_id) return redirect()->to($current_page);
+        $invalid_session = $this->checkSession($user_id);
+        if ($invalid_session !== false) return $invalid_session;
         session()->set('current_page', 'user/'.$user_id.'/business');
         
         $data['title'] = 'Datos del Negocio';
@@ -68,5 +66,14 @@ class BusinessController extends BaseController
         ));
         $this->model->updateBusiness($business->business_id, $business);
         return redirect()->to("/user/$user_id/business");
+    }
+    private function checkSession($user_id) {
+        $current_page = session()->get('current_page');
+        if ($current_page === null) {
+            return redirect()->to('/');
+        } else if (session()->get('id') !== $user_id) {
+            return redirect()->to($current_page);
+        }
+        return false;
     }
 }
