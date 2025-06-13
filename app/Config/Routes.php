@@ -20,7 +20,9 @@ $routes->get('logout/', 'UserController::logout');
 $routes->put('user/(:uuid)', 'UserController::update/$1');
 
 // Rutas del negocio
+// vistas
 $routes->get('user/(:uuid)/business/new', 'BusinessController::new/$1');
-$routes->post('user/(:uuid)', 'BusinessController::create');
 $routes->get('user/(:uuid)/business', 'BusinessController::show/$1');
+// otras
+$routes->post('user/(:uuid)', 'BusinessController::create');
 $routes->put('user/(:uuid)/business', 'BusinessController::update/$1');
