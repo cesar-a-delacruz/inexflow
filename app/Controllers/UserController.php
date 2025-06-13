@@ -64,5 +64,12 @@ class UserController extends BaseController
         $data['users'] = $this->model->findAll();
         return view('/User/index', $data);
     }
-
+    public function delete($id = null)
+    {
+        $business_model = new BusinessModel();
+        $business = $business_model->getBusinessesByUser($id)[0];
+        $business_model->deleteBusiness($business->id);
+        $this->model->delete(uuid_to_bytes($id));
+        return redirect()->to('user/');
+    }
 }

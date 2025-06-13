@@ -12,7 +12,8 @@ $routes->put('user/(:uuid)', 'UserController::update/$1');
 $routes->get('user/new', 'UserController::new');
 $routes->post('user/', 'UserController::create');
 $routes->get('/', 'UserController::login');
-$routes->get('user/', 'UserController::index');
+$routes->get('user/', 'UserController::index'); 
+$routes->delete('user/(:uuid)', 'UserController::delete/$1');
 // Rutas del negocio
 $routes->get('user/(:uuid)/business/new', 'BusinessController::new/$1');
 $routes->post('user/(:uuid)', 'BusinessController::create');
