@@ -1,4 +1,4 @@
-<?= $this->extend('layouts/default') ?>
+<?= $this->extend('layouts/dashboard') ?>
 
 <?= $this->section('content') ?>
 <h1><?= $title ?></h1>
