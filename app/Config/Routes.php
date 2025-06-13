@@ -11,3 +11,4 @@ $routes->get('/user/new', 'UserController::new');
 $routes->get('user/login', 'UserController::login');
 $routes->get('user/dashboard', 'UserController::dashboard');
 $routes->get('user/traders', 'UserController::traders');
+$routes->match(['get', 'post'], 'user/recovery', 'UserController::reset');

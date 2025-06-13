@@ -35,5 +35,9 @@ class UserController extends BaseController
     {
       return view('/User/emprendedores');
     }
+    public function reset()
+    {
+      return view('/User/recovery');
+    }
 
 }
