@@ -1,4 +1,5 @@
 <?php
+// funcion si existe o no
  if (!function_exists('validar_contraseña')) {
     function validar_contraseña($password)
    {

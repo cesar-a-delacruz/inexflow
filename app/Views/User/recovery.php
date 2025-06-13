@@ -7,15 +7,15 @@ $errores = [];
 $errores_password = [];
 $errores_email = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $password = $_POST['password'] ?? '';
-  $email = $_POST['email'] ?? '';
+$password = $_POST['password'] ?? '';
+$email = $_POST['email'] ?? '';
 // Llamar a la función del helper
-  $errores_password = validar_contraseña($password);
-  $errores_email = validar_email($email);
+$errores_password = validar_contraseña($password);
+$errores_email = validar_email($email);
 // si la validacion es correcta limpia el campo
-  if (empty($errores_password) && empty($errores_email)) {
-    $password = '';
-    $email = '';
+if (empty($errores_password) && empty($errores_email)) {
+$password = '';
+$email = '';
  // Aquí puedes hacer redirección si quieres
  // header('Location: success.php'); exit;
 
