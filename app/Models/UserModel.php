@@ -111,7 +111,7 @@ class UserModel extends Model
         }
 
         // Verificar email único (excluyendo el actual)
-        if ($user->email !== $existing->email && $this->emailExists($user->email)) {
+        if ($user->email !== $existing->email && $this->userEmailExists($user->email)) {
             throw new \InvalidArgumentException('El email ya está registrado');
         }
 

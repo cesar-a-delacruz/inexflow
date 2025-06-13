@@ -7,15 +7,18 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->addPlaceholder('uuid', '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}');
 // Rutas del usuario
-$routes->get('user/(:uuid)', 'UserController::show/$1');
-$routes->put('user/(:uuid)', 'UserController::update/$1');
-$routes->get('user/new', 'UserController::new');
-$routes->post('user/', 'UserController::create');
+// vistas
+$routes->get('user/', 'UserController::index'); 
 $routes->get('/', 'UserController::login');
+$routes->get('user/new', 'UserController::new');
+$routes->get('user/(:uuid)', 'UserController::show/$1');
+// otras
+$routes->post('user/', 'UserController::create');
+$routes->delete('user/(:uuid)', 'UserController::delete/$1');
 $routes->post('/', 'UserController::verify');
 $routes->get('logout/', 'UserController::logout');
-$routes->get('user/', 'UserController::index'); 
-$routes->delete('user/(:uuid)', 'UserController::delete/$1');
+$routes->put('user/(:uuid)', 'UserController::update/$1');
+
 // Rutas del negocio
 $routes->get('user/(:uuid)/business/new', 'BusinessController::new/$1');
 $routes->post('user/(:uuid)', 'BusinessController::create');

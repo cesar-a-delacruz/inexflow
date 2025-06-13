@@ -4,19 +4,18 @@
 <h1><?= $title ?></h1>
 <form action="/user/<?= $user->id ?>" method="POST">
     <input type="hidden" name="_method" value="PUT">
-    <input type="hidden" name="user_id" value="<?= $user->id ?>">
     
     <div class="field">
         <label for="name" class="form-label">Nombre:</label>
-        <input type="text" id="name" name="name" value="<?= $user->name?>" class="form-control" disabled >
+        <input type="text" id="name" name="name" value="<?= $user->name ?>" class="form-control" disabled>
     </div>
     <div class="field">
         <label for="email" class="form-label">Correo:</label>
-        <input type="email" id="email" name="email" value="<?= $user->email?>" class="form-control" disabled >
+        <input type="email" id="email" name="email" value="<?= $user->email ?>" class="form-control" disabled>
     </div>
     <div class="field">
         <label for="business" class="form-label">Negocio:</label>
-        <input type="text" id="business" name="business" value="<?= $user->business ?>" class="form-control" disabled >
+        <input type="text" id="business" name="business" value="<?= $user->business ?>" class="form-control" disabled>
     </div>
 </form>
 

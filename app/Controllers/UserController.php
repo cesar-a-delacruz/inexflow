@@ -10,53 +10,57 @@ use Ramsey\Uuid\Uuid;
 class UserController extends BaseController
 {
     protected UserModel $model;
-
+    protected BusinessModel $business_model;
     public function __construct() {
         $this->model = new UserModel();
+        $this->business_model = new BusinessModel();
     }
     
-    public function show($id = null)
+    public function index()
     {
-        $data['title'] = 'Perfil del Usuario';
-        $user = $this->model->find(uuid_to_bytes($id));
-        $user->business = ($user->business_id)
-        ? new BusinessModel()->find(uuid_to_bytes($user->business_id))->business_name : 'NULO';
-        $data['user'] = $user;
-        return view('/User/show', $data);
+        $data['title'] = 'Lista de Usuarios';
+        $data['users'] = $this->model->findAll();
+        return view('/User/index', $data);
     }
-    public function update($id = null)
+    public function login()
     {
-        $user_update = (object) $this->request->getPost(['name', 'email']);
-        $user = $this->model->find($id);
-        $row = [];
-        foreach ($user_update as $key => $value) {
-            if ($value != $user->$key) $row[$key] = $value;
-        }
-        $this->model->update($id, $row);
-        return redirect()->to("/user/$id");
+        $data['title'] = 'Iniciar Sesión';
+        return view('/User/login', $data);
     }
     public function new()
     {
         $data['title'] = 'Registrar Usuario';
         return view('/User/new', $data);
     }
+    public function show($id = null)
+    {
+        $data['title'] = 'Perfil del Usuario';
+        $user = $this->model->find(uuid_to_bytes($id));
+        $user->business = ($user->business_id)
+        ? $this->business_model->find(uuid_to_bytes($user->business_id))->business_name : 'NULO';
+        $data['user'] = $user;
+        return view('/User/show', $data);
+    }
+
     public function create()
     {
-        $user_insert = (object) $this->request->getPost(['name', 'email', 'password', 'role']);
+        $post = (object) $this->request->getPost(['name', 'email', 'password', 'role']);
         $this->model->createUser(new User([
             'id' => Uuid::uuid3(Uuid::NAMESPACE_URL, strval(($this->model->getStats()['total'] + 1))),
             'business_id' => null,
-            'name' => $user_insert->name,
-            'email' => $user_insert->email,
-            'password' => $user_insert->password,
-            'role' => $user_insert->role,
+            'name' => $post->name,
+            'email' => $post->email,
+            'password' => $post->password,
+            'role' => $post->role,
         ]));
         return redirect()->to('user/');
     }
-    public function login()
+    public function delete($id = null)
     {
-        $data['title'] = 'Iniciar Sesión';
-        return view('/User/login', $data);
+        $user = $this->model->find(uuid_to_bytes($id));
+        $this->business_model->deleteBusiness($user->business_id);
+        $this->model->delete(uuid_to_bytes($id));
+        return redirect()->to('user/');
     }
     public function verify()
     {
@@ -86,21 +90,15 @@ class UserController extends BaseController
         session()->destroy();
         return redirect()->to('/');
     }
-    public function index()
+    public function update($id = null)
     {
-        $data['title'] = 'Lista de Usuarios';
-        $data['users'] = $this->model->findAll();
-        return view('/User/index', $data);
+        $user = new User($this->request->getPost(['name', 'email']));
+        $this->model->updateUser($id, $user);
+        return redirect()->to("/user/$id");
     }
-    public function delete($id = null)
+
+    private function validateUser($user, $post) 
     {
-        $business_model = new BusinessModel();
-        $business = $business_model->getBusinessesByUser($id)[0];
-        $business_model->deleteBusiness($business->id);
-        $this->model->delete(uuid_to_bytes($id));
-        return redirect()->to('user/');
-    }
-    private function validateUser($user, $post) {
         if (!$user) {
             return redirect()->back()->with('error', 'Usuario no encontrado.');
         } else if (!$user->verifyPassword($post->password)) {

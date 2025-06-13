@@ -78,8 +78,15 @@ class User extends Entity
     {
         return match ($this->role) {
             'admin' => 'Administrador',
-            'businessman' => 'Empresario',
-            default => ucfirst($this->role)
+            'businessman' => 'Empresario'
+        };
+    }
+
+    public function getIsActiveDisplayName(): string
+    {
+        return match ($this->is_active) {
+            true => 'Activo',
+            false => 'Inactivo'
         };
     }
 
