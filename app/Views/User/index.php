@@ -1,7 +1,7 @@
 <?php $this->extend('layouts/default') ?>
 <?php $this->section('content') ?>
 <div class="container mt-4">
-    <h2 class="mb-4">Lista de Usuarios</h2>
+    <h2 class="mb-4"><?= $title ?></h2>
 
     <a href="/user/new" class="btn btn-primary mb-3">Crear Usuario</a>
 
@@ -11,26 +11,26 @@
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>Email</th>
-                <th>Usuario</th>
+                <th>Rol</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            <?php if (!empty($users) && is_array($users)): ?>
-                <?php foreach ($users as $user): ?>
+            <?php if (!empty($users)): ?>
+                <?php for ($i = 0; $i < count($users); $i++): ?>
                     <tr>
-                        <td><?= esc($user['id']) ?></td>
-                        <td><?= esc($user['nombre']) ?></td>
-                        <td><?= esc($user['email']) ?></td>
-                        <td><?= esc($user['username']) ?></td>
+                        <td><?= $i+1 ?></td>
+                        <td><?= $users[$i]->name ?></td>
+                        <td><?= $users[$i]->email ?></td>
+                        <td><?= $users[$i]->role ?></td>
                         <td>
                             <button class="btn btn-danger btn-sm"
-                                    onclick="confirmarEliminacion(<?= $user['id'] ?>)">
+                                    onclick="confirmarEliminacion(<?= $users[$i]->id ?>)">
                                 Eliminar
                             </button>
                         </td>
                     </tr>
-                <?php endforeach; ?>
+                <?php endfor; ?>
             <?php else: ?>
                 <tr><td colspan="5" class="text-center">No hay usuarios registrados.</td></tr>
             <?php endif; ?>
