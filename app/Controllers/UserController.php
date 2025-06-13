@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Entities\User;
 use App\Models\{UserModel, BusinessModel};
+use CodeIgniter\Config\Services;
 use Ramsey\Uuid\Uuid;
 
 class UserController extends BaseController
@@ -18,22 +19,39 @@ class UserController extends BaseController
     
     public function index()
     {
+        $current_page = session()->get('current_page');
+        if ($current_page === null) return redirect()->to('/');
+        if (session()->get('role') !== 'admin') return redirect()->to($current_page);
+        session()->set('current_page', 'user/');
+
         $data['title'] = 'Lista de Usuarios';
         $data['users'] = $this->model->findAll();
         return view('/User/index', $data);
     }
     public function login()
     {
+        $current_page = session()->get('current_page');
+        if ($current_page !== null) return redirect()->to($current_page);
+
         $data['title'] = 'Iniciar Sesión';
         return view('/User/login', $data);
     }
     public function new()
     {
+        $current_page = session()->get('current_page');
+        if ($current_page === null) return redirect()->to('/');
+        session()->set('current_page', 'user/new');
+
         $data['title'] = 'Registrar Usuario';
         return view('/User/new', $data);
     }
     public function show($id = null)
     {
+        $current_page = session()->get('current_page');
+        if ($current_page === null) return redirect()->to('/');
+        if (session()->get('id') !== $id) return redirect()->to($current_page);
+        session()->set('current_page', 'user/'.$id);
+        
         $data['title'] = 'Perfil del Usuario';
         $user = $this->model->find(uuid_to_bytes($id));
         $user->business = ($user->business_id)
@@ -70,20 +88,19 @@ class UserController extends BaseController
         $is_invalid = $this->validateUser($user, $post);
         if ($is_invalid !== false) return $is_invalid;
 
+        $init_page = match ($user->role) {
+            'admin' => '/user',
+            'businessman' => $user->getBusinessIdAsString() ?
+                '/user/'.$user->getIdAsString().'/business' : '/user/'.$user->getIdAsString()
+        };
         session()->set([
             'id'         => $user->getIdAsString(),
             'name'       => $user->name,
             'email'      => $user->email,
-            'role'       => $user->role
+            'role'       => $user->role,
+            'current_page' => $init_page
         ]);
-        
-        return match ($user->role) {
-            'admin' => redirect()->to('/user'),
-            'businessman' => $user->getBusinessIdAsString() ?
-                redirect()->to('/user/'.$user->getIdAsString().'/business') : 
-                redirect()->to('/user/'.$user->getIdAsString())
-        };
-        
+        return redirect()->to($init_page);   
     }
     public function logout()
     {

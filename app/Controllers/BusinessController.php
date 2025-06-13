@@ -20,12 +20,22 @@ class BusinessController extends BaseController
 
     public function new($user_id = null)
     {
+        $current_page = session()->get('current_page');
+        if ($current_page === null) return redirect()->to('/');
+        if (session()->get('role') !== 'admin') return redirect()->to($current_page);
+        session()->set('current_page', 'user/'.$user_id.'/business/new');
+
         $data['title'] = 'Registrar Negocio';
         $data['user'] = $this->user_model->find(uuid_to_bytes($user_id));
         return view('/Business/new', $data);
     }
     public function show($user_id = null)
     {
+        $current_page = session()->get('current_page');
+        if ($current_page === null) return redirect()->to('/');
+        if (session()->get('id') !== $user_id) return redirect()->to($current_page);
+        session()->set('current_page', 'user/'.$user_id.'/business');
+        
         $data['title'] = 'Datos del Negocio';
         $data['user_id'] = $user_id;
         $data['business'] = $this->model->find(uuid_to_bytes(
