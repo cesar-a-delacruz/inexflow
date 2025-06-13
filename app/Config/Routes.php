@@ -12,6 +12,8 @@ $routes->put('user/(:uuid)', 'UserController::update/$1');
 $routes->get('user/new', 'UserController::new');
 $routes->post('user/', 'UserController::create');
 $routes->get('/', 'UserController::login');
+$routes->post('/', 'UserController::verify');
+$routes->get('logout/', 'UserController::logout');
 $routes->get('user/', 'UserController::index'); 
 $routes->delete('user/(:uuid)', 'UserController::delete/$1');
 // Rutas del negocio
@@ -20,10 +22,6 @@ $routes->post('user/(:uuid)', 'BusinessController::create');
 $routes->get('user/(:uuid)/business', 'BusinessController::show/$1');
 $routes->put('user/(:uuid)/business', 'BusinessController::update/$1');
 
-//Rutas de Login
-$routes->get('/','LoginController::index');
-$routes->get('login','LoginController::index');
-$routes->post('login','LoginController::procesarLogin');
-$routes->get('logout', 'LoginController::logout'); 
+//Rutas de Login 
 
 $routes->get('dashboard/admin', 'DashboardController::index');

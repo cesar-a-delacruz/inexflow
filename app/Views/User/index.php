@@ -4,7 +4,7 @@
     <h1 class="mb-4"><?= $title ?></h1>
 
     <a href="/user/new" class="btn btn-primary mb-3">Crear Usuario</a>
-
+    <a href="/logout" class="btn btn-danger mb-3">Cerrar Sesión</a>
     <table class="table table-bordered">
         <thead class="table-dark">
             <tr>

@@ -1,49 +1,37 @@
 <?= $this->extend('layouts/default') ?>
-<?= $this->section('content')?>
-<br><br><br>
-<section class="h-100">
-	<div class="container h-100">
-		<div class="row justify-content-sm-center h-100">
-			<div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
-				<div class="card shadow-lg">
-					<div class="card-body p-5">
-						<h1 class="fs-4 card-title fw-bold mb-4"><?= $title ?></h1>
-						<form method="POST" class="needs-validation" novalidate="" autocomplete="off">
-							<div class="mb-3">
-								<label class="mb-2 text-muted" for="email">Correo</label>
-								<input id="email" type="email" class="form-control" name="email" value="" required autofocus>
-								<div class="invalid-feedback">
-									Dirección de Correo inválida
-								</div>
-							</div>
 
-							<div class="mb-3">
-								<div class="mb-2 w-100">
-									<label class="text-muted" for="password">Contraseña</label>
-									<a href="forgot.html" class="float-end">
-										¿Olvidaste tu contraseña?
-									</a>
-								</div>
-								<input id="password" type="password" class="form-control" name="password" required>
-								<div class="invalid-feedback">
-									Introduzca su contraseña
-								</div>
-							</div>
+<?= $this->section('content') ?>
+    <div class="container">
+        <div class="row justify-content-center align-items-center vh-100">
+            <div class="col-md-5 col-lg-4">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <h2 class="card-title text-center mb-4">Iniciar Sesión</h2>
+                        
+                        <?php if (session()->getFlashdata('error')): ?>
+                            <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
+                        <?php endif; ?>
 
-							<div class="d-flex align-items-center">
-								<button type="submit" class="btn btn-primary ms-auto">
-									Entrar
-								</button>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</section>
-
-<script src="/assets/js/login.js"></script>
-<?= $this->endSection('content')?>
-</body>
-</html>
+                        <form method="POST" action="/">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Correo</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Contraseña</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                            
+                            <div class="d-flex justify-content-end mb-3">
+                                <a href="/recovery" class="text-decoration-none">¿Olvidó su contraseña?</a>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary w-100 py-2">Acceder</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?= $this->endSection()?>

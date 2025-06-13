@@ -28,6 +28,8 @@
     <a href="/user/<?= $user->id ?>/business" class="btn btn-secondary">Ver Negocio</a>
 <?php endif; ?>
 
+<a href="/logout" class="btn btn-danger">Cerrar Sesión</a>
+
 <script>
     function activateInputs() {
         const inputs = document.querySelectorAll('div.field > input');

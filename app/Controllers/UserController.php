@@ -58,6 +58,34 @@ class UserController extends BaseController
         $data['title'] = 'Iniciar Sesión';
         return view('/User/login', $data);
     }
+    public function verify()
+    {
+        $post = (object) $this->request->getPost(['email', 'password']);
+        $user = $this->model->findByEmail($post->email);
+        
+        $is_invalid = $this->validateUser($user, $post);
+        if ($is_invalid !== false) return $is_invalid;
+
+        session()->set([
+            'id'         => $user->getIdAsString(),
+            'name'       => $user->name,
+            'email'      => $user->email,
+            'role'       => $user->role
+        ]);
+        
+        return match ($user->role) {
+            'admin' => redirect()->to('/user'),
+            'businessman' => $user->getBusinessIdAsString() ?
+                redirect()->to('/user/'.$user->getIdAsString().'/business') : 
+                redirect()->to('/user/'.$user->getIdAsString())
+        };
+        
+    }
+    public function logout()
+    {
+        session()->destroy();
+        return redirect()->to('/');
+    }
     public function index()
     {
         $data['title'] = 'Lista de Usuarios';
@@ -71,5 +99,15 @@ class UserController extends BaseController
         $business_model->deleteBusiness($business->id);
         $this->model->delete(uuid_to_bytes($id));
         return redirect()->to('user/');
+    }
+    private function validateUser($user, $post) {
+        if (!$user) {
+            return redirect()->back()->with('error', 'Usuario no encontrado.');
+        } else if (!$user->verifyPassword($post->password)) {
+            return redirect()->back()->with('error', 'Contraseña incorrecta.');
+        } else if (!$user->isActive()) {
+            return redirect()->back()->with('error', 'Cuenta inactiva. Contacte al administrador.');
+        }
+        return false;
     }
 }
