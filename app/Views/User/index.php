@@ -2,7 +2,7 @@
 <?php $this->section('content') ?>
 <div class="container mt-4">
     <h1 class="mb-4"><?= $title ?></h1>
-    <a href="/user/new" class="btn btn-primary mb-3">Crear Usuario</a>
+    <a href="/users/new" class="btn btn-primary mb-3">Crear Usuario</a>
 
     <table class="table table-bordered">
         <thead class="table-dark">

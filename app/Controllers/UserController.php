@@ -5,7 +5,6 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Entities\User;
 use App\Models\{UserModel, BusinessModel};
-use CodeIgniter\Config\Services;
 use Ramsey\Uuid\Uuid;
 
 class UserController extends BaseController
@@ -19,13 +18,13 @@ class UserController extends BaseController
     
     public function index()
     {
-        $invalid_session = $this->checkSession(null);
-        if ($invalid_session !== false) return $invalid_session;
-        session()->set('current_page', 'user/');
+        $is_admin = $this->isAdmin();
+        if ($is_admin !== true) return $is_admin;
+        session()->set('current_page', 'users');
 
-        $data['title'] = 'Lista de Usuarios';
+        $data['title'] = 'Usuarios';
         $data['users'] = $this->model->findAll();
-        return view('/User/index', $data);
+        return view('User/index', $data);
     }
     public function login()
     {
@@ -33,16 +32,16 @@ class UserController extends BaseController
         if ($current_page !== null) return redirect()->to($current_page);
 
         $data['title'] = 'Iniciar Sesión';
-        return view('/User/login', $data);
+        return view('User/login', $data);
     }
     public function new()
     {
-        $invalid_session = $this->checkSession(null);
-        if ($invalid_session !== false) return $invalid_session;
-        session()->set('current_page', 'user/new');
+        $is_admin = $this->isAdmin();
+        if ($is_admin !== true) return $is_admin;
+        session()->set('current_page', 'users/new');
         
-        $data['title'] = 'Registrar Usuario';
-        return view('/User/new', $data);
+        $data['title'] = 'Nuevo Usuario';
+        return view('User/new', $data);
     }
     public function recovery()
     {
@@ -50,20 +49,19 @@ class UserController extends BaseController
         if ($current_page !== null) return redirect()->to($current_page);
 
         $data['title'] = 'Recuperar Contraseña';
-        return view('/User/recovery', $data);
+        return view('User/recovery', $data);
     }
-    public function show($id = null)
+    public function show()
     {
-        $invalid_session = $this->checkSession($id);
-        if ($invalid_session !== false) return $invalid_session;
-        session()->set('current_page', 'user/'.$id);
+        session()->set('current_page', 'user');
+        $session_id = session()->get('id');
         
-        $data['title'] = 'Perfil del Usuario';
-        $user = $this->model->find(uuid_to_bytes($id));
+        $data['title'] = 'Información Personal';
+        $user = $this->model->find(uuid_to_bytes($session_id));
         $user->business = ($user->business_id)
         ? $this->business_model->find(uuid_to_bytes($user->business_id))->business_name : 'NULO';
         $data['user'] = $user;
-        return view('/User/show', $data);
+        return view('User/show', $data);
     }
 
     public function create()
@@ -77,14 +75,14 @@ class UserController extends BaseController
             'password' => $post->password,
             'role' => $post->role,
         ]));
-        return redirect()->to('user/');
+        return redirect()->to('users');
     }
     public function delete($id = null)
     {
         $user = $this->model->find(uuid_to_bytes($id));
-        $this->business_model->deleteBusiness($user->business_id);
+        if ($user->business_id) $this->business_model->deleteBusiness($user->business_id);
         $this->model->delete(uuid_to_bytes($id));
-        return redirect()->to('user/');
+        return redirect()->to('users');
     }
     public function verify()
     {
@@ -95,15 +93,14 @@ class UserController extends BaseController
         if ($is_invalid !== false) return $is_invalid;
 
         $init_page = match ($user->role) {
-            'admin' => '/user',
-            'businessman' => $user->getBusinessIdAsString() ?
-                '/user/'.$user->getIdAsString().'/business' : '/user/'.$user->getIdAsString()
+            'admin' => 'users',
+            'businessman' => $user->business_id ? 'user/business' : 'user'
         };
         session()->set([
-            'id'         => $user->getIdAsString(),
-            'name'       => $user->name,
-            'email'      => $user->email,
-            'role'       => $user->role,
+            'id' => $user->getIdAsString(),
+            'name' => $user->name,
+            'email' => $user->email,
+            'role' => $user->role,
             'current_page' => $init_page
         ]);
         return redirect()->to($init_page);   
@@ -113,11 +110,11 @@ class UserController extends BaseController
         session()->destroy();
         return redirect()->to('/');
     }
-    public function update($id = null)
+    public function update()
     {
         $user = new User($this->request->getPost(['name', 'email']));
-        $this->model->updateUser($id, $user);
-        return redirect()->to("/user/$id");
+        $this->model->updateUser(session()->get('id'), $user);
+        return redirect()->to('user');
     }
 
     private function validateUser($user, $post) 
@@ -131,23 +128,13 @@ class UserController extends BaseController
         }
         return false;
     }
-    private function checkSession($id) {
+    private function isAdmin() {
         $current_page = session()->get('current_page');
         if ($current_page === null) {
             return redirect()->to('/');
+        } else if (session()->get('role') !== 'admin') {
+            return redirect()->to($current_page);
         }
-        switch ($id) {
-            case !null:
-                if (session()->get('id') !== $id) {
-                    return redirect()->to($current_page);
-                }
-                break;
-            case null:
-                if (session()->get('role') !== 'admin') {
-                    return redirect()->to($current_page);
-                }
-                break;
-        }
-        return false;
+        return true;
     }
 }

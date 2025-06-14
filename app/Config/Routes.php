@@ -5,26 +5,25 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->addPlaceholder('uuid', '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}');
 // Rutas del usuario
 // vistas
-$routes->get('user/', 'UserController::index'); 
 $routes->get('/', 'UserController::login');
-$routes->get('user/new', 'UserController::new');
-$routes->get('user/recovery', 'UserController::recovery');
-$routes->get('user/(:uuid)', 'UserController::show/$1');
+$routes->get('user', 'UserController::show');
+$routes->get('users', 'UserController::index'); 
+$routes->get('users/new', 'UserController::new');
+$routes->get('recovery', 'UserController::recovery');
 // otras
-$routes->post('user/', 'UserController::create');
-$routes->delete('user/(:uuid)', 'UserController::delete/$1');
 $routes->post('/', 'UserController::verify');
-$routes->get('logout/', 'UserController::logout');
-$routes->post('user/recovery', 'UserController::recovery');
-$routes->put('user/(:uuid)', 'UserController::update/$1');
+$routes->put('user', 'UserController::update');
+$routes->delete('user/(:segment)', 'UserController::delete/$1');
+$routes->post('users', 'UserController::create');
+$routes->get('logout', 'UserController::logout');
+$routes->post('recovery', 'UserController::recovery');
 
 // Rutas del negocio
 // vistas
-$routes->get('user/(:uuid)/business/new', 'BusinessController::new/$1');
-$routes->get('user/(:uuid)/business', 'BusinessController::show/$1');
+$routes->get('user/business', 'BusinessController::show');
+$routes->get('user/business/new', 'BusinessController::new');
 // otras
-$routes->post('user/(:uuid)', 'BusinessController::create');
-$routes->put('user/(:uuid)/business', 'BusinessController::update/$1');
+$routes->post('user', 'BusinessController::create');
+$routes->put('user/business', 'BusinessController::update');

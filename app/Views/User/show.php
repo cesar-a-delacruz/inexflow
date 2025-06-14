@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 <h1><?= $title ?></h1>
-<form action="/user/<?= $user->id ?>" method="POST">
+<form action="/user" method="POST">
     <input type="hidden" name="_method" value="PUT">
     
     <div class="field">
@@ -22,9 +22,9 @@
 <button class="edit btn btn-primary" onclick="activateInputs()" >Editar Perfil</button>
 
 <?php if ($user->business == 'NULO'): ?>
-    <a href="/user/<?= $user->id ?>/business/new" class="btn btn-secondary">Crear Negocio</a>
+    <a href="/user/business/new" class="btn btn-secondary">Crear Negocio</a>
 <?php else: ?>
-    <a href="/user/<?= $user->id ?>/business" class="btn btn-secondary">Ver Negocio</a>
+    <a href="/user/business" class="btn btn-secondary">Ver Negocio</a>
 <?php endif; ?>
 
 <script>

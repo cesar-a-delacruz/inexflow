@@ -4,9 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Entities\Business;
-use App\Models\BusinessModel;
-use App\Models\UserModel;
-use CodeIgniter\HTTP\ResponseInterface;
+use App\Models\{BusinessModel, UserModel};
 use Ramsey\Uuid\Uuid;
 
 class BusinessController extends BaseController
@@ -18,62 +16,56 @@ class BusinessController extends BaseController
         $this->user_model = new UserModel();
     }
 
-    public function new($user_id = null)
+    public function new()
     {
-        $invalid_session = $this->checkSession($user_id);
-        if ($invalid_session !== false) return $invalid_session;
-        session()->set('current_page', 'user/'.$user_id.'/business/new');
+        session()->set('current_page', 'user/business/new');
+        $session_id = session()->get('id');
 
-        $data['title'] = 'Registrar Negocio';
-        $data['user'] = $this->user_model->find(uuid_to_bytes($user_id));
-        return view('/Business/new', $data);
+        $data['title'] = 'Nuevo Negocio';
+        $data['user'] = $this->user_model->find(uuid_to_bytes($session_id));
+        return view('Business/new', $data);
     }
-    public function show($user_id = null)
+    public function show()
     {
-        $invalid_session = $this->checkSession($user_id);
-        if ($invalid_session !== false) return $invalid_session;
-        session()->set('current_page', 'user/'.$user_id.'/business');
-        
-        $data['title'] = 'Datos del Negocio';
-        $data['user_id'] = $user_id;
+        session()->set('current_page', 'user/business');
+        $session_id = session()->get('id');
+
+        $data['title'] = 'Información del Negocio';
         $data['business'] = $this->model->find(uuid_to_bytes(
-            $this->user_model->find(uuid_to_bytes($user_id))->business_id
+            $this->user_model->find(uuid_to_bytes($session_id))->business_id
         ));
-        return view('/Business/show', $data);
+        return view('Business/show', $data);
     }
     
     public function create()
     {
         $post = (object) $this->request->getPost(
-            ['business_name', 'owner_name', 'owner_email', 'owner_phone', 'user_id']
+            ['business_name', 'owner_name', 'owner_email', 'owner_phone']
         );
         $business_id = Uuid::uuid3(Uuid::NAMESPACE_URL, strval(($this->model->getBusinessStats()['total'] + 1)));
+        $session_id = session()->get('id');
         $this->model->createBusiness(new Business([
             'id' => $business_id,
             'business_name' => $post->business_name,
             'owner_name' => $post->owner_name,
             'owner_email' => $post->owner_email,
             'owner_phone' => $post->owner_phone,
-            'registered_by'=> uuid_to_bytes($post->user_id),
+            'registered_by'=> uuid_to_bytes($session_id),
         ]));
-        $this->user_model->update(uuid_to_bytes($post->user_id), ['business_id' => uuid_to_bytes($business_id)]);
-        return redirect()->to("user/$post->user_id");
+
+        $this->user_model->update(
+            uuid_to_bytes($session_id), ['business_id' => uuid_to_bytes($business_id)]
+        );
+
+        return redirect()->to('user');
     }
-    public function update($user_id = null)
+    public function update()
     {
         $business = new Business($this->request->getPost(
             ['business_name', 'owner_name', 'owner_email', 'owner_phone', 'business_id']
         ));
+        
         $this->model->updateBusiness($business->business_id, $business);
-        return redirect()->to("/user/$user_id/business");
-    }
-    private function checkSession($user_id) {
-        $current_page = session()->get('current_page');
-        if ($current_page === null) {
-            return redirect()->to('/');
-        } else if (session()->get('id') !== $user_id) {
-            return redirect()->to($current_page);
-        }
-        return false;
+        return redirect()->to('user/business');
     }
 }

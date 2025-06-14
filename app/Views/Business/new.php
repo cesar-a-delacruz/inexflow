@@ -2,8 +2,7 @@
 
 <?= $this->section('content') ?>
 <h1><?= $title ?></h1>
-<form action="/user/<?= $user->id ?>" method="POST">
-    <input type="hidden" name="user_id" value="<?= $user->id ?>">
+<form action="/user" method="POST">
     <div class="field">
         <label for="business_name" class="form-label">Nombre del Negocio:</label>
         <input type="text" id="business_name" name="business_name" class="form-control">

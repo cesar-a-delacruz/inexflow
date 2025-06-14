@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 <h1><?= $title ?></h1>
-<form action="/user/<?= $user_id ?>/business" method="POST">
+<form action="/user/business" method="POST">
     <input type="hidden" name="_method" value="PUT">
     <input type="hidden" name="business_id" value="<?= $business->id ?>">
     

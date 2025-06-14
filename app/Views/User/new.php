@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 <h1><?= $title ?></h1>
-<form action="/user/" method="POST">
+<form action="/users" method="POST">
     <div class="field">
         <label for="name" class="form-label">Nombre:</label>
         <input type="text" id="name" name="name" class="form-control">

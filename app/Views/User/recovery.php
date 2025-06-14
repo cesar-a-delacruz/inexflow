@@ -1,3 +1,4 @@
+<?= $this->extend('layouts/default')?>
 <?php
 helper('reset');
 $email = '';
@@ -6,13 +7,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$email = $_POST['email'] ?? '';
 	// Llamar a la función del helper
 	$errores_email = validar_email($email);
-	// si la validacion es correcta limpia el campo
 	if (empty($errores_email)) {
 		$email = '';
 	}
 }
 ?>
-<?= $this->extend('layouts/default')?>
 
 <?= $this->section('content')?>
 <section class="h-100">
