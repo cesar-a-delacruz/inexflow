@@ -40,9 +40,17 @@ class UserController extends BaseController
         $invalid_session = $this->checkSession(null);
         if ($invalid_session !== false) return $invalid_session;
         session()->set('current_page', 'user/new');
-
+        
         $data['title'] = 'Registrar Usuario';
         return view('/User/new', $data);
+    }
+    public function recovery()
+    {
+        $current_page = session()->get('current_page');
+        if ($current_page !== null) return redirect()->to($current_page);
+
+        $data['title'] = 'Recuperar Contraseña';
+        return view('/User/recovery', $data);
     }
     public function show($id = null)
     {

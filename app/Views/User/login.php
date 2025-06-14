@@ -24,7 +24,7 @@
                             </div>
                             
                             <div class="d-flex justify-content-end mb-3">
-                                <a href="/recovery" class="text-decoration-none">¿Olvidó su contraseña?</a>
+                                <a href="/user/recovery" class="text-decoration-none">¿Olvidó su contraseña?</a>
                             </div>
                             
                             <button type="submit" class="btn btn-primary w-100 py-2">Acceder</button>

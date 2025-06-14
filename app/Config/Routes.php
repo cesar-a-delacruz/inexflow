@@ -11,12 +11,14 @@ $routes->addPlaceholder('uuid', '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}
 $routes->get('user/', 'UserController::index'); 
 $routes->get('/', 'UserController::login');
 $routes->get('user/new', 'UserController::new');
+$routes->get('user/recovery', 'UserController::recovery');
 $routes->get('user/(:uuid)', 'UserController::show/$1');
 // otras
 $routes->post('user/', 'UserController::create');
 $routes->delete('user/(:uuid)', 'UserController::delete/$1');
 $routes->post('/', 'UserController::verify');
 $routes->get('logout/', 'UserController::logout');
+$routes->post('user/recovery', 'UserController::recovery');
 $routes->put('user/(:uuid)', 'UserController::update/$1');
 
 // Rutas del negocio
