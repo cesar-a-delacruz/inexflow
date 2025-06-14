@@ -1,5 +1,4 @@
-<!-- llamando un helper -->
-<?php helper('BreabCrumb'); ?>
+<?php helper('bread_crumb') ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -79,7 +78,7 @@
       </nav>
       <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4 py-4">
         <!-- renderisamos la funcion miga de pan que viene del helper -->
-        <?= render_dynamic_breadcrumb(); ?>
+        <?= render_breadcrumb(); ?>
         <?= $this->renderSection('content') ?>
       </main>
     </div>

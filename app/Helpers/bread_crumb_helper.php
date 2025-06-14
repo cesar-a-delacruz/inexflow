@@ -1,19 +1,23 @@
 <?php
 
-if (!function_exists('render_dynamic_breadcrumb')) {
-    function render_dynamic_breadcrumb()
+if (!function_exists('render_breadcrumb')) {
+    /**
+     * Renderiza un Bread Crumb. Muestra el directorio actual del sitio web con
+     * etiquetas HTML.
+     */
+    function render_breadcrumb()
     {
         // Obtener segmentos desde el servicio URI
         $segments = service('uri')->getSegments();
 
-        $base = base_url();
-
         if (empty($segments)) {
-            return '<nav aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item active" aria-current="page">Inicio</li></ol></nav>';
+            return '<nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+            </ol></nav>';
         }
 
-        $html = '<nav aria-label="breadcrumb"><ol class="breadcrumb">';
-        $html .= '<li class="breadcrumb-item"><a href="' . $base . '">Inicio</a></li>';
+        $html = '<nav aria-label="breadcrumb" class="bg-light"><ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Inicio</a></li>';
 
         $url = '';
         $last_index = count($segments) - 1;
