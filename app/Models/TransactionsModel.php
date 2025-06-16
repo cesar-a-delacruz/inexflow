@@ -3,13 +3,14 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 use CodeIgniter\Database\ConnectionInterface;
+use App\Entities\Transaction;
 
 class TransactionsModel extends Model
 {
     protected $table            = 'transactions';
-    protected $primaryKey       = 'id';
+    protected $primaryKey       = 'transaction_number';
     protected $useAutoIncrement = true;
-    protected $returnType       = 'object';
+    protected $returnType       = Transaction::class;
 
      protected $allowedFields    = [
         'business_id',
@@ -19,7 +20,6 @@ class TransactionsModel extends Model
         'transaction_date',
         'payment_method',
         'notes',
-        'created_by',
     ];
 
     protected bool $allowEmptyInserts = false;
@@ -33,6 +33,7 @@ class TransactionsModel extends Model
     // protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
+    protected $deletedField  = 'deleted_at';
 
      protected $validationRules = [
         'business_id'      => 'permit_empty|integer',
@@ -56,20 +57,4 @@ class TransactionsModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
-
-    // Relaciones
-    public function business()
-    {
-        return $this->belongsTo(BusinessModel::class, 'business_id');
-    }
-
-    public function categories()
-    {
-        return $this->belongsTo(CategoriesModel::class, 'category_id');
-    }
-
-    public function users()
-    {
-        return $this->belongsTo(UserModel::class, 'created_by');
-    }
 }
