@@ -49,12 +49,14 @@
 </div>
 
 <dialog>
-    <p>¿Estás seguro que deseas eliminar este usuario?</p>
+    <button class="btn btn-secondary btn-sm mb-3" onclick="closeDialog(this, event)">X</button>
+    <h5>Para eliminar este usuario introduce la contraseña del mismo</h5>
     <form action="" method="POST">
         <input type="hidden" name="_method" value="DELETE">
-
-        <button type="submit" class="btn btn-danger btn-sm">Sí</button>
-        <button class="btn btn-danger btn-sm" onclick="closeDialog(this, event)">No</button>
+        
+        <label for="password" class="form-label">Contraseña</label>
+        <input type="text" name="password" id="password" class="form-control mb-3">
+        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
     </form>
 </dialog>
 <script>

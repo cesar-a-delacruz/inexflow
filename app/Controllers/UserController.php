@@ -83,8 +83,10 @@ class UserController extends BaseController
     public function delete($id = null)
     {
         $user = $this->model->find(uuid_to_bytes($id));
-        if ($user->business_id) $this->business_model->deleteBusiness($user->business_id);
-        $this->model->delete(uuid_to_bytes($id));
+        if ($user->verifyPassword($this->request->getPost('password'))) {
+            if ($user->business_id) $this->business_model->deleteBusiness($user->business_id);
+            $this->model->delete(uuid_to_bytes($id));
+        }
         return redirect()->to('users');
     }
     public function activate($id = null) 
