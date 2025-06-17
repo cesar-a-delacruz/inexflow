@@ -23,7 +23,10 @@ class UserController extends BaseController
         session()->set('current_page', 'users');
 
         $data['title'] = 'Usuarios';
-        $data['users'] = $this->model->findAll();
+        $data['users'] = array_values(array_filter(
+            $this->model->findAll(), 
+            function ($user) { return $user->id != session()->get('id'); }
+        ));
         return view('User/index', $data);
     }
     public function login()
