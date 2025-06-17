@@ -84,6 +84,11 @@ class UserController extends BaseController
         $this->model->delete(uuid_to_bytes($id));
         return redirect()->to('users');
     }
+    public function activate($id = null) 
+    {
+        $this->model->toggleActive($id);
+        return redirect()->to('users');
+    }
     public function verify()
     {
         $post = (object) $this->request->getPost(['email', 'password']);

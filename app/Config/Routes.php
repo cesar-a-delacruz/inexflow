@@ -16,6 +16,7 @@ $routes->get('recovery', 'UserController::recovery');
 $routes->post('/', 'UserController::verify');
 $routes->put('user', 'UserController::update');
 $routes->delete('user/(:segment)', 'UserController::delete/$1');
+$routes->put('user/(:segment)/activate', 'UserController::activate/$1');
 $routes->post('users', 'UserController::create');
 $routes->get('logout', 'UserController::logout');
 $routes->post('recovery', 'UserController::recovery');

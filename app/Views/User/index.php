@@ -23,7 +23,14 @@
                         <td><?= $users[$i]->name ?></td>
                         <td><?= $users[$i]->email ?></td>
                         <td><?= $users[$i]->getRoleDisplayName() ?></td>
-                        <td><?= $users[$i]->getIsActiveDisplayName() ?></td>
+                        <td>
+                            <form action="/user/<?= $users[$i]->id ?>/activate" method="POST">
+                                <input type="hidden" name="_method" value="PUT">
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <?= $users[$i]->getIsActiveDisplayName() ?>
+                                </button>
+                            </form>
+                        </td>
                         <td>
                             <button class="btn btn-warning btn-sm"
                             onclick="openDialog('<?= $users[$i]->id ?>')">

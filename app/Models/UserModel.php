@@ -223,7 +223,7 @@ class UserModel extends Model
             return false;
         }
 
-        return $this->update($bytes, ['is_active' => !$user->is_active]);
+        return $this->update($bytes, ['is_active' => intval(!$user->is_active)]);
     }
 
     /**
