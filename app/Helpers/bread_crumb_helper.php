@@ -10,14 +10,8 @@ if (!function_exists('render_breadcrumb')) {
         // Obtener segmentos desde el servicio URI
         $segments = service('uri')->getSegments();
 
-        if (empty($segments)) {
-            return '<nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-            </ol></nav>';
-        }
-
-        $html = '<nav aria-label="breadcrumb" class="bg-light"><ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Inicio</a></li>';
+        $html = '<nav aria-label="breadcrumb" class="bg-light p-lg-3 d-flex align-items-center"><ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"></li>';
 
         $url = '';
         $last_index = count($segments) - 1;
