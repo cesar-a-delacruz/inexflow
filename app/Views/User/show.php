@@ -21,10 +21,8 @@
 
 <button class="edit btn btn-primary" onclick="activateInputs()" >Editar Perfil</button>
 
-<?php if ($user->business == 'NULO'): ?>
+<?php if ($user->business == 'NULO' && $user->role == 'businessman'): ?>
     <a href="/user/business/new" class="btn btn-secondary">Crear Negocio</a>
-<?php else: ?>
-    <a href="/user/business" class="btn btn-secondary">Ver Negocio</a>
 <?php endif; ?>
 
 <script>

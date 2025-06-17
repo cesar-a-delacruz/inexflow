@@ -31,9 +31,11 @@ class BusinessController extends BaseController
         $session_id = session()->get('id');
 
         $data['title'] = 'Información del Negocio';
-        $data['business'] = $this->model->find(uuid_to_bytes(
-            $this->user_model->find(uuid_to_bytes($session_id))->business_id
-        ));
+        $user_business = $this->user_model->find(uuid_to_bytes($session_id))->business_id;
+        if (!$user_business) {
+            return redirect()->to('user/business/new');
+        }
+        $data['business'] = $this->model->find(uuid_to_bytes($user_business));
         return view('Business/show', $data);
     }
     
