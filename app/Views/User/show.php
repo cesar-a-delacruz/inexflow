@@ -2,8 +2,11 @@
 
 <?= $this->section('content') ?>
 <h1><?= $title ?></h1>
-<form action="/user" method="POST">
+<form action="/user" method="POST" novalidate>
     <input type="hidden" name="_method" value="PUT">
+    <?php if (!empty(validation_errors())): ?>
+        <div class="alert alert-danger"><?= validation_list_errors() ?></div>
+    <?php endif; ?>
     
     <div class="field">
         <label for="name" class="form-label">Nombre:</label>
@@ -29,6 +32,8 @@
     function activateInputs() {
         const inputs = document.querySelectorAll('div.field > input');
         for (let i = 0; i < inputs.length - 1; i++) {
+            inputs[i].placeholder = inputs[i].value; 
+            inputs[i].value = ''; 
             inputs[i].disabled = false; 
         }
 

@@ -8,19 +8,20 @@
                     <div class="card-body p-4">
                         <h2 class="card-title text-center mb-4">Iniciar Sesión</h2>
                         
-                        <?php if (session()->getFlashdata('error')): ?>
-                            <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
+                        <?php if (!empty(validation_errors())): ?>
+                            <div class="alert alert-danger"><?= validation_list_errors() ?></div>
                         <?php endif; ?>
 
-                        <form method="POST" action="/">
+                        <form method="POST" action="/" novalidate>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Correo</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
+                                <input type="email" class="form-control" id="email" name="email" 
+                                value="<?= !validation_show_error('email') ? set_value('email') : null ?>">
                             </div>
                             
                             <div class="mb-3">
                                 <label for="password" class="form-label">Contraseña</label>
-                                <input type="password" class="form-control" id="password" name="password" required>
+                                <input type="password" class="form-control" id="password" name="password">
                             </div>
                             
                             <div class="d-flex justify-content-end mb-3">

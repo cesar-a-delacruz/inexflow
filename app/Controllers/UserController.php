@@ -5,15 +5,20 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Entities\User;
 use App\Models\{UserModel, BusinessModel};
+use App\Validation\Validators\UserValidator;
 use Ramsey\Uuid\Uuid;
 
 class UserController extends BaseController
 {
     protected UserModel $model;
     protected BusinessModel $business_model;
+    protected UserValidator $form_validator;
     public function __construct() {
         $this->model = new UserModel();
         $this->business_model = new BusinessModel();
+        $this->form_validator = new UserValidator();
+
+        helper('form');
     }
     
     public function index()
@@ -70,6 +75,10 @@ class UserController extends BaseController
     public function create()
     {
         $post = (object) $this->request->getPost(['name', 'email', 'password', 'role']);
+        if (!$this->validate($this->form_validator->newRules())) {
+            return redirect()->back()->withInput();
+        }
+
         $this->model->createUser(new User([
             'id' => Uuid::uuid3(Uuid::NAMESPACE_URL, strval(($this->model->getStats()['total'] + 1))),
             'business_id' => null,
@@ -83,10 +92,13 @@ class UserController extends BaseController
     public function delete($id = null)
     {
         $user = $this->model->find(uuid_to_bytes($id));
-        if ($user->verifyPassword($this->request->getPost('password'))) {
-            if ($user->business_id) $this->business_model->deleteBusiness($user->business_id);
-            $this->model->delete(uuid_to_bytes($id));
+        
+        if (!$this->validate($this->form_validator->indexRules())) {
+            return redirect()->back()->withInput();
         }
+        if ($user->business_id) $this->business_model->deleteBusiness($user->business_id);
+            $this->model->delete(uuid_to_bytes($id));
+
         return redirect()->to('users');
     }
     public function activate($id = null) 
@@ -98,9 +110,10 @@ class UserController extends BaseController
     {
         $post = (object) $this->request->getPost(['email', 'password']);
         $user = $this->model->findByEmail($post->email);
-        
-        $is_invalid = $this->validateUser($user, $post);
-        if ($is_invalid !== false) return $is_invalid;
+
+        if (!$this->validate($this->form_validator->loginRules())) {
+            return redirect()->back()->withInput();
+        }
 
         $init_page = match ($user->role) {
             'admin' => 'users',
@@ -122,22 +135,20 @@ class UserController extends BaseController
     }
     public function update()
     {
-        $user = new User($this->request->getPost(['name', 'email']));
+        $post = $this->request->getPost(['name', 'email']);
+        $row = [];
+        foreach ($post as $key => $value) {
+            if ($value) $row[$key] = $value;
+        }
+        $user = new User($row);
+        if (!$this->validate($this->form_validator->showRules())) {
+            return redirect()->back()->withInput();
+        }
+
         $this->model->updateUser(session()->get('id'), $user);
         return redirect()->to('user');
     }
 
-    private function validateUser($user, $post) 
-    {
-        if (!$user) {
-            return redirect()->back()->with('error', 'Usuario no encontrado.');
-        } else if (!$user->verifyPassword($post->password)) {
-            return redirect()->back()->with('error', 'Contraseña incorrecta.');
-        } else if (!$user->isActive()) {
-            return redirect()->back()->with('error', 'Cuenta inactiva. Contacte al administrador.');
-        }
-        return false;
-    }
     private function isAdmin() {
         $current_page = session()->get('current_page');
         if ($current_page === null) {
