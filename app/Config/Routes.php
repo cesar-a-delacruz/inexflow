@@ -28,3 +28,9 @@ $routes->get('user/business/new', 'BusinessController::new');
 // otras
 $routes->post('user', 'BusinessController::create');
 $routes->put('user/business', 'BusinessController::update');
+
+// Rutas de Categoría
+//vistas
+$routes->get('categories/new', 'CategoryController::new');
+// otras
+$routes->post('categories', 'CategoryController::create');

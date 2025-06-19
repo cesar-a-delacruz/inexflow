@@ -13,7 +13,7 @@ class CategoriesModel extends Model
     protected $table            = 'categories';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = Categories::Class;
+    protected $returnType       = Categories::class;
     protected $useSoftDeletes   = true;
 
     // protected $protectFields    = true;
@@ -132,7 +132,7 @@ class CategoriesModel extends Model
      /**
      * Verificar si category_num ya existe
      */
-    private function CategoriesCategory_numberExists(string $category_number): ?Categories
+    public function categoryNumberExists(string $category_number): bool
     {
         return $this->where('category_number', $category_number)->countAllResults() > 0;
     }
