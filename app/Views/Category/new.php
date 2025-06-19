@@ -13,17 +13,14 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
                 </div>
             <?php endif; ?>
-            <?php if (session()->getFlashdata('error')): ?>
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <?= session()->getFlashdata('error') ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-                </div>
+            <?php if (!empty(validation_errors())): ?>
+                <div class="alert alert-danger"><?= validation_list_errors() ?></div>
             <?php endif; ?>
 
-            <form action="/categories" method="post">
+            <form action="/categories" method="post" novalidate>
                 <div class="mb-3">
                     <label for="category_number" class="form-label">Número de Categoría</label>
-                    <input type="number" name="category_number" class="form-control" required>
+                    <input type="number" name="category_number" class="form-control">
                 </div>
                 <div class="mb-3">
                     <label for="business_id" class="form-label">Negocio</label>
