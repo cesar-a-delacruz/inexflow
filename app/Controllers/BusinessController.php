@@ -5,15 +5,20 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Entities\Business;
 use App\Models\{BusinessModel, UserModel};
+use App\Validation\Validators\BusinessValidator;
 use Ramsey\Uuid\Uuid;
 
 class BusinessController extends BaseController
 {   
     protected BusinessModel $model;
     protected UserModel $user_model;
+    protected BusinessValidator $form_validator;
     public function __construct() {
         $this->model = new BusinessModel();
         $this->user_model = new UserModel();
+        $this->form_validator = new BusinessValidator();
+
+        helper('form');
     }
 
     public function new()
@@ -44,6 +49,10 @@ class BusinessController extends BaseController
         $post = (object) $this->request->getPost(
             ['business_name', 'owner_name', 'owner_email', 'owner_phone']
         );
+        if (!$this->validate($this->form_validator->newRules())) {
+            return redirect()->back()->withInput();
+        }
+
         $business_id = Uuid::uuid3(Uuid::NAMESPACE_URL, strval(($this->model->getBusinessStats()['total'] + 1)));
         $session_id = session()->get('id');
         $this->model->createBusiness(new Business([
@@ -58,15 +67,22 @@ class BusinessController extends BaseController
         $this->user_model->update(
             uuid_to_bytes($session_id), ['business_id' => uuid_to_bytes($business_id)]
         );
-
         return redirect()->to('user');
     }
     public function update()
     {
-        $business = new Business($this->request->getPost(
+        $post = $this->request->getPost(
             ['business_name', 'owner_name', 'owner_email', 'owner_phone', 'business_id']
-        ));
-        
+        );
+        $row = [];
+        foreach ($post as $key => $value) {
+            if ($value) $row[$key] = $value;
+        }
+
+        $business = new Business($row);
+        if (!$this->validate($this->form_validator->showRules())) {
+            return redirect()->back()->withInput();
+        }
         $this->model->updateBusiness($business->business_id, $business);
         return redirect()->to('user/business');
     }

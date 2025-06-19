@@ -2,9 +2,12 @@
 
 <?= $this->section('content') ?>
 <h1><?= $title ?></h1>
-<form action="/user/business" method="POST">
+<form action="/user/business" method="POST" novalidate>
     <input type="hidden" name="_method" value="PUT">
     <input type="hidden" name="business_id" value="<?= $business->id ?>">
+    <?php if (!empty(validation_errors())): ?>
+        <div class="alert alert-danger"><?= validation_list_errors() ?></div>
+    <?php endif; ?>
     
     <div class="field">
         <label for="business_name" class="form-label">Nombre del Negocio:</label>
@@ -20,7 +23,8 @@
     </div>
     <div class="field">
         <label for="owner_phone" class="form-label">Número del Dueño:</label>
-        <input type="tel" id="owner_phone" name="owner_phone" value="<?= $business->owner_phone ?>" class="form-control" placeholder="66666666" disabled>
+        <input type="tel" id="owner_phone" name="owner_phone" value="<?= $business->owner_phone ?>" 
+        class="form-control" placeholder="66666666" disabled>
     </div>
 </form>
 
@@ -29,6 +33,8 @@
     function activateInputs() {
         const inputs = document.querySelectorAll('div.field > input');
         for (let i = 0; i < inputs.length; i++) {
+            inputs[i].placeholder = inputs[i].value; 
+            inputs[i].value = ''; 
             inputs[i].disabled = false; 
         }
 
