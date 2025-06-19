@@ -76,8 +76,10 @@ class BusinessController extends BaseController
         );
         $row = [];
         foreach ($post as $key => $value) {
+            if ($key == 'business_id') continue;
             if ($value) $row[$key] = $value;
         }
+        if (empty($row)) return redirect()->to('user/business');
 
         $business = new Business($row);
         if (!$this->validate($this->form_validator->showRules())) {

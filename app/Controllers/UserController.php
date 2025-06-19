@@ -140,6 +140,8 @@ class UserController extends BaseController
         foreach ($post as $key => $value) {
             if ($value) $row[$key] = $value;
         }
+        if (empty($row)) return redirect()->to('user');
+
         $user = new User($row);
         if (!$this->validate($this->form_validator->showRules())) {
             return redirect()->back()->withInput();
