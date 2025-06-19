@@ -5,7 +5,6 @@ namespace App\Models;
 use CodeIgniter\Model;
 use App\Entities\Business;
 use CodeIgniter\Database\Exceptions\DatabaseException;
-use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 class BusinessModel extends Model
@@ -17,11 +16,10 @@ class BusinessModel extends Model
     protected $useSoftDeletes = true;
 
     protected $allowedFields = [
-        // 'id',
-        'business_name',
-        'owner_name',
-        'owner_email',
-        'owner_phone',
+        'id',
+        'name',
+        'phone',
+        'owner_id',
         'status',
         'registered_by'
     ];
@@ -33,30 +31,15 @@ class BusinessModel extends Model
     protected $deletedField = 'deleted_at';
 
     protected $validationRules = [
-        'business_name' => 'required|max_length[255]',
-        'owner_name' => 'required|max_length[255]',
-        'owner_email' => 'required|valid_email|max_length[255]',
-        'owner_phone' => 'permit_empty|max_length[50]',
+        'name' => 'required|max_length[255]',
         'status' => 'required|in_list[active,inactive]',
         'registered_by' => 'required'
     ];
 
     protected $validationMessages = [
-        'business_name' => [
+        'name' => [
             'required' => 'El nombre del negocio es requerido',
             'max_length' => 'El nombre del negocio no puede exceder 255 caracteres'
-        ],
-        'owner_name' => [
-            'required' => 'El nombre del propietario es requerido',
-            'max_length' => 'El nombre del propietario no puede exceder 255 caracteres'
-        ],
-        'owner_email' => [
-            'required' => 'El email del propietario es requerido',
-            'valid_email' => 'Debe proporcionar un email válido',
-            'max_length' => 'El email no puede exceder 255 caracteres'
-        ],
-        'owner_phone' => [
-            'max_length' => 'El teléfono no puede exceder 50 caracteres'
         ],
         'status' => [
             'required' => 'El estado es requerido',
@@ -74,10 +57,6 @@ class BusinessModel extends Model
      */
     public function createBusiness(Business $business, $returnID = true): bool|int|UuidInterface
     {
-
-        if ($this->emailExists($business->owner_email)) {
-            throw new \InvalidArgumentException('El email ya está registrado');
-        }
 
         try {
 
@@ -110,11 +89,6 @@ class BusinessModel extends Model
 
         if (!$existing) {
             throw new \InvalidArgumentException('Negocio no encontrado');
-        }
-
-        // Verificar email único (excluyendo el actual)
-        if ($business->owner_email !== $existing->owner_email && $this->emailExists($business->owner_email)) {
-            throw new \InvalidArgumentException('El email ya está registrado');
         }
 
         try {
@@ -157,15 +131,7 @@ class BusinessModel extends Model
      */
     public function searchByName(string $name): array
     {
-        return $this->like('business_name', $name)->findAll();
-    }
-
-    /**
-     * Obtener negocio por email del propietario
-     */
-    public function getBusinessByEmail(string $email): ?Business
-    {
-        return $this->where('owner_email', $email)->first();
+        return $this->like('name', $name)->findAll();
     }
 
     /**
@@ -211,14 +177,6 @@ class BusinessModel extends Model
             'active' => $active,
             'inactive' => $inactive
         ];
-    }
-
-    /**
-     * Verificar si un email ya existe
-     */
-    private function emailExists(string $email): bool
-    {
-        return $this->where('owner_email', $email)->countAllResults() > 0;
     }
 
     /**

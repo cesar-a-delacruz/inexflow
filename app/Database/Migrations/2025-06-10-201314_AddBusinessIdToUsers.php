@@ -20,9 +20,6 @@ class AddBusinessIdToUsers extends Migration
 
         // Agregar foreign key
         $this->forge->addForeignKey('business_id', 'businesses', 'id', 'CASCADE', 'RESTRICT', 'users_business_id_foreign');
-
-        // Agregar unique key compuesto
-        $this->forge->addUniqueKey(['business_id', 'email'], 'uk_business_email');
     }
 
     public function down()

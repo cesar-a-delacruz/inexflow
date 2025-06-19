@@ -67,7 +67,7 @@ class UserController extends BaseController
         $data['title'] = 'Información Personal';
         $user = $this->model->find(uuid_to_bytes($session_id));
         $user->business = ($user->business_id)
-        ? $this->business_model->find(uuid_to_bytes($user->business_id))->business_name : 'NULO';
+        ? $this->business_model->find(uuid_to_bytes($user->business_id))->name : 'NULO';
         $data['user'] = $user;
         return view('User/show', $data);
     }

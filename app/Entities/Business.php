@@ -12,12 +12,11 @@ class Business extends Entity
 
     protected $casts = [
         'id' => 'uuid',
-        'registered_by' => 'uuid',
+        'name' => 'string',
+        'phone' => 'string',
         'status' => 'string',
-        'business_name' => 'string',
-        'owner_name' => 'string',
-        'owner_email' => 'string',
-        'owner_phone' => '?string',
+        'owner_id' => 'uuid',
+        'registered_by' => 'uuid',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => '?datetime',
@@ -25,10 +24,9 @@ class Business extends Entity
 
     protected $attributes = [
         'id' => null,
-        'business_name' => null,
-        'owner_name' => null,
-        'owner_email' => null,
-        'owner_phone' => null,
+        'name' => null,
+        'phone' => null,
+        'owner_id' => null,
         'status' => 'active',
         'registered_by' => null,
     ];

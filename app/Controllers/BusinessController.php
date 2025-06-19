@@ -47,7 +47,7 @@ class BusinessController extends BaseController
     public function create()
     {
         $post = (object) $this->request->getPost(
-            ['business_name', 'owner_name', 'owner_email', 'owner_phone']
+            ['name', 'phone']
         );
         if (!$this->validate($this->form_validator->newRules())) {
             return redirect()->back()->withInput();
@@ -57,10 +57,8 @@ class BusinessController extends BaseController
         $session_id = session()->get('id');
         $this->model->createBusiness(new Business([
             'id' => $business_id,
-            'business_name' => $post->business_name,
-            'owner_name' => $post->owner_name,
-            'owner_email' => $post->owner_email,
-            'owner_phone' => $post->owner_phone,
+            'name' => $post->name,
+            'phone' => $post->phone,
             'registered_by'=> uuid_to_bytes($session_id),
         ]));
 
@@ -72,20 +70,20 @@ class BusinessController extends BaseController
     public function update()
     {
         $post = $this->request->getPost(
-            ['business_name', 'owner_name', 'owner_email', 'owner_phone', 'business_id']
+            ['name', 'phone', 'id']
         );
         $row = [];
         foreach ($post as $key => $value) {
-            if ($key == 'business_id') continue;
+            if ($key == 'id') continue;
             if ($value) $row[$key] = $value;
         }
         if (empty($row)) return redirect()->to('user/business');
-
+        $row['id'] = $this->request->getPost('id');
         $business = new Business($row);
         if (!$this->validate($this->form_validator->showRules())) {
             return redirect()->back()->withInput();
         }
-        $this->model->updateBusiness($business->business_id, $business);
+        $this->model->updateBusiness($business->id, $business);
         return redirect()->to('user/business');
     }
 }

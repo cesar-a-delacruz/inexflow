@@ -4,26 +4,18 @@
 <h1><?= $title ?></h1>
 <form action="/user/business" method="POST" novalidate>
     <input type="hidden" name="_method" value="PUT">
-    <input type="hidden" name="business_id" value="<?= $business->id ?>">
+    <input type="hidden" name="id" value="<?= $business->id ?>">
     <?php if (!empty(validation_errors())): ?>
         <div class="alert alert-danger"><?= validation_list_errors() ?></div>
     <?php endif; ?>
     
     <div class="field">
-        <label for="business_name" class="form-label">Nombre del Negocio:</label>
-        <input type="text" id="business_name" name="business_name" value="<?= $business->business_name ?>" class="form-control" disabled>
+        <label for="name" class="form-label">Nombre del Negocio:</label>
+        <input type="text" id="name" name="name" value="<?= $business->name ?>" class="form-control" disabled>
     </div>
     <div class="field">
-        <label for="owner_name" class="form-label">Nombre del Dueño:</label>
-        <input type="text" id="owner_name" name="owner_name" value="<?= $business->owner_name ?>" class="form-control" disabled>
-    </div>
-    <div class="field">
-        <label for="owner_email" class="form-label">Correo del Dueño:</label>
-        <input type="email" id="owner_email" name="owner_email" value="<?= $business->owner_email ?>" class="form-control" disabled>
-    </div>
-    <div class="field">
-        <label for="owner_phone" class="form-label">Número del Dueño:</label>
-        <input type="tel" id="owner_phone" name="owner_phone" value="<?= $business->owner_phone ?>" 
+        <label for="phone" class="form-label">Número de Teléfono:</label>
+        <input type="tel" id="phone" name="phone" value="<?= $business->phone ?>" 
         class="form-control" placeholder="66666666" disabled>
     </div>
     <div class="field buttons"></div>

@@ -14,24 +14,19 @@ class CreateBusinessesTable extends Migration
                 'constraint'       => 16,
                 'null'       => false,
             ],
-            'business_name' => [
+            'name' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 255,
                 'null'       => false,
             ],
-            'owner_name' => [
+            'phone' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 255,
                 'null'       => false,
             ],
-            'owner_email' => [
-                'type'       => 'VARCHAR',
-                'constraint' => 255,
-                'null'       => false,
-            ],
-            'owner_phone' => [
-                'type'       => 'VARCHAR',
-                'constraint' => 50,
+            'owner_id' => [
+                'type'       => 'BINARY',
+                'constraint' => 16,
                 'null'       => true,
             ],
             'status' => [
@@ -61,8 +56,8 @@ class CreateBusinessesTable extends Migration
 
         $this->forge->addKey('id', true);
         $this->forge->addKey('status', false, false, 'idx_status');
-        $this->forge->addUniqueKey('owner_email', 'idx_owner_email');
         $this->forge->addForeignKey('registered_by', 'users', 'id', 'CASCADE', 'RESTRICT');
+        $this->forge->addForeignKey('owner_id', 'users', 'id', 'CASCADE', 'RESTRICT');
 
         $this->forge->createTable('businesses');
     }

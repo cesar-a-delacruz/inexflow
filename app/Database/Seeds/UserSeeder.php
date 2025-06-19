@@ -23,9 +23,18 @@ class UserSeeder extends Seeder
         ]));
         $model->createUser(new User([
             'id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '2'),
+            'business_id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
+            'name' => 'active owner',
+            'email' => 'active.owner@email.com',
+            'password' => '12345678',
+            'role' => 'businessman',
+            'is_active' => 1,
+        ]));
+        $model->createUser(new User([
+            'id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '3'),
             'business_id' => null,
-            'name' => 'business owner',
-            'email' => 'business.owner@email.com',
+            'name' => 'inactive owner',
+            'email' => 'inactive.owner@email.com',
             'password' => '12345678',
             'role' => 'businessman',
             'is_active' => 0,
