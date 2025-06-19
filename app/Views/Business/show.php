@@ -26,6 +26,7 @@
         <input type="tel" id="owner_phone" name="owner_phone" value="<?= $business->owner_phone ?>" 
         class="form-control" placeholder="66666666" disabled>
     </div>
+    <div class="field buttons"></div>
 </form>
 
 <button class="edit btn btn-primary" onclick="activateInputs()" >Editar Datos</button>
@@ -42,7 +43,14 @@
         butSubmit.type = 'submit';
         butSubmit.className = 'btn btn-primary';
         butSubmit.innerHTML = 'Guardar Cambios';
-        document.querySelector('form').append(butSubmit);
+        const butReload = document.createElement('button');
+        butReload.className = 'btn btn-secondary';
+        butReload.innerHTML = 'Cancelar';
+        butReload.onclick = function(e) { 
+            e.preventDefault();
+            window.location.reload();
+        }
+        document.querySelector('form div.buttons').append(butSubmit, butReload);
         document.querySelector('button.edit').remove();
     }
 </script>
