@@ -55,6 +55,12 @@ class UserController extends BaseController
     {
         $current_page = session()->get('current_page');
         if ($current_page !== null) return redirect()->to($current_page);
+        if ($this->request->getServer('REQUEST_METHOD') == 'POST') {
+            if (!$this->validate($this->form_validator->recoveryRules())) {
+                return redirect()->back()->withInput();
+            }
+            return redirect()->to('/');
+        }
 
         $data['title'] = 'Recuperar Contraseña';
         return view('User/recovery', $data);

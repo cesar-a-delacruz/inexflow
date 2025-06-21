@@ -1,4 +1,4 @@
-<?php helper('bread_crumb') ?>
+<?php helper('breadcrumb') ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
