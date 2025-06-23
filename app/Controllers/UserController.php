@@ -130,7 +130,7 @@ class UserController extends BaseController
 
         $init_page = match ($user->role) {
             'admin' => 'users',
-            'businessman' => $user->business_id ? 'user/business' : 'user'
+            'businessman' => $user->business_id ? 'business' : 'user'
         };
         session()->set([
             'id' => $user->getIdAsString(),

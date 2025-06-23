@@ -23,11 +23,11 @@ $routes->post('recovery', 'UserController::recovery');
 
 // Rutas del negocio
 // vistas
-$routes->get('user/business', 'BusinessController::show');
-$routes->get('user/business/new', 'BusinessController::new');
+$routes->get('business', 'BusinessController::show');
+$routes->get('business/new', 'BusinessController::new');
 // otras
-$routes->post('user', 'BusinessController::create');
-$routes->put('user/business', 'BusinessController::update');
+$routes->post('business', 'BusinessController::create');
+$routes->put('business', 'BusinessController::update');
 
 // Rutas de Categoría
 //vistas

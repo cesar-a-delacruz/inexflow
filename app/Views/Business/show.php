@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 <h1><?= $title ?></h1>
-<form action="/user/business" method="POST" novalidate>
+<form action="/business" method="POST" novalidate>
     <input type="hidden" name="_method" value="PUT">
     <input type="hidden" name="id" value="<?= $business->id ?>">
     <?php if (!empty(validation_errors())): ?>
