@@ -23,15 +23,6 @@
                     <input type="number" name="category_number" class="form-control">
                 </div>
                 <div class="mb-3">
-                    <label for="business_id" class="form-label">Negocio</label>
-                    <select name="business_id" class="form-select" required>
-                        <option value="">-- Seleccione un negocio --</option>
-                        <?php foreach ($businesses as $business): ?>
-                            <option value="<?= $business->id ?>"><?= $business->name ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="mb-3">
                     <label for="name" class="form-label">Nombre</label>
                     <input type="text" name="name" class="form-control" >
                 </div>

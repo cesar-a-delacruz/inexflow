@@ -22,12 +22,6 @@ class CategoryValidator {
                     'is_unique' => 'El nombre ya existe',
                 ],
             ],
-            'business_id' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'El negocio es requerido',
-                ],
-            ],
         ];
     }
 }

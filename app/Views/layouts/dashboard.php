@@ -45,8 +45,8 @@
                 <?= session()->get('name') ?>
               </a>
             </li>
-            <li class="nav-item">
-              <?php if (session()->get('role') == 'admin'): ?>
+            <?php if (session()->get('role') == 'admin'): ?>
+              <li class="nav-item">
                 <a class="nav-link" href="/users" role="button">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list">
@@ -56,16 +56,23 @@
                 </svg>
                   Usuarios
                 </a>
+              </li>
               <?php else: ?>
-                <a class="nav-link" href="/business" role="button">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-briefcase">
-                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-                  Negocio
-                </a>
+                <li class="nav-item">
+                  <a class="nav-link" href="/business" role="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-briefcase">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                    Negocio
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/categories" role="button">
+                    Categorías
+                  </a>
+              </li>
               <?php endif; ?>
-            </li>
           </ul>
         </div>
       </nav>

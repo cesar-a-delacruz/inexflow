@@ -29,7 +29,7 @@ class CategoryController extends BaseController
         if (!user_logged()) return redirect()->to('/');
         else session()->set('current_page', 'categories');
 
-        $categories = $this->model->findAll();
+        $categories = $this->model->getByBusiness(uuid_to_bytes(session()->get('business_id')));
         $data = [
             'title' => 'Categorías de Transacciones',
             'categories' => $categories  
@@ -54,14 +54,13 @@ class CategoryController extends BaseController
 
     public function create()
     {
-        $post = $this->request->getPost(['category_number', 'business_id','name', 'type']);
+        $category = $this->request->getPost(['category_number','name', 'type']);
         if (!$this->validate($this->form_validator->newRules())) {
             return redirect()->back()->withInput();
         }
-        $post['business_id'] = uuid_to_bytes($post['business_id']);
-        
-        $category = new Categories($post);
-        $this->model->createCategories($category);
+        $category['business_id'] = uuid_to_bytes(session()->get('business_id'));
+
+        $this->model->createCategories(new Categories($category));
         return redirect()->to('categories/new')->with('success', 'Categoría creada exitosamente.');
     }
     public function delete($id)
