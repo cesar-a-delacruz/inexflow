@@ -11,7 +11,8 @@ use Ramsey\Uuid\UuidInterface;
 class CategoriesModel extends Model
 {
     protected $table            = 'categories';
-    protected $primaryKey       = 'id';
+    protected $primaryKey       = 'business_id';
+    
     protected $useAutoIncrement = true;
     protected $returnType       = Categories::class;
     protected $useSoftDeletes   = true;
@@ -124,9 +125,9 @@ class CategoriesModel extends Model
     /**
      * Busca un usuario por category_num
      */
-    public function findByCategory_num(string $category_num): ?Categories
+    public function findByCategoryNumber(string $category_number): ?Categories
     {
-        return $this->where('category_num', $category_num)->first();
+        return $this->where('category_number', $category_number)->first();
     }
 
      /**
@@ -181,9 +182,12 @@ class CategoriesModel extends Model
     /**
      * Eliminar categoria (soft delete)
      */
-    public function deleteCategories(UuidInterface|string $id): bool
+    public function deleteCategories(UuidInterface|string $id)
     {
-        return $this->delete(uuid_to_bytes($id));
+        $business_id = substr($id, 0, 36);
+        $category_number = substr($id, 36);
+        $this->where('business_id', uuid_to_bytes($business_id))
+            ->where('category_number', $category_number)->delete();
     }
     /**
      * Restaurar categoría eliminada

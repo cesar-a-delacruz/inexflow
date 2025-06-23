@@ -20,6 +20,15 @@ class CategoryController extends BaseController
         helper('form');
     }
 
+    public function index()
+    {
+        $categories = $this->model->findAll();
+        $data = [
+            'title' => 'Categorías de Transacciones',
+            'categories' => $categories  
+        ];
+        return view('Category/index', $data);
+    }
     public function new()
     {
         $businesses = $this->business_model->findAll();
@@ -41,5 +50,10 @@ class CategoryController extends BaseController
         $category = new Categories($post);
         $this->model->createCategories($category);
         return redirect()->to('categories/new')->with('success', 'Categoría creada exitosamente.');
+    }
+    public function delete($id)
+    {
+        $this->model->deleteCategories($id);
+        return redirect()->to('categories');
     }
 }

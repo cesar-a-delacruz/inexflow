@@ -32,5 +32,7 @@ $routes->put('user/business', 'BusinessController::update');
 // Rutas de Categoría
 //vistas
 $routes->get('categories/new', 'CategoryController::new');
+$routes->get('categories', 'CategoryController::index');
 // otras
 $routes->post('categories', 'CategoryController::create');
+$routes->delete('category/(:segment)', 'CategoryController::delete/$1');

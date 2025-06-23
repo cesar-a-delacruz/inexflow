@@ -34,7 +34,7 @@ class Categories extends Entity
         'uuid' => Cast\UuidCast::class
     ];
 
-     public function isActive(): bool
+    public function isActive(): bool
     {
         return $this->is_active === true;
     }
@@ -42,5 +42,13 @@ class Categories extends Entity
     public function isDeleted(): bool
     {
         return $this->deleted_at !== null;
+    }
+
+    public function getTypeDisplayName(): string
+    {
+        return match ($this->type) {
+            'income' => 'Ingreso',
+            'expense' => 'Gasto'
+        };
     }
 }
