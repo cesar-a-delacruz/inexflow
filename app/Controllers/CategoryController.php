@@ -18,10 +18,17 @@ class CategoryController extends BaseController
         $this->form_validator = new CategoryValidator();
 
         helper('form');
+        helper('session');
     }
 
     public function index()
     {
+        $current_page = session()->get('current_page');
+        if (is_admin() && $current_page) return redirect()->to($current_page);
+
+        if (!user_logged()) return redirect()->to('/');
+        else session()->set('current_page', 'categories');
+
         $categories = $this->model->findAll();
         $data = [
             'title' => 'Categorías de Transacciones',
@@ -31,6 +38,12 @@ class CategoryController extends BaseController
     }
     public function new()
     {
+        $current_page = session()->get('current_page');
+        if (is_admin() && $current_page) return redirect()->to($current_page);
+
+        if (!user_logged()) return redirect()->to('/');
+        else session()->set('current_page', 'categories/new');
+        
         $businesses = $this->business_model->findAll();
         $data = [
             'title' => 'Crear Categoría',

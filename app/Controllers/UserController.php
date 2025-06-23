@@ -19,13 +19,16 @@ class UserController extends BaseController
         $this->form_validator = new UserValidator();
 
         helper('form');
+        helper('session');
     }
     
     public function index()
     {
-        $is_admin = $this->isAdmin();
-        if ($is_admin !== true) return $is_admin;
-        session()->set('current_page', 'users');
+        $current_page = session()->get('current_page');
+        if (!is_admin() && $current_page) return redirect()->to($current_page);
+
+        if (!user_logged()) return redirect()->to('/');
+        else session()->set('current_page', 'users');
 
         $data['title'] = 'Usuarios';
         $data['users'] = array_values(array_filter(
@@ -37,24 +40,27 @@ class UserController extends BaseController
     public function login()
     {
         $current_page = session()->get('current_page');
-        if ($current_page !== null) return redirect()->to($current_page);
+        if (user_logged()) return redirect()->to($current_page);
 
         $data['title'] = 'Iniciar Sesión';
         return view('User/login', $data);
     }
     public function new()
     {
-        $is_admin = $this->isAdmin();
-        if ($is_admin !== true) return $is_admin;
-        session()->set('current_page', 'users/new');
-        
+        $current_page = session()->get('current_page');
+        if (!is_admin() && $current_page) return redirect()->to($current_page);
+
+        if (!user_logged()) return redirect()->to('/');
+        else session()->set('current_page', 'users/new');
+
         $data['title'] = 'Nuevo Usuario';
         return view('User/new', $data);
     }
     public function recovery()
     {
         $current_page = session()->get('current_page');
-        if ($current_page !== null) return redirect()->to($current_page);
+        if (user_logged()) return redirect()->to($current_page);
+
         if ($this->request->getServer('REQUEST_METHOD') == 'POST') {
             if (!$this->validate($this->form_validator->recoveryRules())) {
                 return redirect()->back()->withInput();
@@ -67,13 +73,14 @@ class UserController extends BaseController
     }
     public function show()
     {
-        session()->set('current_page', 'user');
+        if (!user_logged()) return redirect()->to('/');
+        else session()->set('current_page', 'user');
         $session_id = session()->get('id');
         
         $data['title'] = 'Información Personal';
         $user = $this->model->find(uuid_to_bytes($session_id));
-        $user->business = ($user->business_id)
-        ? $this->business_model->find(uuid_to_bytes($user->business_id))->name : 'NULO';
+        $user->business = ($user->role === 'businessman')
+        ? $this->business_model->find(uuid_to_bytes($user->business_id))->name : null;
         $data['user'] = $user;
         return view('User/show', $data);
     }
@@ -155,15 +162,5 @@ class UserController extends BaseController
 
         $this->model->updateUser(session()->get('id'), $user);
         return redirect()->to('user');
-    }
-
-    private function isAdmin() {
-        $current_page = session()->get('current_page');
-        if ($current_page === null) {
-            return redirect()->to('/');
-        } else if (session()->get('role') !== 'admin') {
-            return redirect()->to($current_page);
-        }
-        return true;
     }
 }

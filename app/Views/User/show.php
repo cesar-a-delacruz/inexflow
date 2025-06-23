@@ -16,16 +16,18 @@
         <label for="email" class="form-label">Correo:</label>
         <input type="email" id="email" name="email" value="<?= $user->email ?>" class="form-control" disabled>
     </div>
-    <div class="field">
-        <label for="business" class="form-label">Negocio:</label>
-        <input type="text" id="business" name="business" value="<?= $user->business ?>" class="form-control" disabled>
-    </div>
+    <?php if (!is_admin() && $user->business): ?>
+        <div class="field">
+            <label for="business" class="form-label">Negocio:</label>
+            <input type="text" id="business" name="business" value="<?= $user->business ?>" class="form-control" disabled>
+        </div>
+    <?php endif; ?>
     <div class="field buttons"></div>
 </form>
 
 <button class="edit btn btn-primary" onclick="activateInputs()" >Editar Perfil</button>
 
-<?php if ($user->business == 'NULO' && $user->role == 'businessman'): ?>
+<?php if (!is_admin() && !$user->business): ?>
     <a href="/user/business/new" class="btn btn-secondary">Crear Negocio</a>
 <?php endif; ?>
 
