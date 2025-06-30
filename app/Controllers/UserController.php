@@ -56,6 +56,18 @@ class UserController extends BaseController
         $data['title'] = 'Nuevo Usuario';
         return view('User/new', $data);
     }
+    public function password()
+    {
+        $current_page = session()->get('current_page');
+        if (user_logged()) return redirect()->to($current_page);
+
+        if ($this->request->getServer('REQUEST_METHOD') == 'POST') {
+            return redirect()->to('/');
+        }
+
+        $data['title'] = 'Cambiar Contraseña';
+        return view('User/password', $data);
+    }
     public function recovery()
     {
         $current_page = session()->get('current_page');
@@ -65,10 +77,10 @@ class UserController extends BaseController
             if (!$this->validate($this->form_validator->recoveryRules())) {
                 return redirect()->back()->withInput();
             }
-            return redirect()->to('/');
+            return redirect()->to('token');
         }
 
-        $data['title'] = 'Recuperar Contraseña';
+        $data['title'] = 'Recuperar Cuenta';
         return view('User/recovery', $data);
     }
     public function show()
@@ -84,7 +96,19 @@ class UserController extends BaseController
         $data['user'] = $user;
         return view('User/show', $data);
     }
+    public function token()
+    {
+        $current_page = session()->get('current_page');
+        if (user_logged()) return redirect()->to($current_page);
 
+        if ($this->request->getServer('REQUEST_METHOD') == 'POST') {
+            return redirect()->to('password');
+        }
+
+        $data['title'] = 'Código de Verificación';
+        return view('User/token', $data);
+    }
+    
     public function create()
     {
         $post = (object) $this->request->getPost(['name', 'email', 'password', 'role']);

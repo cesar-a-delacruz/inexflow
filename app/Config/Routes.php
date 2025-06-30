@@ -11,7 +11,9 @@ $routes->get('/', 'UserController::login');
 $routes->get('user', 'UserController::show');
 $routes->get('users', 'UserController::index'); 
 $routes->get('users/new', 'UserController::new');
+$routes->get('password', 'UserController::password');
 $routes->get('recovery', 'UserController::recovery');
+$routes->get('token', 'UserController::token');
 // otras
 $routes->post('/', 'UserController::verify');
 $routes->put('user', 'UserController::update');
@@ -19,7 +21,9 @@ $routes->delete('user/(:segment)', 'UserController::delete/$1');
 $routes->put('user/(:segment)/activate', 'UserController::activate/$1');
 $routes->post('users', 'UserController::create');
 $routes->get('logout', 'UserController::logout');
+$routes->post('password', 'UserController::password');
 $routes->post('recovery', 'UserController::recovery');
+$routes->post('token', 'UserController::token');
 
 // Rutas del negocio
 // vistas
