@@ -4,7 +4,7 @@
     <h1 class="mb-4"><?= $title ?></h1>
     <a href="/categories/new" class="btn btn-primary mb-3">Añadir Categoria</a>
 
-    <table class="table table-bordered">
+    <table id="showtable" class="table table-striped table-hover table-bordered">
         <thead class="table-dark">
             <tr>
                 <th>Número</th>

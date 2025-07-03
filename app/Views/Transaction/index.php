@@ -1,19 +1,13 @@
 <?= $this->extend('layouts/dashboard') ?>
 
 <?= $this->section('content') ?>
-<style>
-  div.dt-container .dt-paging .dt-paging-button:hover {
-    background: #6c757d;
-  }
-</style>  
-
 <div class="container-fluid">
   <h1 class="mb-4"><?= $title ?></h1>
   <button type="button" class="btn btn-primary">Registrar transacciones</button>
 
   <div class="table-responsive" >
-    <table id="showtable" class="table table-striped table-hover table-bordered"  style="min-width: 1000px;">
-      <thead>
+    <table id="showtable" class="table table-striped table-hover table-bordered">
+      <thead class="table-dark">
         <tr>
           <th>Id</th>
           <th>Categoría</th>
