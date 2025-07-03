@@ -33,10 +33,14 @@ $routes->get('business/new', 'BusinessController::new');
 $routes->post('business', 'BusinessController::create');
 $routes->put('business', 'BusinessController::update');
 
-// Rutas de Categoría
+// Rutas de categoríaa
 //vistas
 $routes->get('categories/new', 'CategoryController::new');
 $routes->get('categories', 'CategoryController::index');
 // otras
 $routes->post('categories', 'CategoryController::create');
 $routes->delete('category/(:segment)', 'CategoryController::delete/$1');
+// Rutas de transacciones
+//vistas
+$routes->get('transactions', 'TransactionController::index');
+// otras
