@@ -1,4 +1,2 @@
-  // js para las tablas dinamicas
-  $(document).ready(function(){
-    $('#showtable').DataTable();
-  });
+// js para las tablas dinamicas
+new DataTable('#showtable');
