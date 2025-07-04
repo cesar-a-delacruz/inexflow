@@ -17,7 +17,9 @@
                 <div class="alert alert-danger"><?= validation_list_errors() ?></div>
             <?php endif; ?>
 
-            <form action="/transactions" method="POST" novalidate>
+            <form action="/transaction/<?= $transaction->id ?>" method="POST" novalidate>
+                <input type="hidden" name="_method" value="PUT">
+
                 <div class="mb-3">
                     <label for="description" class="form-label">Descripcion</label>
                     <input type="text" name="description" class="form-control" value="<?= $transaction->description ?>">
@@ -25,7 +27,6 @@
                 <div class="mb-3">
                     <label for="category_number" class="form-label">Categoría</label>
                     <select name="category_number" class="form-select">
-                        <option value="">-- Seleccione una categoría --</option>
                         <?php foreach ($categories as $category): ?>
                             <option value="<?= $category->category_number ?>"
                             <?= $category->category_number === $transaction->category_number ? 'selected' : null ?>>

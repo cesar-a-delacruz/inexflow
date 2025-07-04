@@ -48,3 +48,4 @@ $routes->get('transactions', 'TransactionController::index');
 $routes->get('transactions/new', 'TransactionController::new');
 // otras
 $routes->post('transactions', 'TransactionController::create');
+$routes->put('transaction/(:segment)', 'TransactionController::update/$1');

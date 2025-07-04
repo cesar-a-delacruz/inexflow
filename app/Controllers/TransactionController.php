@@ -84,4 +84,23 @@ class TransactionController extends BaseController
     $this->model->createTransaction(new Transaction($transaction));
     return redirect()->to('transactions/new')->with('success', 'Transacción exitosamente.');
   }
+  public function update($id = null)
+  {
+    $post = $this->request->getPost(
+      ['description','category_number', 'amount', 'payment_method', 'notes']
+    );
+    $row = [];
+    foreach ($post as $key => $value) {
+      if ($value) $row[$key] = $value;
+    }
+    if (empty($row)) return redirect()->to('transactions');
+
+    $transaction = new Transaction($row);
+    if (!$this->validate($this->form_validator->showRules())) {
+      return redirect()->back()->withInput(); 
+    }
+
+    $this->model->update($id, $transaction);
+    return redirect()->to('transactions');
+  }
 }
