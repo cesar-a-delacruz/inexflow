@@ -26,7 +26,7 @@
               <td><?= $i+1 ?></td>
               <td><?= $transactions[$i]->category_name ?></td>
               <td><?= $transactions[$i]->description ?></td>
-              <td><?= '$'.$transactions[$i]->amount ?></td>
+              <td><?= '$'.number_format($transactions[$i]->amount, 2) ?></td>
               <td><?= $transactions[$i]->getMethodDisplayName() ?></td>
               <td><?= $transactions[$i]->transaction_date ?></td>
               <td><?= $transactions[$i]->notes ?></td>
@@ -41,7 +41,7 @@
           <?php endfor; ?>
         <?php else: ?>
           <tr>
-              <td colspan="8" class="text-center">No hay transacciones registradas.</td>
+            <td colspan="8" class="text-center">No hay transacciones registradas.</td>
           </tr>
         <?php endif; ?>
       </tbody>
