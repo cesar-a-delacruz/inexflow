@@ -40,7 +40,10 @@ $routes->get('categories', 'CategoryController::index');
 // otras
 $routes->post('categories', 'CategoryController::create');
 $routes->delete('category/(:segment)', 'CategoryController::delete/$1');
+
 // Rutas de transacciones
 //vistas
 $routes->get('transactions', 'TransactionController::index');
+$routes->get('transactions/new', 'TransactionController::new');
 // otras
+$routes->post('transactions', 'TransactionController::create');
