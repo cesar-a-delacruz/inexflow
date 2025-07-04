@@ -3,18 +3,17 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
-use App\Entities\Categories;
+use App\Entities\Category;
 use CodeIgniter\Database\Exceptions\DatabaseException;
-use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
-class CategoriesModel extends Model
+class CategoryModel extends Model
 {
     protected $table            = 'categories';
     protected $primaryKey       = 'business_id';
     
     protected $useAutoIncrement = true;
-    protected $returnType       = Categories::class;
+    protected $returnType       = Category::class;
     protected $useSoftDeletes   = true;
 
     // protected $protectFields    = true;
@@ -72,7 +71,7 @@ class CategoriesModel extends Model
     /**
      * Crear una nueva categoria con validación de Entity
      */
-     public function createCategories(Categories $categories, $returnID = true): bool|int|UuidInterface
+     public function createCategories(Category $categories, $returnID = true): bool|int|UuidInterface
     {
         // Verificar duplicados
         if ($this->categoryNumberExists($categories->category_number)) {
@@ -101,7 +100,7 @@ class CategoriesModel extends Model
      /**
      * Actualizar una categoria existente
      */
-     public function updateCategories(UuidInterface|string $id, Categories $categories): bool
+     public function updateCategories(UuidInterface|string $id, Category $categories): bool
     {
          $bytes = uuid_to_bytes($id);
 
@@ -125,7 +124,7 @@ class CategoriesModel extends Model
     /**
      * Busca un usuario por category_num
      */
-    public function findByCategoryNumber(string $category_number): ?Categories
+    public function findByCategoryNumber(string $category_number): ?Category
     {
         return $this->where('category_number', $category_number)->first();
     }
@@ -147,7 +146,7 @@ class CategoriesModel extends Model
     }
     /**
      * Obtener categorías por tipo (income/expense)
-     * @return array<Categories>
+     * @return array<Category>
      */
     public function getByType(string $type): array
     {
@@ -156,7 +155,7 @@ class CategoriesModel extends Model
     /**
      * Obtener categorías por negocio
      * @param string|UuidInterface $businessId
-     * @return array<Categories>
+     * @return array<Category>
      */
     public function getByBusiness($businessId): array
     {

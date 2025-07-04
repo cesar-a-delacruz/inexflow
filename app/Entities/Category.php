@@ -3,9 +3,8 @@
 namespace App\Entities;
 
 use CodeIgniter\Entity\Entity;
-use Ramsey\Uuid\Uuid;
 
-class Categories extends Entity
+class Category extends Entity
 {
     protected $datamap = [];
 

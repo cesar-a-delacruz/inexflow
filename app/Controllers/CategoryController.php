@@ -3,17 +3,17 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Entities\Categories;
-use App\Models\{BusinessModel, CategoriesModel};
+use App\Entities\Category;
+use App\Models\{BusinessModel, CategoryModel};
 use App\Validation\Validators\CategoryValidator;
 
 class CategoryController extends BaseController
 {
-    protected CategoriesModel $model;
+    protected CategoryModel $model;
     protected BusinessModel $business_model;
     protected CategoryValidator $form_validator;
     public function __construct() {
-        $this->model = new CategoriesModel();
+        $this->model = new CategoryModel();
         $this->business_model = new BusinessModel();
         $this->form_validator = new CategoryValidator();
 
@@ -60,7 +60,7 @@ class CategoryController extends BaseController
         }
         $category['business_id'] = uuid_to_bytes(session()->get('business_id'));
 
-        $this->model->createCategories(new Categories($category));
+        $this->model->createCategories(new Category($category));
         return redirect()->to('categories/new')->with('success', 'Categoría creada exitosamente.');
     }
     public function delete($id)
