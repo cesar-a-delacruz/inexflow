@@ -13,21 +13,21 @@ class CategorySeeder extends Seeder
     {
         $model = new CategoriesModel();
         $model->createCategories(new Categories([
-            'business_id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '2'),
+            'business_id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
             'category_number' => 1,
             'name' => 'Ventas',
             'type' => 'income',
             'is_active' => 1,
         ]));
         $model->createCategories(new Categories([
-            'business_id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '2'),
+            'business_id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
             'category_number' => 2,
             'name' => 'Gastos Operativos',
             'type' => 'expense',
             'is_active' => 1,
         ]));
         $model->createCategories(new Categories([
-            'business_id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '2'),
+            'business_id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
             'category_number' => 3,
             'name' => 'Costo de Fabricación',
             'type' => 'expense',

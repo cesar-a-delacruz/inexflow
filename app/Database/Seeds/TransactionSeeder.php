@@ -14,7 +14,7 @@ class TransactionSeeder extends Seeder
     {
         $model = new TransactionsModel();
         $model->createTransaction(new Transaction([
-            'business_id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '2'),
+            'business_id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
             'category_number' => 1,
             'amount' => 120.00,
             'description' => 'Pago en Tienda',
@@ -23,7 +23,7 @@ class TransactionSeeder extends Seeder
             'notes' => null,
         ]));
         $model->createTransaction(new Transaction([
-            'business_id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '2'),
+            'business_id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
             'category_number' => 2,
             'amount' => 140.00,
             'description' => 'Renta Mensual',
@@ -32,7 +32,7 @@ class TransactionSeeder extends Seeder
             'notes' => 'Vivienda',
         ]));
         $model->createTransaction(new Transaction([
-            'business_id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '2'),
+            'business_id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
             'category_number' => 3,
             'amount' => 85.50,
             'description' => 'Consulta Médica',
