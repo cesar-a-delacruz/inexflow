@@ -14,7 +14,7 @@ class TransactionController extends BaseController
   public function index()
     {
       $data['title'] = 'Transacciones';
-      $data['transactions'] = $this->model->findAll();
+      $data['transactions'] = $this->model->findAllWithCategory();
       return view('Transaction/index', $data);
     }
 }

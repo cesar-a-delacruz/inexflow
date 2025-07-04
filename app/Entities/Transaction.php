@@ -18,6 +18,7 @@ class Transaction extends Entity
         'created_at'         => null,
         'updated_at'         => null,
         'deleted_at'         => null,
+        'category_name'      => null,
     ];
 
     protected $dates = ['deleted_at', 'created_at', 'updated_at'];
@@ -34,9 +35,19 @@ class Transaction extends Entity
         'created_at'         => 'datetime',
         'updated_at'         => 'datetime',
         'deleted_at'         => '?datetime',
+        'category_name'      => 'string',
     ];
 
     protected $castHandlers = [
         'uuid' => Cast\UuidCast::class
     ];
+
+    public function getMethodDisplayName(): string
+    {
+        return match ($this->payment_method) {
+            'cash' => 'Efectivo',
+            'card' => 'Tarjeta de Débito/Crédito',
+            'transfer' => 'Transferencia Bancaria',
+        };
+    }
 }

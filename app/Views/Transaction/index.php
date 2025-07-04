@@ -13,7 +13,7 @@
           <th>Categoría</th>
           <th>Descripción</th>
           <th>Monto</th>
-          <th>Método de pago</th>
+          <th>Método de Pago</th>
           <th>Fecha</th>
           <th>Notas</th>
           <th>Acciones</th>
@@ -24,10 +24,10 @@
           <?php for ($i = 0; $i < count($transactions); $i++): ?>
             <tr>
               <td><?= $i+1 ?></td>
-              <td><?= $transactions[$i]->category_number ?></td>
+              <td><?= $transactions[$i]->category_name ?></td>
               <td><?= $transactions[$i]->description ?></td>
               <td><?= '$'.$transactions[$i]->amount ?></td>
-              <td><?= $transactions[$i]->payment_method ?></td>
+              <td><?= $transactions[$i]->getMethodDisplayName() ?></td>
               <td><?= $transactions[$i]->transaction_date ?></td>
               <td><?= $transactions[$i]->notes ?></td>
               <td>
@@ -39,11 +39,11 @@
               </td>
             </tr>
           <?php endfor; ?>
-          <?php else: ?>
-              <tr>
-                  <td colspan="6" class="text-center">No hay transacciones registradas.</td>
-              </tr>
-          <?php endif; ?>
+        <?php else: ?>
+          <tr>
+              <td colspan="8" class="text-center">No hay transacciones registradas.</td>
+          </tr>
+        <?php endif; ?>
       </tbody>
     </table>
   </div>

@@ -58,9 +58,9 @@ class TransactionsModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-     public function createTransaction(Transaction $transaction, $returnID = true): bool|int
+    public function createTransaction(Transaction $transaction, $returnID = true): bool|int
     {
-         try {
+        try {
 
             $result = $this->insert($transaction);
 
@@ -74,5 +74,12 @@ class TransactionsModel extends Model
             log_message('error', 'Error creando transacción: ' . $e->getMessage());
             throw $e;
         }
+    }
+    public function findAllWithCategory()
+    {
+        $builder =$this->builder();
+        $result =$builder->select('categories.name as category_name, amount, description, transaction_date, payment_method, notes')
+        ->join('categories', 'categories.category_number = transactions.category_number');
+        return $result->get()->getCustomResultObject(\App\Entities\Transaction::class);
     }
 }
