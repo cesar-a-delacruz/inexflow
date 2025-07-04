@@ -4,7 +4,7 @@
 <div class="container-fluid">
   <h1 class="mb-4"><?= $title ?></h1>
   <button type="button" class="btn btn-primary">Registrar transacción</button>
-
+  <a href="/categories" class="btn btn-success">Ver Categorías</a>
   <div class="table-responsive" >
     <table id="showtable" class="table table-striped table-hover table-bordered">
       <thead class="table-dark">
