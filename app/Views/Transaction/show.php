@@ -19,38 +19,44 @@
 
             <form action="/transactions" method="POST" novalidate>
                 <div class="mb-3">
-                    <label for="description" class="form-label">Descripción</label>
-                    <input type="text" name="description" class="form-control">
+                    <label for="description" class="form-label">Descripcion</label>
+                    <input type="text" name="description" class="form-control" value="<?= $transaction->description ?>">
                 </div>
                 <div class="mb-3">
                     <label for="category_number" class="form-label">Categoría</label>
                     <select name="category_number" class="form-select">
                         <option value="">-- Seleccione una categoría --</option>
                         <?php foreach ($categories as $category): ?>
-                            <option value="<?= $category->category_number ?>"><?= $category->name ?></option>
+                            <option value="<?= $category->category_number ?>"
+                            <?= $category->category_number === $transaction->category_number ? 'selected' : null ?>>
+                                <?= $category->name ?>
+                            </option>
                         <?php endforeach; ?>
                     </select>
                 </div>
                 <div class="mb-3">
                     <label for="amount" class="form-label">Monto</label>
-                    <input type="number" name="amount" class="form-control" >
+                    <input type="number" name="amount" class="form-control" value="<?= number_format($transaction->amount, 2) ?>">
                 </div>
                 <div class="mb-3">
                     <label for="payment_method" class="form-label">Método de Pago</label>
                     <select name="payment_method" class="form-select">
-                        <option value="cash">Efectivo</option>
-                        <option value="card">Tarjeta de Débito/Crédito</option>
-                        <option value="transfer">Transferencia Bancaria</option>
+                        <?php foreach ($transaction->getMethods() as $key => $value): ?>
+                            <option value="<?= $key ?>" <?= $key === $transaction->payment_method ? 'selected' : null ?>>
+                                <?= $value ?>
+                            </option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
                 <div class="mb-3">  
                     <div class="form-floating">
-                        <textarea class="form-control" name="notes"></textarea>
+                        <textarea class="form-control" name="notes"><?= $transaction->notes ?></textarea>
                         <label for="notes">Notas</label>
                     </div>
                 </div>
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-success">Registrar</button>
+                <div class="grid text-center">
+                    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                    <a href="/transactions" class="btn btn-secondary">Cancelar</a>
                 </div>
             </form>
         </div>

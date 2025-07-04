@@ -50,4 +50,12 @@ class Transaction extends Entity
             'transfer' => 'Transferencia Bancaria',
         };
     }
+    public function getMethods(): array
+    {
+        return [
+            'cash' => 'Efectivo',
+            'card' => 'Tarjeta de Débito/Crédito',
+            'transfer' => 'Transferencia Bancaria',
+        ];
+    }
 }

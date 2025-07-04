@@ -43,6 +43,7 @@ $routes->delete('category/(:segment)', 'CategoryController::delete/$1');
 
 // Rutas de transacciones
 //vistas
+$routes->get('transaction/(:segment)', 'TransactionController::show/$1');
 $routes->get('transactions', 'TransactionController::index');
 $routes->get('transactions/new', 'TransactionController::new');
 // otras

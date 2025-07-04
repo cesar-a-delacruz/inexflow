@@ -36,34 +36,52 @@ class TransactionController extends BaseController
     return view('Transaction/index', $data);
   }
   public function new()
-    {
-        $current_page = session()->get('current_page');
-        if (is_admin() && $current_page) return redirect()->to($current_page);
+  {
+    $current_page = session()->get('current_page');
+    if (is_admin() && $current_page) return redirect()->to($current_page);
 
-        if (!user_logged()) return redirect()->to('/');
-        else session()->set('current_page', 'transactions/new');
-        
-        $categories = $this->category_model->getByBusiness(uuid_to_bytes(session()->get('business_id')));
-        $data = [
-            'title' => 'Nueva Transacción',
-            'categories' => $categories  
-        ];
-        return view('Transaction/new', $data);
+    if (!user_logged()) return redirect()->to('/');
+    else session()->set('current_page', 'transactions/new');
+    
+    $categories = $this->category_model->getByBusiness(uuid_to_bytes(session()->get('business_id')));
+    $data = [
+        'title' => 'Nueva Transacción',
+        'categories' => $categories  
+    ];
+    return view('Transaction/new', $data);
+  }
+  public function show($id = null)
+  {
+    $current_page = session()->get('current_page');
+    if (is_admin() && $current_page) return redirect()->to($current_page);
+
+    if (!user_logged()) return redirect()->to('/');
+    else session()->set('current_page', 'transactions/new');
+
+    $transaction = $this->model->find($id);
+    $categories = $this->category_model->getByBusiness(uuid_to_bytes(session()->get('business_id')));
+
+    $data = [
+        'title' => 'Información de Transacción',
+        'transaction' => $transaction,
+        'categories' => $categories
+    ];
+    return view('Transaction/show', $data);
+  }
+
+  public function create()
+  {
+    $transaction = $this->request->getPost(
+      ['description','category_number', 'amount', 'payment_method', 'notes']
+    );
+    if (!$this->validate($this->form_validator->newRules())) {
+        return redirect()->back()->withInput();
     }
 
-    public function create()
-    {
-        $transaction = $this->request->getPost(
-          ['description','category_number', 'amount', 'payment_method', 'notes']
-        );
-        if (!$this->validate($this->form_validator->newRules())) {
-            return redirect()->back()->withInput();
-        }
+    $transaction['business_id'] = uuid_to_bytes(session()->get('business_id'));
+    $transaction['transaction_date'] = date('Y-m-d', Time::now()->timestamp);
 
-        $transaction['business_id'] = uuid_to_bytes(session()->get('business_id'));
-        $transaction['transaction_date'] = date('Y-m-d', Time::now()->timestamp);
-
-        $this->model->createTransaction(new Transaction($transaction));
-        return redirect()->to('transactions/new')->with('success', 'Transacción exitosamente.');
-    }
+    $this->model->createTransaction(new Transaction($transaction));
+    return redirect()->to('transactions/new')->with('success', 'Transacción exitosamente.');
+  }
 }
