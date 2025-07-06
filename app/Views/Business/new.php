@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 <h1><?= $title ?></h1>
-<form action="/user" method="POST" novalidate>
+<form action="/business" method="POST" novalidate>
     <?php if (!empty(validation_errors())): ?>
         <div class="alert alert-danger"><?= validation_list_errors() ?></div>
     <?php endif; ?>

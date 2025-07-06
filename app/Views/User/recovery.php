@@ -1,17 +1,4 @@
 <?= $this->extend('layouts/default')?>
-<?php
-helper('reset');
-$email = '';
-$errores_email = [];
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$email = $_POST['email'] ?? '';
-	// Llamar a la función del helper
-	$errores_email = validar_email($email);
-	if (empty($errores_email)) {
-		$email = '';
-	}
-}
-?>
 
 <?= $this->section('content')?>
 <section class="h-100">
@@ -21,19 +8,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				<div class="card shadow-lg">
 					<div class="card-body p-5">
 						<h1 class="fs-4 card-title fw-bold mb-4"><?= $title?></h1>
-						<form method="POST" action="" class="needs-validation" novalidate="" autocomplete="off">
+
+						<?php if (!empty(validation_errors())): ?>
+                            <div class="alert alert-danger"><?= validation_list_errors() ?></div>
+                        <?php endif; ?>
+
+						<form method="POST" action="/recovery" class="needs-validation" novalidate>
 							<div class="mb-3">
 								<label class="mb-2 text-muted" for="password-confirm">Introduzca su Correo</label>
-								<input id="email" type="email" class="form-control <?= !empty($errores_email) ? 'is-invalid' : '' ?>" 
-								name="email" required value="<?= htmlspecialchars($email) ?>">
-								<div class="invalid-feedback">
-									<!-- validando los email -->
-									<?php if (!empty($errores_email)): ?>
-										<?php foreach ($errores_email as $error): ?>
-											<p><?= htmlspecialchars($error) ?></p>
-										<?php endforeach; ?>
-									<?php endif; ?>
-								</div>
+								<input id="email" type="email" 
+								class="form-control <?= !validation_show_error('email') ? 'is-invalid' : '' ?>" name="email">
 							</div>
 							<button type="submit" class="btn btn-primary ms-auto">
 								Recuperar

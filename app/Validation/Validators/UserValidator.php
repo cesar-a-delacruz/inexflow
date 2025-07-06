@@ -68,6 +68,19 @@ class UserValidator {
             ],
         ];
     }
+    public function recoveryRules() {
+        return [
+            'email' => [
+                'rules' => 'required|valid_email|login_email|is_active',
+                'errors' => [
+                    'required' => 'El correo es requerido',
+                    'valid_email' => 'El correo no es válido',
+                    'login_email' => 'Este usuario no existe',
+                    'is_active' => 'Usuario inactivo',
+                ],
+            ],
+        ];
+    }
     public function showRules() {
         return [
             'name' => [

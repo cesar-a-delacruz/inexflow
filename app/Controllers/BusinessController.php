@@ -19,11 +19,16 @@ class BusinessController extends BaseController
         $this->form_validator = new BusinessValidator();
 
         helper('form');
+        helper('session');
     }
 
     public function new()
     {
-        session()->set('current_page', 'user/business/new');
+        $current_page = session()->get('current_page');
+        if (is_admin() && $current_page) return redirect()->to($current_page);
+
+        if (!user_logged()) return redirect()->to('/');
+        else session()->set('current_page', 'user/business/new');
         $session_id = session()->get('id');
 
         $data['title'] = 'Nuevo Negocio';
@@ -32,7 +37,11 @@ class BusinessController extends BaseController
     }
     public function show()
     {
-        session()->set('current_page', 'user/business');
+        $current_page = session()->get('current_page');
+        if (is_admin() && $current_page) return redirect()->to($current_page);
+
+        if (!user_logged()) return redirect()->to('/');
+        else session()->set('current_page', 'user/business');
         $session_id = session()->get('id');
 
         $data['title'] = 'Información del Negocio';

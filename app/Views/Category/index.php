@@ -2,52 +2,42 @@
 <?php $this->section('content') ?>
 <div class="container mt-4">
     <h1 class="mb-4"><?= $title ?></h1>
-    <a href="/users/new" class="btn btn-primary mb-3">Crear Usuario</a>
+    <a href="/categories/new" class="btn btn-primary mb-3">Añadir Categoria</a>
 
     <table id="showtable" class="table table-striped table-hover table-bordered">
         <thead class="table-dark">
             <tr>
-                <th></th>
+                <th>Número</th>
                 <th>Nombre</th>
-                <th>Email</th>
-                <th>Rol</th>
-                <th>Estado</th>
+                <th>Tipo</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            <?php if (!empty($users)): ?>
-                <?php for ($i = 0; $i < count($users); $i++): ?>
+            <?php if (!empty($categories)): ?>
+                <?php for ($i = 0; $i < count($categories); $i++): ?>
                     <tr>
-                        <td><?= $i+1 ?></td>
-                        <td><?= $users[$i]->name ?></td>
-                        <td><?= $users[$i]->email ?></td>
-                        <td><?= $users[$i]->getRoleDisplayName() ?></td>
+                        <td><?= $categories[$i]->category_number ?></td>
+                        <td><?= $categories[$i]->name ?></td>
+                        <td><?= $categories[$i]->getTypeDisplayName() ?></td>
                         <td>
-                            <form action="/user/<?= $users[$i]->id ?>/activate" method="POST">
-                                <input type="hidden" name="_method" value="PUT">
+                            <form action="/category/<?= $categories[$i]->business_id.$categories[$i]->category_number ?>" method="POST">
+                                <input type="hidden" name="_method" value="DELETE">
                                 <button type="submit" class="btn btn-danger btn-sm">
-                                    <?= $users[$i]->getIsActiveDisplayName() ?>
+                                    Eliminar
                                 </button>
                             </form>
-                        </td>
-                        <td>
-                            <button class="btn btn-warning btn-sm"
-                            onclick="openDialog('<?= $users[$i]->id ?>')">
-                                Eliminar
-                            </button>
                         </td>
                     </tr>
                 <?php endfor; ?>
             <?php else: ?>
                 <tr>
-                    <td colspan="6" class="text-center">No hay usuarios registrados.</td>
+                    <td colspan="6" class="text-center">No hay categorias registradas.</td>
                 </tr>
             <?php endif; ?>
         </tbody>
     </table>
 </div>
-
 <dialog class="delete">
     <button class="btn btn-secondary btn-sm mb-3" onclick="closeDialog(this, event)">X</button>
     <h5>Para eliminar este usuario introduce la contraseña del mismo</h5>

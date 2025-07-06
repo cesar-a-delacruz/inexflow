@@ -3,17 +3,17 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
-use App\Entities\Categories;
+use App\Entities\Category;
 use CodeIgniter\Database\Exceptions\DatabaseException;
-use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
-class CategoriesModel extends Model
+class CategoryModel extends Model
 {
     protected $table            = 'categories';
-    protected $primaryKey       = 'id';
+    protected $primaryKey       = 'business_id';
+    
     protected $useAutoIncrement = true;
-    protected $returnType       = Categories::class;
+    protected $returnType       = Category::class;
     protected $useSoftDeletes   = true;
 
     // protected $protectFields    = true;
@@ -71,7 +71,7 @@ class CategoriesModel extends Model
     /**
      * Crear una nueva categoria con validación de Entity
      */
-     public function createCategories(Categories $categories, $returnID = true): bool|int|UuidInterface
+     public function createCategories(Category $categories, $returnID = true): bool|int|UuidInterface
     {
         // Verificar duplicados
         if ($this->categoryNumberExists($categories->category_number)) {
@@ -100,7 +100,7 @@ class CategoriesModel extends Model
      /**
      * Actualizar una categoria existente
      */
-     public function updateCategories(UuidInterface|string $id, Categories $categories): bool
+     public function updateCategories(UuidInterface|string $id, Category $categories): bool
     {
          $bytes = uuid_to_bytes($id);
 
@@ -124,9 +124,9 @@ class CategoriesModel extends Model
     /**
      * Busca un usuario por category_num
      */
-    public function findByCategory_num(string $category_num): ?Categories
+    public function findByCategoryNumber(string $category_number): ?Category
     {
-        return $this->where('category_num', $category_num)->first();
+        return $this->where('category_number', $category_number)->first();
     }
 
      /**
@@ -146,7 +146,7 @@ class CategoriesModel extends Model
     }
     /**
      * Obtener categorías por tipo (income/expense)
-     * @return array<Categories>
+     * @return array<Category>
      */
     public function getByType(string $type): array
     {
@@ -155,7 +155,7 @@ class CategoriesModel extends Model
     /**
      * Obtener categorías por negocio
      * @param string|UuidInterface $businessId
-     * @return array<Categories>
+     * @return array<Category>
      */
     public function getByBusiness($businessId): array
     {
@@ -181,9 +181,12 @@ class CategoriesModel extends Model
     /**
      * Eliminar categoria (soft delete)
      */
-    public function deleteCategories(UuidInterface|string $id): bool
+    public function deleteCategories(UuidInterface|string $id)
     {
-        return $this->delete(uuid_to_bytes($id));
+        $business_id = substr($id, 0, 36);
+        $category_number = substr($id, 36);
+        $this->where('business_id', uuid_to_bytes($business_id))
+            ->where('category_number', $category_number)->delete();
     }
     /**
      * Restaurar categoría eliminada

@@ -3,22 +3,47 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Entities\Categories;
-use App\Models\{BusinessModel, CategoriesModel};
-use CodeIgniter\HTTP\ResponseInterface;
-use Ramsey\Uuid\Uuid;
+use App\Entities\Category;
+use App\Models\{BusinessModel, CategoryModel};
+use App\Validation\Validators\CategoryValidator;
 
 class CategoryController extends BaseController
 {
-    protected CategoriesModel $model;
+    protected CategoryModel $model;
     protected BusinessModel $business_model;
+    protected CategoryValidator $form_validator;
     public function __construct() {
-        $this->model = new CategoriesModel();
+        $this->model = new CategoryModel();
         $this->business_model = new BusinessModel();
-        helper('url');
+        $this->form_validator = new CategoryValidator();
+
+        helper('form');
+        helper('session');
+    }
+
+    public function index()
+    {
+        $current_page = session()->get('current_page');
+        if (is_admin() && $current_page) return redirect()->to($current_page);
+
+        if (!user_logged()) return redirect()->to('/');
+        else session()->set('current_page', 'categories');
+
+        $categories = $this->model->getByBusiness(uuid_to_bytes(session()->get('business_id')));
+        $data = [
+            'title' => 'Categorías de Transacciones',
+            'categories' => $categories  
+        ];
+        return view('Category/index', $data);
     }
     public function new()
     {
+        $current_page = session()->get('current_page');
+        if (is_admin() && $current_page) return redirect()->to($current_page);
+
+        if (!user_logged()) return redirect()->to('/');
+        else session()->set('current_page', 'categories/new');
+        
         $businesses = $this->business_model->findAll();
         $data = [
             'title' => 'Crear Categoría',
@@ -26,35 +51,21 @@ class CategoryController extends BaseController
         ];
         return view('Category/new', $data);
     }
+
     public function create()
     {
-        $post = (object) $this->request->getPost(['category_number', 'business_id','name', 'type']);
-        $post->business_id = Uuid::fromString($post->business_id)->getBytes();
+        $category = $this->request->getPost(['category_number','name', 'type']);
+        if (!$this->validate($this->form_validator->newRules())) {
+            return redirect()->back()->withInput();
+        }
+        $category['business_id'] = uuid_to_bytes(session()->get('business_id'));
 
-        if ($this->model->categoryNumberExists($post->business_id,$post->category_number)) {
-            return redirect()->back()->withInput()->with('error', 'El número de categoría ya está en uso.');
-        }
-        
-        if ($this->model->CategoriesNameExists($post->business_id,$post->name)){
-            return redirect()->back()->withInput()->with('error','El nombre de la categoria ya existe en el negocio');
-        }
-        
-        
-        // Crear entidad
-        $category = new Categories([
-            'business_id' => $post->business_id,
-            'category_number' => $post->category_number,
-            'name' => $post->name,
-            'type' => $post->type,
-            'is_active' => 1, // 1 representa que esta activo 
-        ]);
-
-       
-        try {
-            $this->model->createCategories($category);
-            return redirect()->to('categories/new')->with('success', 'Categoría creada exitosamente.');
-        } catch (\Exception $e) {
-            return redirect()->back()->withInput()->with('error',  $e->getMessage());
-        }
+        $this->model->createCategories(new Category($category));
+        return redirect()->to('categories/new')->with('success', 'Categoría creada exitosamente.');
+    }
+    public function delete($id)
+    {
+        $this->model->deleteCategories($id);
+        return redirect()->to('categories');
     }
 }
