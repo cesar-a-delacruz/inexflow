@@ -11,13 +11,13 @@ class CategoryModel extends Model
 {
     protected $table            = 'categories';
     protected $primaryKey       = 'business_id';
-    
+
     protected $useAutoIncrement = true;
     protected $returnType       = Category::class;
     protected $useSoftDeletes   = true;
 
     // protected $protectFields    = true;
-     protected $allowedFields    = [
+    protected $allowedFields    = [
         'business_id',
         'category_number',
         'name',
@@ -41,8 +41,8 @@ class CategoryModel extends Model
 
     // Validaciones
     protected $validationRules = [
-        'type'        => 'in_list[income,expense]',
-        'category_number' =>'required|integer|is_unique[categories.category_number]',
+        'type'        => 'in_list[income,expense,product]',
+        'category_number' => 'required|integer|is_unique[categories.category_number]',
         'name'            => 'required|string|max_length[255]',
         'business_id' => 'permit_empty',
         'is_active' => 'permit_empty|in_list[0,1]'
@@ -50,12 +50,12 @@ class CategoryModel extends Model
 
     protected $validationMessages   = [
         'type' => [
-            'in_list' => 'solo puede ser income o expense'// ingresos o gastos
+            'in_list' => 'solo puede ser income, expense o product' // ingresos o gastos
         ],
         'category_number' => [
             'required'   => 'El número de categoría es requerido',
             'integer'    => 'El número de categoría debe ser un entero',
-            'is_unique' => 'Este número de categoría ya está registrado' 
+            'is_unique' => 'Este número de categoría ya está registrado'
         ],
         'name' => [
             'required'   => 'El nombre es requerido',
@@ -71,14 +71,14 @@ class CategoryModel extends Model
     /**
      * Crear una nueva categoria con validación de Entity
      */
-     public function createCategories(Category $categories, $returnID = true): bool|int|UuidInterface
+    public function createCategories(Category $categories, $returnID = true): bool|int|UuidInterface
     {
         // Verificar duplicados
         if ($this->categoryNumberExists($categories->category_number)) {
             throw new \InvalidArgumentException('El número de categoría ya está registrado');
         }
 
-         try {
+        try {
 
             if ($categories->id === null) $categories->id = generate_uuid();
 
@@ -95,22 +95,21 @@ class CategoryModel extends Model
             log_message('error', 'Error creando categoría: ' . $e->getMessage());
             throw $e;
         }
-
     }
-     /**
+    /**
      * Actualizar una categoria existente
      */
-     public function updateCategories(UuidInterface|string $id, Category $categories): bool
+    public function updateCategories(UuidInterface|string $id, Category $categories): bool
     {
-         $bytes = uuid_to_bytes($id);
+        $bytes = uuid_to_bytes($id);
 
         $existing = $this->find($bytes);
 
-         if (!$existing) {
+        if (!$existing) {
             throw new \InvalidArgumentException('Categoría no encontrada');
         }
         // Verificar si el número de categoría fue modificado
-        if ($categories->category_number !== $existing->category_number && $this-> categoryNumberExists($categories->category_number)) {
+        if ($categories->category_number !== $existing->category_number && $this->categoryNumberExists($categories->category_number)) {
             throw new \InvalidArgumentException('El nuevo número de categoría ya está en uso');
         }
 
@@ -129,7 +128,7 @@ class CategoryModel extends Model
         return $this->where('category_number', $category_number)->first();
     }
 
-     /**
+    /**
      * Verificar si category_num ya existe
      */
     public function categoryNumberExists(string $category_number): bool
@@ -195,7 +194,7 @@ class CategoryModel extends Model
     {
         return $this->update(uuid_to_bytes($id));
     }
-    
+
     /**
      * Obtener categorías paginadas
      */
@@ -214,6 +213,4 @@ class CategoryModel extends Model
             'total_pages' => ceil($this->countAll() / $perPage)
         ];
     }
-
 }
-

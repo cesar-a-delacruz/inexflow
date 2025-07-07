@@ -27,9 +27,9 @@ class Category extends Entity
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => '?datetime',
-         ];
+    ];
 
-         protected $castHandlers = [
+    protected $castHandlers = [
         'uuid' => Cast\UuidCast::class
     ];
 
@@ -47,7 +47,8 @@ class Category extends Entity
     {
         return match ($this->type) {
             'income' => 'Ingreso',
-            'expense' => 'Gasto'
+            'expense' => 'Gasto',
+            'product' => 'Product',
         };
     }
 }

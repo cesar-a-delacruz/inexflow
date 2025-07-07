@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use CodeIgniter\Model;
@@ -12,7 +13,7 @@ class TransactionsModel extends Model
     protected $useAutoIncrement = true;
     protected $returnType       = Transaction::class;
 
-     protected $allowedFields    = [
+    protected $allowedFields    = [
         'business_id',
         'category_number',
         'amount',
@@ -20,6 +21,7 @@ class TransactionsModel extends Model
         'transaction_date',
         'payment_method',
         'notes',
+        'invoice_id',
     ];
 
     protected bool $allowEmptyInserts = false;
@@ -35,7 +37,7 @@ class TransactionsModel extends Model
     protected $updatedField  = 'updated_at';
     protected $deletedField  = 'deleted_at';
 
-     protected $validationRules = [
+    protected $validationRules = [
         // 'business_id'      => 'permit_empty|integer',
         'category_number'  => 'permit_empty|integer',
         'amount'           => 'required|decimal',
@@ -77,9 +79,9 @@ class TransactionsModel extends Model
     }
     public function findAllWithCategory()
     {
-        $builder =$this->builder();
+        $builder = $this->builder();
         $result = $builder->select('id, categories.name as category_name, amount, description, transaction_date, payment_method, notes')
-        ->join('categories', 'categories.category_number = transactions.category_number')->orderBy('id','ASC');
+            ->join('categories', 'categories.category_number = transactions.category_number')->orderBy('id', 'ASC');
         $transaction = $result->get()->getCustomResultObject(\App\Entities\Transaction::class);
         $result->get()->freeResult();
         return $transaction;
