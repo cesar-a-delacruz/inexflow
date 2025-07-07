@@ -19,6 +19,7 @@ class Transaction extends Entity
         'updated_at'         => null,
         'deleted_at'         => null,
         'category_name'      => null,
+        'invoice_id'         => null,
     ];
 
     protected $dates = ['deleted_at', 'created_at', 'updated_at'];
@@ -36,6 +37,7 @@ class Transaction extends Entity
         'updated_at'         => 'datetime',
         'deleted_at'         => '?datetime',
         'category_name'      => 'string',
+        'invoice_id'         => 'uuid',
     ];
 
     protected $castHandlers = [
