@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateCustomersTable extends Migration
+class CreateContactsTable extends Migration
 {
 
     public function up()
@@ -50,6 +50,11 @@ class CreateCustomersTable extends Migration
                 'default' => true,
                 'null'    => false,
             ],
+            'is_provider' => [
+                'type'    => 'BOOLEAN',
+                'default' => false,
+                'null'    => false,
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => false,
@@ -67,13 +72,14 @@ class CreateCustomersTable extends Migration
         $this->forge->addKey('id', true);
         $this->forge->addKey(['business_id', 'name'], false, false, 'idx_business_customer_name');
         $this->forge->addKey(['business_id', 'is_active'], false, false, 'idx_business_active');
+        $this->forge->addKey(['business_id', 'is_provider'], false, false, 'idx_business_provider');
 
         $this->forge->addForeignKey('business_id', 'businesses', 'id', 'CASCADE', 'RESTRICT');
-        $this->forge->createTable('customers');
+        $this->forge->createTable('contacts');
     }
 
     public function down()
     {
-        $this->forge->dropTable('customers');
+        $this->forge->dropTable('contacts');
     }
 }

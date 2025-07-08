@@ -13,7 +13,7 @@ class PaymentReceipt extends Entity
     protected $casts = [
         'id' => 'uuid',
         'business_id' => 'uuid',
-        'customer_id' => 'uuid',
+        'contact_id' => 'uuid',
         'account_receivable_id' => '?uuid',
         'amount' => 'decimal',
         'payment_method' => 'string',
@@ -27,7 +27,7 @@ class PaymentReceipt extends Entity
     protected $attributes = [
         'id' => null,
         'business_id' => null,
-        'customer_id' => null,
+        'contact_id' => null,
         'account_receivable_id' => null,
         'amount' => null,
         'payment_method' => null,

@@ -13,7 +13,7 @@ class AccountsReceivable extends Entity
     protected $casts = [
         'id' => 'uuid',
         'business_id' => 'uuid',
-        'customer_id' => 'uuid',
+        'contact_id' => 'uuid',
         'invoice_id' => 'uuid',
         'original_amount' => 'decimal',
         'paid_amount' => 'decimal',
@@ -27,7 +27,7 @@ class AccountsReceivable extends Entity
     protected $attributes = [
         'id' => null,
         'business_id' => null,
-        'customer_id' => null,
+        'contact_id' => null,
         'invoice_id' => null,
         'original_amount' => null,
         'paid_amount' => 0.00,

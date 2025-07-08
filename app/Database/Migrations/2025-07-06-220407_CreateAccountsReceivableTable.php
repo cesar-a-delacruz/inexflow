@@ -19,7 +19,7 @@ class CreateAccountsReceivableTable extends Migration
                 'constraint' => 16,
                 'null'       => false,
             ],
-            'customer_id' => [
+            'contact_id' => [
                 'type'       => 'BINARY',
                 'constraint' => 16,
                 'null'       => false,
@@ -68,11 +68,11 @@ class CreateAccountsReceivableTable extends Migration
         $this->forge->addKey('id', true);
         $this->forge->addKey(['business_id', 'status'], false, false, 'idx_business_status');
         $this->forge->addKey(['business_id', 'due_date'], false, false, 'idx_business_due_date');
-        $this->forge->addKey(['business_id', 'customer_id'], false, false, 'idx_business_customer');
+        $this->forge->addKey(['business_id', 'contact_id'], false, false, 'idx_business_contect');
         $this->forge->addUniqueKey(['business_id', 'invoice_id'], 'uk_business_invoice');
 
         $this->forge->addForeignKey('business_id', 'businesses', 'id', 'CASCADE', 'RESTRICT');
-        $this->forge->addForeignKey('customer_id', 'customers', 'id', 'CASCADE', 'RESTRICT');
+        $this->forge->addForeignKey('contact_id', 'contects', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->addForeignKey('invoice_id', 'invoices', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('accounts_receivable');
     }

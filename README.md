@@ -260,3 +260,164 @@ Otros gastos:            $ 95.00 (9%)
                         -----------
 TOTAL:                  $1,050.00
 ```
+
+# Actualizaciones
+
+## Agregar tablas
+
+```sql
+-- Clientes del consumer y providers
+contacts 👌
+- id (PK)
+- business_id (FK → businesses.id)
+- is_providers 
+- name VARCHAR(255) NOT NULL -- nombre del cliente o nombre del contacto
+- email VARCHAR(255)
+- phone VARCHAR(50)
+- address TEXT
+- tax_id VARCHAR(50) -- cédula/RUC del cliente
+- is_active BOOLEAN DEFAULT TRUE
+- is_provider BOOLEAN DEFAULT FALSE
+- created_at TIMESTAMP
+- updated_at TIMESTAMP
+
+-- Productos/servicios del negocio
+products 👌
+- id (PK)
+- business_id (FK → businesses.id)
+- category_id (FK → categories.id) NULL -- categoría de producto
+- name VARCHAR(255) NOT NULL
+- description TEXT
+- sku VARCHAR(100) -- código del producto
+- cost_price DECIMAL(10,2) DEFAULT 0.00 -- precio de costo
+- selling_price DECIMAL(10,2) NOT NULL -- precio de venta
+- is_service BOOLEAN DEFAULT FALSE -- TRUE si es servicio
+- track_inventory BOOLEAN DEFAULT TRUE -- si controla stock
+- current_stock INT DEFAULT 0
+- min_stock_level INT DEFAULT 0 -- para alertas
+- unit_of_measure VARCHAR(20) DEFAULT 'unit' -- unidad, kg, lb, etc.
+- is_active BOOLEAN DEFAULT TRUE
+- created_at TIMESTAMP
+- updated_at TIMESTAMP
+
+-- Movimientos de inventario
+inventory_movements 👌
+- id (PK)
+- business_id (FK → businesses.id)
+- product_id (FK → products.id)
+- movement_type ENUM('in', 'out', 'adjustment')
+- quantity INT NOT NULL
+- unit_cost DECIMAL(10,2) -- costo unitario
+- reference_type ENUM('sale', 'purchase', 'adjustment')
+- reference_id INT -- ID de la factura, compra, etc.
+- notes TEXT
+- created_by (FK → app_users.id)
+- created_at TIMESTAMP
+
+-- Facturas/recibos emitidos
+invoices 👌
+- id (PK)
+- business_id (FK → businesses.id)
+- customer_id (FK → customers.id) NULL -- NULL para venta sin cliente
+- invoice_number VARCHAR(50) NOT NULL -- correlativo por negocio
+- invoice_date DATE NOT NULL
+- due_date DATE -- fecha de vencimiento para crédito
+- subtotal DECIMAL(10,2) NOT NULL
+- tax_amount DECIMAL(10,2) DEFAULT 0.00
+- discount_amount DECIMAL(10,2) DEFAULT 0.00
+- total_amount DECIMAL(10,2) NOT NULL
+- payment_status ENUM('paid', 'pending', 'overdue', 'cancelled') DEFAULT 'paid'
+- payment_method ENUM('cash', 'card', 'transfer', 'credit', 'mixed')
+- notes TEXT
+- created_by (FK → app_users.id)
+- created_at TIMESTAMP
+- updated_at TIMESTAMP
+
+-- Detalle de productos en facturas
+invoice_items 👌
+- id (PK)
+- business_id (FK → businesses.id)
+- invoice_id (FK → invoices.id)
+- product_id (FK → products.id)
+- quantity DECIMAL(8,2) NOT NULL
+- unit_price DECIMAL(10,2) NOT NULL
+- line_total DECIMAL(10,2) NOT NULL
+- created_at TIMESTAMP
+
+-- Cuentas por cobrar (facturas pendientes de pago)
+accounts_receivable 👌
+- id (PK)
+- business_id (FK → businesses.id)
+- contact_id (FK → contacts.id)
+- invoice_id (FK → invoices.id)
+- original_amount DECIMAL(10,2) NOT NULL
+- paid_amount DECIMAL(10,2) DEFAULT 0.00
+- balance_due DECIMAL(10,2) NOT NULL
+- due_date DATE NOT NULL
+- status ENUM('current', 'overdue', 'paid') DEFAULT 'current'
+- created_at TIMESTAMP
+- updated_at TIMESTAMP
+
+-- Cuentas por pagar (deudas con proveedores)
+accounts_payable 👌
+- id (PK)
+- business_id (FK → businesses.id)
+- contact_id (FK → contacts.id)
+- transaction_id (FK → transactions.id) NULL -- relación con gasto
+- invoice_number VARCHAR(100)
+- description VARCHAR(255) NOT NULL
+- original_amount DECIMAL(10,2) NOT NULL
+- paid_amount DECIMAL(10,2) DEFAULT 0.00
+- balance_due DECIMAL(10,2) NOT NULL
+- due_date DATE NOT NULL
+- status ENUM('pending', 'overdue', 'paid') DEFAULT 'pending'
+- created_at TIMESTAMP
+- updated_at TIMESTAMP
+
+-- Pagos recibidos de clientes
+payment_receipts 👌
+- id (PK)
+- business_id (FK → businesses.id)
+- contact_id (FK → contacts.id)
+- account_receivable_id (FK → accounts_receivable.id) NULL
+- amount DECIMAL(10,2) NOT NULL
+- payment_method ENUM('cash', 'card', 'transfer', 'check')
+- payment_date DATE NOT NULL
+- reference VARCHAR(100) -- número de cheque, transferencia
+- notes TEXT
+- created_by (FK → app_users.id)
+- created_at TIMESTAMP
+
+-- Pagos realizados a proveedores
+payment_vouchers
+- id (PK)
+- business_id (FK → businesses.id)
+- contact_id (FK → contacts.id)
+- account_payable_id (FK → accounts_payable.id) NULL
+- amount DECIMAL(10,2) NOT NULL
+- payment_method ENUM('cash', 'card', 'transfer', 'check')
+- payment_date DATE NOT NULL
+- reference VARCHAR(100)
+- notes TEXT
+- created_by (FK → app_users.id)
+- created_at TIMESTAMP
+```
+
+## Actualizar tablas viejas
+
+```sql
+-- Agregar nuevo tipo para productos
+ALTER TABLE categories 
+MODIFY type ENUM('income', 'expense', 'product');
+
+-- Ejemplos de nuevas categorías:
+-- Productos: "Bebidas", "Comida", "Ropa", "Electrónicos"
+-- Servicios: "Reparaciones", "Consultorías", "Mantenimiento"
+``` 
+
+```sql
+-- Agregar relación opcional con facturas
+ALTER TABLE transactions 
+ADD COLUMN invoice_id (FK → invoices.id) NULL;
+-- Para conectar ingresos de Fase 1 con facturas de Fase 2
+```

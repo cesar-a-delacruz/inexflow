@@ -13,7 +13,7 @@ class PaymentVoucher extends Entity
     protected $casts = [
         'id' => 'uuid',
         'business_id' => 'uuid',
-        'supplier_id' => 'uuid',
+        'contact_id' => 'uuid',
         'account_payable_id' => '?uuid',
         'amount' => 'decimal',
         'payment_method' => 'string',
@@ -27,7 +27,7 @@ class PaymentVoucher extends Entity
     protected $attributes = [
         'id' => null,
         'business_id' => null,
-        'supplier_id' => null,
+        'contact_id' => null,
         'account_payable_id' => null,
         'amount' => null,
         'payment_method' => null,
