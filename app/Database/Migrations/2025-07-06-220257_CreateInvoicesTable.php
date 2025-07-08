@@ -19,7 +19,7 @@ class CreateInvoicesTable extends Migration
                 'constraint' => 16,
                 'null'       => false,
             ],
-            'customer_id' => [
+            'contact_id' => [
                 'type'       => 'BINARY',
                 'constraint' => 16,
                 'null'       => true,
@@ -102,7 +102,7 @@ class CreateInvoicesTable extends Migration
         $this->forge->addUniqueKey(['business_id', 'invoice_number'], 'uk_business_invoice_number');
 
         $this->forge->addForeignKey('business_id', 'businesses', 'id', 'CASCADE', 'RESTRICT');
-        $this->forge->addForeignKey('customer_id', 'customers', 'id', 'CASCADE', 'RESTRICT');
+        $this->forge->addForeignKey('contact_id', 'contacts', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->addForeignKey('created_by', 'users', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->createTable('invoices');
     }

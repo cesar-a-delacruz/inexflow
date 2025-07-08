@@ -72,7 +72,7 @@ class CreateAccountsReceivableTable extends Migration
         $this->forge->addUniqueKey(['business_id', 'invoice_id'], 'uk_business_invoice');
 
         $this->forge->addForeignKey('business_id', 'businesses', 'id', 'CASCADE', 'RESTRICT');
-        $this->forge->addForeignKey('contact_id', 'contects', 'id', 'CASCADE', 'RESTRICT');
+        $this->forge->addForeignKey('contact_id', 'contacts', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->addForeignKey('invoice_id', 'invoices', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('accounts_receivable');
     }
