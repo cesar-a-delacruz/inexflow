@@ -13,7 +13,7 @@ class AccountsPayable extends Entity
     protected $casts = [
         'id' => 'uuid',
         'business_id' => 'uuid',
-        'supplier_id' => 'uuid',
+        'contact_id' => 'uuid',
         'transaction_id' => '?int',
         'invoice_number' => '?string',
         'description' => 'string',
@@ -29,7 +29,7 @@ class AccountsPayable extends Entity
     protected $attributes = [
         'id' => null,
         'business_id' => null,
-        'supplier_id' => null,
+        'contact_id' => null,
         'transaction_id' => null,
         'invoice_number' => null,
         'description' => null,

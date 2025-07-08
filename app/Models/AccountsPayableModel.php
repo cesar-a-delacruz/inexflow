@@ -18,7 +18,7 @@ class AccountsPayableModel extends Model
     protected $allowedFields = [
         'id',
         'business_id',
-        'supplier_id',
+        'contact_id',
         'transaction_id',
         'invoice_number',
         'description',
@@ -38,7 +38,7 @@ class AccountsPayableModel extends Model
     protected $validationRules = [
         'id' => 'required',
         'business_id' => 'required',
-        'supplier_id' => 'required',
+        'contact_id' => 'required',
         'transaction_id' => 'permit_empty|integer',
         'invoice_number' => 'permit_empty|max_length[100]',
         'description' => 'required|max_length[255]',
@@ -56,7 +56,7 @@ class AccountsPayableModel extends Model
         'business_id' => [
             'required' => 'El ID del negocio es requerido',
         ],
-        'supplier_id' => [
+        'contact_id' => [
             'required' => 'El ID del proveedor es requerido',
         ],
         'transaction_id' => [
@@ -143,7 +143,7 @@ class AccountsPayableModel extends Model
     public function getAccountsPayableBySupplier(UuidInterface|string $businessId, UuidInterface|string $supplierId): array
     {
         return $this->where('business_id', uuid_to_bytes($businessId))
-            ->where('supplier_id', uuid_to_bytes($supplierId))
+            ->where('contact_id', uuid_to_bytes($supplierId))
             ->findAll();
     }
 
@@ -291,8 +291,8 @@ class AccountsPayableModel extends Model
                 COUNT(ap.id) as total_accounts,
                 SUM(ap.balance_due) as total_debt,
                 AVG(ap.balance_due) as avg_debt
-            FROM suppliers s
-            LEFT JOIN accounts_payable ap ON s.id = ap.supplier_id 
+            FROM contacts s
+            LEFT JOIN accounts_payable ap ON s.id = ap.contact_id 
                 AND ap.business_id = ? 
                 AND ap.status != 'paid'
             WHERE s.business_id = ?

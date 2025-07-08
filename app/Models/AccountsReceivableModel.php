@@ -18,7 +18,7 @@ class AccountsReceivableModel extends Model
     protected $allowedFields = [
         'id',
         'business_id',
-        'customer_id',
+        'contact_id',
         'invoice_id',
         'original_amount',
         'paid_amount',
@@ -36,7 +36,7 @@ class AccountsReceivableModel extends Model
     protected $validationRules = [
         'id' => 'required',
         'business_id' => 'required',
-        'customer_id' => 'required',
+        'contact_id' => 'required',
         'invoice_id' => 'required',
         'original_amount' => 'required|decimal|greater_than[0]',
         'paid_amount' => 'permit_empty|decimal|greater_than_equal_to[0]',
@@ -52,7 +52,7 @@ class AccountsReceivableModel extends Model
         'business_id' => [
             'required' => 'El ID del negocio es requerido',
         ],
-        'customer_id' => [
+        'contact_id' => [
             'required' => 'El ID del cliente es requerido',
         ],
         'invoice_id' => [
@@ -133,7 +133,7 @@ class AccountsReceivableModel extends Model
     public function getAccountsByCustomer(UuidInterface|string $businessId, UuidInterface|string $customerId): array
     {
         return $this->where('business_id', uuid_to_bytes($businessId))
-            ->where('customer_id', uuid_to_bytes($customerId))
+            ->where('contact_id', uuid_to_bytes($customerId))
             ->findAll();
     }
 
@@ -240,8 +240,8 @@ class AccountsReceivableModel extends Model
             $query->where('status', $filters['status']);
         }
 
-        if (!empty($filters['customer_id'])) {
-            $query->where('customer_id', uuid_to_bytes($filters['customer_id']));
+        if (!empty($filters['contact_id'])) {
+            $query->where('contact_id', uuid_to_bytes($filters['contact_id']));
         }
 
         if (!empty($filters['due_date_from'])) {

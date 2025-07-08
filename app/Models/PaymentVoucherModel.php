@@ -18,7 +18,7 @@ class PaymentVoucherModel extends Model
     protected $allowedFields = [
         'id',
         'business_id',
-        'supplier_id',
+        'contact_id',
         'account_payable_id',
         'amount',
         'payment_method',
@@ -36,7 +36,7 @@ class PaymentVoucherModel extends Model
 
     protected $validationRules = [
         'business_id' => 'required',
-        'supplier_id' => 'required',
+        'contact_id' => 'required',
         'amount' => 'required|decimal|greater_than[0]',
         'payment_method' => 'required|in_list[cash,card,transfer,check]',
         'payment_date' => 'required|valid_date',
@@ -47,7 +47,7 @@ class PaymentVoucherModel extends Model
         'business_id' => [
             'required' => 'El ID del negocio es requerido',
         ],
-        'supplier_id' => [
+        'contact_id' => [
             'required' => 'El ID del proveedor es requerido',
         ],
         'amount' => [
@@ -116,7 +116,7 @@ class PaymentVoucherModel extends Model
      */
     public function getVouchersBySupplier(UuidInterface|string $supplierId): array
     {
-        return $this->where('supplier_id', uuid_to_bytes($supplierId))->findAll();
+        return $this->where('contact_id', uuid_to_bytes($supplierId))->findAll();
     }
 
     /**

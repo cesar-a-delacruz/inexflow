@@ -19,7 +19,7 @@ class CreatePaymentVouchersTable extends Migration
                 'constraint' => 16,
                 'null'       => false,
             ],
-            'supplier_id' => [
+            'contact_id' => [
                 'type'       => 'BINARY',
                 'constraint' => 16,
                 'null'       => false,
@@ -66,10 +66,10 @@ class CreatePaymentVouchersTable extends Migration
 
         $this->forge->addKey('id', true);
         $this->forge->addKey(['business_id', 'payment_date'], false, false, 'idx_business_payment_date');
-        $this->forge->addKey(['business_id', 'supplier_id'], false, false, 'idx_business_supplier');
+        $this->forge->addKey(['business_id', 'contact_id'], false, false, 'idx_business_contact');
 
         $this->forge->addForeignKey('business_id', 'businesses', 'id', 'CASCADE', 'RESTRICT');
-        $this->forge->addForeignKey('supplier_id', 'suppliers', 'id', 'CASCADE', 'RESTRICT');
+        $this->forge->addForeignKey('contact_id', 'contacts', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->addForeignKey('account_payable_id', 'accounts_payable', 'id', 'CASCADE', 'SET NULL');
         $this->forge->addForeignKey('created_by', 'users', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->createTable('payment_vouchers');

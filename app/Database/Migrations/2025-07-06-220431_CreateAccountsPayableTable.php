@@ -19,7 +19,7 @@ class CreateAccountsPayableTable extends Migration
                 'constraint' => 16,
                 'null'       => false,
             ],
-            'supplier_id' => [
+            'contact_id' => [
                 'type'       => 'BINARY',
                 'constraint' => 16,
                 'null'       => false,
@@ -80,10 +80,10 @@ class CreateAccountsPayableTable extends Migration
         $this->forge->addKey('id', true);
         $this->forge->addKey(['business_id', 'status'], false, false, 'idx_business_status');
         $this->forge->addKey(['business_id', 'due_date'], false, false, 'idx_business_due_date');
-        $this->forge->addKey(['business_id', 'supplier_id'], false, false, 'idx_business_supplier');
+        $this->forge->addKey(['business_id', 'contact_id'], false, false, 'idx_business_contact');
 
         $this->forge->addForeignKey('business_id', 'businesses', 'id', 'CASCADE', 'RESTRICT');
-        $this->forge->addForeignKey('supplier_id', 'suppliers', 'id', 'CASCADE', 'RESTRICT');
+        $this->forge->addForeignKey('contact_id', 'contacts', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->addForeignKey('transaction_id', 'transactions', 'id', 'CASCADE', 'SET NULL');
         $this->forge->createTable('accounts_payable');
     }

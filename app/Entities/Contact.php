@@ -4,7 +4,7 @@ namespace App\Entities;
 
 use CodeIgniter\Entity\Entity;
 
-class Supplier extends Entity
+class Contact extends Entity
 {
     protected $datamap = [];
 
@@ -14,12 +14,12 @@ class Supplier extends Entity
         'id' => 'uuid',
         'business_id' => 'uuid',
         'name' => 'string',
-        'contact_person' => 'string',
         'email' => 'string',
         'phone' => 'string',
         'address' => 'string',
         'tax_id' => 'string',
         'is_active' => 'boolean',
+        'is_provider' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => '?datetime',
@@ -29,12 +29,12 @@ class Supplier extends Entity
         'id' => null,
         'business_id' => null,
         'name' => null,
-        'contact_person' => null,
         'email' => null,
         'phone' => null,
         'address' => null,
         'tax_id' => null,
         'is_active' => true,
+        'is_provider' => false,
     ];
 
     protected $castHandlers = [

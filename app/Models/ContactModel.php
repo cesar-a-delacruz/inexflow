@@ -2,27 +2,27 @@
 
 namespace App\Models;
 
+use App\Entities\Contact;
 use CodeIgniter\Model;
-use App\Entities\Supplier;
 
-class SupplierModel extends Model
+class ContactModel extends Model
 {
-    protected $table = 'suppliers';
+    protected $table = 'customers';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = false;
-    protected $returnType = Supplier::class;
+    protected $returnType = Contact::class;
     protected $useSoftDeletes = true;
 
     protected $allowedFields = [
         'id',
         'business_id',
         'name',
-        'contact_person',
         'email',
         'phone',
         'address',
         'tax_id',
-        'is_active'
+        'is_active',
+        'is_provider'
     ];
 
     protected $useTimestamps = true;
@@ -34,11 +34,11 @@ class SupplierModel extends Model
     protected $validationRules = [
         'business_id' => 'required',
         'name' => 'required|max_length[255]',
-        'contact_person' => 'permit_empty|max_length[255]',
         'email' => 'permit_empty|valid_email|max_length[255]',
         'phone' => 'permit_empty|max_length[50]',
         'tax_id' => 'permit_empty|max_length[50]',
-        'is_active' => 'required|in_list[0,1]'
+        'is_active' => 'required|in_list[0,1]',
+        'is_provider' => 'required|in_list[0,1]',
     ];
 
     protected $validationMessages = [
@@ -46,11 +46,8 @@ class SupplierModel extends Model
             'required' => 'El ID del negocio es requerido'
         ],
         'name' => [
-            'required' => 'El nombre del proveedor es requerido',
+            'required' => 'El nombre del cliente es requerido',
             'max_length' => 'El nombre no puede exceder 255 caracteres'
-        ],
-        'contact_person' => [
-            'max_length' => 'El contacto no puede exceder 255 caracteres'
         ],
         'email' => [
             'valid_email' => 'El email debe tener un formato válido',
@@ -60,12 +57,16 @@ class SupplierModel extends Model
             'max_length' => 'El teléfono no puede exceder 50 caracteres'
         ],
         'tax_id' => [
-            'max_length' => 'El RUC no puede exceder 50 caracteres'
+            'max_length' => 'La cédula/RUC no puede exceder 50 caracteres'
         ],
         'is_active' => [
             'required' => 'El estado es requerido',
             'in_list' => 'El estado debe ser 0 o 1'
-        ]
+        ],
+        'is_privider' => [
+            'required' => 'El si es proveedor es requerido',
+            'in_list' => 'El si es proveedor debe ser 0 o 1'
+        ],
     ];
 
     protected $skipValidation = false;

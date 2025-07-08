@@ -18,7 +18,7 @@ class PaymentReceiptModel extends Model
     protected $allowedFields = [
         'id',
         'business_id',
-        'customer_id',
+        'contact_id',
         'account_receivable_id',
         'amount',
         'payment_method',
@@ -36,7 +36,7 @@ class PaymentReceiptModel extends Model
 
     protected $validationRules = [
         'business_id' => 'required',
-        'customer_id' => 'required',
+        'contact_id' => 'required',
         'amount' => 'required|decimal|greater_than[0]',
         'payment_method' => 'required|in_list[cash,card,transfer,check]',
         'payment_date' => 'required|valid_date',
@@ -47,7 +47,7 @@ class PaymentReceiptModel extends Model
         'business_id' => [
             'required' => 'El ID del negocio es requerido',
         ],
-        'customer_id' => [
+        'contact_id' => [
             'required' => 'El ID del cliente es requerido',
         ],
         'amount' => [
@@ -116,7 +116,7 @@ class PaymentReceiptModel extends Model
      */
     public function getReceiptsByCustomer(UuidInterface|string $customerId): array
     {
-        return $this->where('customer_id', uuid_to_bytes($customerId))->findAll();
+        return $this->where('contact_id', uuid_to_bytes($customerId))->findAll();
     }
 
     /**
