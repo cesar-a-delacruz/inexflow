@@ -16,7 +16,7 @@ class InvoiceModel extends Model
     protected $allowedFields = [
         'id',
         'business_id',
-        'customer_id',
+        'contact_id',
         'invoice_number',
         'invoice_date',
         'due_date',

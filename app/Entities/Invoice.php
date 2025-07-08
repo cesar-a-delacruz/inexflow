@@ -13,7 +13,7 @@ class Invoice extends Entity
     protected $casts = [
         'id' => 'uuid',
         'business_id' => 'uuid',
-        'customer_id' => 'uuid',
+        'contact_id' => 'uuid',
         'invoice_number' => 'string',
         'invoice_date' => 'datetime',
         'due_date' => '?datetime',
@@ -33,7 +33,7 @@ class Invoice extends Entity
     protected $attributes = [
         'id' => null,
         'business_id' => null,
-        'customer_id' => null,
+        'contact_id' => null,
         'invoice_number' => null,
         'invoice_date' => null,
         'due_date' => null,
