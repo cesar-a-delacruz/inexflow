@@ -44,4 +44,12 @@ class Item extends Entity
     protected $castHandlers = [
         'uuid' => Cast\UuidCast::class
     ];
+
+    public function getTypeDisplayName(): string
+    {
+        return match ($this->type) {
+            'service' => 'Servicio',
+            'product' => 'Producto  ',
+        };
+    }
 }
