@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateProductsTable extends Migration
+class CreateItemsTable extends Migration
 {
     public function up()
     {
@@ -31,17 +31,13 @@ class CreateProductsTable extends Migration
                 'constraint' => 255,
                 'null'       => false,
             ],
-            'description' => [
-                'type' => 'TEXT',
-                'null' => true,
+            'type' => [
+                'type'    => 'ENUM',
+                'constraint' => ['product', 'service'],
+                'default'    => 'product',
+                'null'    => false,
             ],
-            'sku' => [
-                'type'       => 'VARCHAR',
-                'constraint' => 100,
-                'null'       => true,
-                'comment'    => 'Código del producto'
-            ],
-            'cost_price' => [
+            'cost' => [
                 'type'       => 'DECIMAL',
                 'constraint' => '10,2',
                 'default'    => 0.00,
@@ -51,37 +47,24 @@ class CreateProductsTable extends Migration
             'selling_price' => [
                 'type'       => 'DECIMAL',
                 'constraint' => '10,2',
-                'null'       => false,
+                'null'       => true,
                 'comment'    => 'Precio de venta'
-            ],
-            'is_service' => [
-                'type'    => 'BOOLEAN',
-                'default' => false,
-                'null'    => false,
-                'comment' => 'TRUE si es servicio'
-            ],
-            'track_inventory' => [
-                'type'    => 'BOOLEAN',
-                'default' => true,
-                'null'    => false,
-                'comment' => 'Si controla stock'
             ],
             'current_stock' => [
                 'type'    => 'INT',
                 'default' => 0,
-                'null'    => false,
+                'null'    => true,
             ],
-            'min_stock_level' => [
+            'min_stock' => [
                 'type'    => 'INT',
                 'default' => 0,
-                'null'    => false,
+                'null'    => true,
                 'comment' => 'Para alertas'
             ],
-            'unit_of_measure' => [
+            'measure_unit' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 20,
-                'default'    => 'unit',
-                'null'       => false,
+                'null'       => true,
                 'comment'    => 'unidad, kg, lb, etc.'
             ],
             'is_active' => [
@@ -107,15 +90,14 @@ class CreateProductsTable extends Migration
         $this->forge->addKey(['business_id', 'name'], false, false, 'idx_business_product_name');
         $this->forge->addKey(['business_id', 'is_active'], false, false, 'idx_business_product_active');
         $this->forge->addKey(['business_id', 'current_stock'], false, false, 'idx_business_stock');
-        $this->forge->addUniqueKey(['business_id', 'sku'], 'uk_business_sku');
 
         $this->forge->addForeignKey('business_id', 'businesses', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->addForeignKey(['business_id', 'category_number'], 'categories', ['business_id', 'category_number'], 'CASCADE', 'RESTRICT', 'fk_product_category');
-        $this->forge->createTable('products');
+        $this->forge->createTable('items');
     }
 
     public function down()
     {
-        $this->forge->dropTable('products');
+        $this->forge->dropTable('items');
     }
 }

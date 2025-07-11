@@ -4,7 +4,7 @@ namespace App\Entities;
 
 use CodeIgniter\Entity\Entity;
 
-class Product extends Entity
+class Item extends Entity
 {
     protected $datamap = [];
 
@@ -15,15 +15,12 @@ class Product extends Entity
         'business_id' => 'uuid',
         'category_number' => 'int',
         'name' => 'string',
-        'description' => 'string',
-        'sku' => 'string',
-        'cost_price' => 'decimal',
-        'selling_price' => 'decimal',
-        'is_service' => 'boolean',
-        'track_inventory' => 'boolean',
+        'type' => 'string',
+        'cost' => 'float',
+        'selling_price' => 'float',
         'current_stock' => 'int',
-        'min_stock_level' => 'int',
-        'unit_of_measure' => 'string',
+        'min_stock' => 'int',
+        'measure_unit' => 'string',
         'is_active' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
@@ -35,15 +32,12 @@ class Product extends Entity
         'business_id' => null,
         'category_number' => null,
         'name' => null,
-        'description' => null,
-        'sku' => null,
-        'cost_price' => 0.00,
+        'type' => 'product',
+        'cost' => 0.00,
         'selling_price' => null,
-        'is_service' => false,
-        'track_inventory' => true,
         'current_stock' => 0,
-        'min_stock_level' => 0,
-        'unit_of_measure' => 'unit',
+        'min_stock' => 0,
+        'measure_unit' => 'unit',
         'is_active' => true,
     ];
 
