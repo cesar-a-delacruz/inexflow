@@ -80,9 +80,9 @@ class TransactionsModel extends Model
     public function findAllWithCategory()
     {
         $builder = $this->builder();
-        $result = $builder->select('id, categories.name as category_name, amount, description, transaction_date, payment_method, notes')
+        $result = $builder->select('categories.name as category_name, transactions.*')
             ->join('categories', 'categories.category_number = transactions.category_number')->orderBy('id', 'ASC');
-        $transaction = $result->get()->getCustomResultObject(\App\Entities\Transaction::class);
+        $transaction = $result->get()->getCustomResultObject($this->returnType);
         $result->get()->freeResult();
         return $transaction;
     }
