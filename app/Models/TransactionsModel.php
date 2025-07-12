@@ -15,12 +15,10 @@ class TransactionsModel extends Model
 
     protected $allowedFields    = [
         'business_id',
-        'category_number',
-        'amount',
         'description',
-        'transaction_date',
-        'payment_method',
-        'notes',
+        'category',
+        'amount',
+        'subtotal',
         'invoice_id',
     ];
 
@@ -39,10 +37,7 @@ class TransactionsModel extends Model
 
     protected $validationRules = [
         // 'business_id'      => 'permit_empty|integer',
-        'category_number'  => 'permit_empty|integer',
-        'amount'           => 'required|decimal',
-        'transaction_date' => 'required|valid_date',
-        'payment_method'   => 'required|in_list[cash,card,transfer]',
+        'amount'           => 'permit_empty|decimal',
     ];
 
     protected $validationMessages = [];

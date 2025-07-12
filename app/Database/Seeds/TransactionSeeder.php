@@ -14,31 +14,25 @@ class TransactionSeeder extends Seeder
     {
         $model = new TransactionsModel();
         $model->createTransaction(new Transaction([
-            'business_id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
-            'category_number' => 1,
-            'amount' => 120.00,
-            'description' => 'Pago en Tienda',
-            'transaction_date' => '2025-02-28',
-            'payment_method' => 'cash',
-            'notes' => null,
+            'invoice_id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
+            'description' => 'Empanada',
+            'category' => 'Ventas',
+            'amount' => 3,
+            'subtotal' => 1.50,
         ]));
         $model->createTransaction(new Transaction([
-            'business_id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
-            'category_number' => 2,
-            'amount' => 140.00,
-            'description' => 'Renta Mensual',
-            'transaction_date' => '2024-12-31',
-            'payment_method' => 'card',
-            'notes' => 'Vivienda',
+            'invoice_id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '2'),
+            'description' => 'Lavado de auto',
+            'category' => 'Gastos Operativos',
+            'amount' => null,
+            'subtotal' => 20.00,
         ]));
         $model->createTransaction(new Transaction([
-            'business_id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
-            'category_number' => 3,
-            'amount' => 85.50,
-            'description' => 'Consulta Médica',
-            'transaction_date' => '2023-11-09',
-            'payment_method' => 'transfer',
-            'notes' => null,
+            'invoice_id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '3'),
+            'description' => 'Artesanía',
+            'category' => 'Ventas',
+            'amount' => 4,
+            'subtotal' => 30.75,
         ]));
     }
 }

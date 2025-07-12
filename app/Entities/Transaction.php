@@ -8,18 +8,15 @@ class Transaction extends Entity
 {
     protected $attributes = [
         'id' => null,
-        'business_id'        => null,
-        'category_number'    => null,
-        'amount'             => null,
         'description'        => null,
-        'transaction_date'   => null,
-        'payment_method'     => 'cash',
-        'notes'              => null,
+        'category'        => null,
+        'amount'             => null,
+        'total'             => null,
+        'discount'             => null,
+        'invoice_id'         => null,
         'created_at'         => null,
         'updated_at'         => null,
         'deleted_at'         => null,
-        'category_name'      => null,
-        'invoice_id'         => null,
     ];
 
     protected $dates = ['deleted_at', 'created_at', 'updated_at'];
@@ -27,37 +24,17 @@ class Transaction extends Entity
     protected $casts = [
         'id'                 => 'integer',
         'business_id'        => 'uuid',
-        'category_number'    => 'integer',
-        'amount'             => 'float',
+        'category'    => 'string',
         'description'        => 'string',
-        'transaction_date'   => 'string',
-        'payment_method'     => 'string',
-        'notes'              => '?string',
+        'amount'             => 'integer',
+        'subtotal'             => 'float',
+        'invoice_id'         => 'uuid',
         'created_at'         => 'datetime',
         'updated_at'         => 'datetime',
         'deleted_at'         => '?datetime',
-        'category_name'      => 'string',
-        'invoice_id'         => 'uuid',
     ];
 
     protected $castHandlers = [
         'uuid' => Cast\UuidCast::class
     ];
-
-    public function getMethodDisplayName(): string
-    {
-        return match ($this->payment_method) {
-            'cash' => 'Efectivo',
-            'card' => 'Tarjeta de Débito/Crédito',
-            'transfer' => 'Transferencia Bancaria',
-        };
-    }
-    public function getMethods(): array
-    {
-        return [
-            'cash' => 'Efectivo',
-            'card' => 'Tarjeta de Débito/Crédito',
-            'transfer' => 'Transferencia Bancaria',
-        ];
-    }
 }

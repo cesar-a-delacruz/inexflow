@@ -20,14 +20,8 @@ class InvoiceModel extends Model
         'invoice_number',
         'invoice_date',
         'due_date',
-        'subtotal',
-        'tax_amount',
-        'discount_amount',
-        'total_amount',
         'payment_status',
         'payment_method',
-        'notes',
-        'created_by'
     ];
 
     protected $useTimestamps = true;
@@ -41,13 +35,8 @@ class InvoiceModel extends Model
         'invoice_number' => 'required|max_length[50]',
         'invoice_date' => 'required|valid_date',
         'due_date' => 'permit_empty|valid_date',
-        'subtotal' => 'required|decimal',
-        'tax_amount' => 'required|decimal',
-        'discount_amount' => 'required|decimal',
-        'total_amount' => 'required|decimal',
         'payment_status' => 'required|in_list[paid,pending,overdue,cancelled]',
         'payment_method' => 'permit_empty|in_list[cash,card,transfer,credit,mixed]',
-        'created_by' => 'required'
     ];
 
     protected $validationMessages = [
@@ -65,22 +54,6 @@ class InvoiceModel extends Model
         'due_date' => [
             'valid_date' => 'La fecha de vencimiento debe ser válida'
         ],
-        'subtotal' => [
-            'required' => 'El subtotal es requerido',
-            'decimal' => 'El subtotal debe ser un número decimal'
-        ],
-        'tax_amount' => [
-            'required' => 'El monto del impuesto es requerido',
-            'decimal' => 'El monto del impuesto debe ser un número decimal'
-        ],
-        'discount_amount' => [
-            'required' => 'El monto del descuento es requerido',
-            'decimal' => 'El monto del descuento debe ser un número decimal'
-        ],
-        'total_amount' => [
-            'required' => 'El monto total es requerido',
-            'decimal' => 'El monto total debe ser un número decimal'
-        ],
         'payment_status' => [
             'required' => 'El estado de pago es requerido',
             'in_list' => 'El estado de pago debe ser: paid, pending, overdue, cancelled'
@@ -88,9 +61,6 @@ class InvoiceModel extends Model
         'payment_method' => [
             'in_list' => 'El método de pago debe ser: cash, card, transfer, credit, mixed'
         ],
-        'created_by' => [
-            'required' => 'El usuario creador es requerido'
-        ]
     ];
 
     protected $skipValidation = false;

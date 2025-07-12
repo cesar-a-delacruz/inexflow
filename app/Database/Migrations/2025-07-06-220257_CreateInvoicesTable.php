@@ -14,6 +14,12 @@ class CreateInvoicesTable extends Migration
                 'constraint' => 16,
                 'null'       => false,
             ],
+            'invoice_number' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 50,
+                'null'       => false,
+                'comment'    => 'Correlativo por negocio'
+            ],
             'business_id' => [
                 'type'       => 'BINARY',
                 'constraint' => 16,
@@ -25,43 +31,6 @@ class CreateInvoicesTable extends Migration
                 'null'       => true,
                 'comment'    => 'NULL para venta sin cliente'
             ],
-            'invoice_number' => [
-                'type'       => 'VARCHAR',
-                'constraint' => 50,
-                'null'       => false,
-                'comment'    => 'Correlativo por negocio'
-            ],
-            'invoice_date' => [
-                'type' => 'DATE',
-                'null' => false,
-            ],
-            'due_date' => [
-                'type' => 'DATE',
-                'null' => true,
-                'comment' => 'Fecha de vencimiento para crédito'
-            ],
-            'subtotal' => [
-                'type'       => 'DECIMAL',
-                'constraint' => '10,2',
-                'null'       => false,
-            ],
-            'tax_amount' => [
-                'type'       => 'DECIMAL',
-                'constraint' => '10,2',
-                'default'    => 0.00,
-                'null'       => false,
-            ],
-            'discount_amount' => [
-                'type'       => 'DECIMAL',
-                'constraint' => '10,2',
-                'default'    => 0.00,
-                'null'       => false,
-            ],
-            'total_amount' => [
-                'type'       => 'DECIMAL',
-                'constraint' => '10,2',
-                'null'       => false,
-            ],
             'payment_status' => [
                 'type'       => 'ENUM',
                 'constraint' => ['paid', 'pending', 'overdue', 'cancelled'],
@@ -70,17 +39,17 @@ class CreateInvoicesTable extends Migration
             ],
             'payment_method' => [
                 'type'       => 'ENUM',
-                'constraint' => ['cash', 'card', 'transfer', 'credit', 'mixed'],
+                'constraint' => ['cash', 'card', 'transfer'],
                 'null'       => true,
             ],
-            'notes' => [
-                'type' => 'TEXT',
-                'null' => true,
+            'invoice_date' => [
+                'type' => 'DATETIME',
+                'null' => false,
             ],
-            'created_by' => [
-                'type'       => 'BINARY',
-                'constraint' => 16,
-                'null'       => false,
+            'due_date' => [
+                'type' => 'DATE',
+                'null' => true,
+                'comment' => 'Fecha de vencimiento para crédito'
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -103,7 +72,6 @@ class CreateInvoicesTable extends Migration
 
         $this->forge->addForeignKey('business_id', 'businesses', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->addForeignKey('contact_id', 'contacts', 'id', 'CASCADE', 'RESTRICT');
-        $this->forge->addForeignKey('created_by', 'users', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->createTable('invoices');
     }
 
