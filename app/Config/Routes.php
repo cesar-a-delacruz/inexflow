@@ -49,3 +49,13 @@ $routes->get('transactions/new', 'TransactionController::new');
 // otras
 $routes->post('transactions', 'TransactionController::create');
 $routes->put('transaction/(:segment)', 'TransactionController::update/$1');
+
+// Rutas de Contactos
+// vistas
+$routes->get('contacts', 'ContactController::index');
+$routes->get('contacts/new', 'ContactController::new');
+$routes->get('contacts/(:segment)', 'ContactController::show/$1');
+// otras
+$routes->post('contacts', 'ContactController::create');
+$routes->put('contacts/(:segment)', 'ContactController::update/$1');
+$routes->delete('contacts/(:segment)', 'ContactController::delete/$1');
