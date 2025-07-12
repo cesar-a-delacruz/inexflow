@@ -9,7 +9,7 @@ use CodeIgniter\Router\RouteCollection;
 // vistas
 $routes->get('/', 'UserController::login');
 $routes->get('user', 'UserController::show');
-$routes->get('users', 'UserController::index'); 
+$routes->get('users', 'UserController::index');
 $routes->get('users/new', 'UserController::new');
 $routes->get('password', 'UserController::password');
 $routes->get('recovery', 'UserController::recovery');
@@ -63,3 +63,5 @@ $routes->delete('contacts/(:segment)', 'ContactController::delete/$1');
 // Rutas de Items
 // vistas
 $routes->get('items', 'ItemController::index');
+
+$routes->get('/example', 'ExampleController::index');
