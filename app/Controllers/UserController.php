@@ -117,7 +117,7 @@ class UserController extends BaseController
         }
 
         $this->model->createUser(new User([
-            'id' => Uuid::uuid3(Uuid::NAMESPACE_URL, strval(($this->model->getStats()['total'] + 1))),
+            'id' => Uuid::uuid4(),
             'business_id' => null,
             'name' => $post->name,
             'email' => $post->email,

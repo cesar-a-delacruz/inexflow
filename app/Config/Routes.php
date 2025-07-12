@@ -59,3 +59,7 @@ $routes->get('contacts/(:segment)', 'ContactController::show/$1');
 $routes->post('contacts', 'ContactController::create');
 $routes->put('contacts/(:segment)', 'ContactController::update/$1');
 $routes->delete('contacts/(:segment)', 'ContactController::delete/$1');
+
+// Rutas de Items
+// vistas
+$routes->get('items', 'ItemController::index');

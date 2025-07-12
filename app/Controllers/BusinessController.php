@@ -62,7 +62,7 @@ class BusinessController extends BaseController
             return redirect()->back()->withInput();
         }
 
-        $business_id = Uuid::uuid3(Uuid::NAMESPACE_URL, strval(($this->model->getBusinessStats()['total'] + 1)));
+        $business_id = Uuid::uuid4();
         $session_id = session()->get('id');
         $this->model->createBusiness(new Business([
             'id' => $business_id,
