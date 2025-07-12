@@ -37,8 +37,8 @@ class Item extends Entity
         'selling_price' => null,
         'current_stock' => 0,
         'min_stock' => 0,
-        'measure_unit' => 'unit',
-        'is_active' => true,
+        'measure_unit' => 'unidad',
+        'is_active' => 1,
     ];
 
     protected $castHandlers = [

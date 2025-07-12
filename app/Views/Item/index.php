@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 <div class="container-fluid">
   <h1 class="mb-4"><?= $title ?></h1>
-  <a href="/transactions/new" class="btn btn-primary">Registrar Item</a>
+  <a href="/items/new" class="btn btn-primary">Registrar Item</a>
   <a href="/categories" class="btn btn-success">Ver Categorías</a>
   <div class="table-responsive" >
     <table id="showtable" class="table table-striped table-hover table-bordered">

@@ -73,10 +73,6 @@ class ItemModel extends Model
         'measure_unit' => [
             'max_length' => 'La unidad de medida no puede exceder 20 caracteres'
         ],
-        'is_active' => [
-            'required' => 'El estado es requerido',
-            'in_list' => 'El estado debe ser 0 o 1'
-        ]
     ];
 
     protected $skipValidation = false;
