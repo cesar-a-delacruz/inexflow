@@ -68,3 +68,4 @@ $routes->get('items/(:segment)', 'ItemController::show/$1');
 // otras
 $routes->post('items', 'ItemController::create');
 $routes->put('items/(:segment)', 'ItemController::update/$1');
+$routes->delete('items/(:segment)', 'ItemController::delete/$1');

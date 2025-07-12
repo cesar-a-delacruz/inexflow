@@ -31,7 +31,7 @@ class ItemController extends BaseController
     if (!user_logged()) return redirect()->to('/');
     else session()->set('current_page', 'items');
 
-    $data['title'] = 'Productos y Servicios';
+    $data['title'] = 'Items';
     $data['items'] = $this->model->findAllWithCategory();
     return view('Item/index', $data);
   }
@@ -85,6 +85,11 @@ class ItemController extends BaseController
 
     $this->model->insert(new Item($item));
     return redirect()->to('items/new')->with('success', 'Item insertado exitosamente.');
+  }
+  public function delete($id = null)
+  {
+    $this->model->delete(uuid_to_bytes($id));
+    return redirect()->to('items');
   }
   public function update($id = null)
   {
