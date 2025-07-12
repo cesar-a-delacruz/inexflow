@@ -56,7 +56,7 @@ class TransactionController extends BaseController
     if (is_admin() && $current_page) return redirect()->to($current_page);
 
     if (!user_logged()) return redirect()->to('/');
-    else session()->set('current_page', 'transactions/new');
+    else session()->set('current_page', "transactions/$id");
 
     $transaction = $this->model->find($id);
     $categories = $this->category_model->getByBusiness(uuid_to_bytes(session()->get('business_id')));
@@ -95,12 +95,11 @@ class TransactionController extends BaseController
     }
     if (empty($row)) return redirect()->to('transactions');
 
-    $transaction = new Transaction($row);
     if (!$this->validate($this->form_validator->showRules())) {
       return redirect()->back()->withInput(); 
     }
 
-    $this->model->update($id, $transaction);
+    $this->model->update($id, new Transaction($row));
     return redirect()->to('transactions');
   }
 }
