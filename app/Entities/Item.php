@@ -52,4 +52,11 @@ class Item extends Entity
             'product' => 'Producto  ',
         };
     }
+    public function getCategoryTypeDisplayName(): string
+    {
+        return match ($this->category_type) {
+            'income' => 'Ingreso',
+            'expense' => 'Gasto',
+        };
+    }
 }

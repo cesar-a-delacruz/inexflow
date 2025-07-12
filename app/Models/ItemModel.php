@@ -80,7 +80,7 @@ class ItemModel extends Model
     public function findAllWithCategory()
     {
         $builder = $this->builder();
-        $result = $builder->select('categories.name as category_name, items.*')
+        $result = $builder->select('categories.name as category_name, categories.type as category_type, items.*')
             ->join('categories', 'categories.category_number = items.category_number')->orderBy('id', 'ASC');
         $transaction = $result->get()->getCustomResultObject($this->returnType);
         $result->get()->freeResult();

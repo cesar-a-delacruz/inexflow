@@ -64,5 +64,7 @@ $routes->delete('contacts/(:segment)', 'ContactController::delete/$1');
 // vistas
 $routes->get('items', 'ItemController::index');
 $routes->get('items/new', 'ItemController::new');
+$routes->get('items/(:segment)', 'ItemController::show/$1');
 // otras
 $routes->post('items', 'ItemController::create');
+$routes->put('items/(:segment)', 'ItemController::update/$1');

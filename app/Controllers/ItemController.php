@@ -50,6 +50,24 @@ class ItemController extends BaseController
     ];
     return view('Item/new', $data);
   }  
+  public function show($id = null)
+  {
+    $current_page = session()->get('current_page');
+    if (is_admin() && $current_page) return redirect()->to($current_page);
+
+    if (!user_logged()) return redirect()->to('/');
+    else session()->set('current_page', "items/$id");
+
+    $item = $this->model->find(uuid_to_bytes($id));
+    $categories = $this->category_model->getByBusiness(uuid_to_bytes(session()->get('business_id')));
+
+    $data = [
+        'title' => 'Editar Item',
+        'item' => $item,
+        'categories' => $categories
+    ];
+    return view('Item/show', $data);
+  }
 
   public function create()
   {
@@ -57,7 +75,7 @@ class ItemController extends BaseController
       ['name', 'type', 'category_number', 'cost',
       'selling_price', 'current_stock', 'min_stock', 'measure_unit']
     );
-    
+
     if (!$this->validate($this->form_validator->newRules())) {
       return redirect()->back()->withInput();
     }
@@ -67,5 +85,24 @@ class ItemController extends BaseController
 
     $this->model->insert(new Item($item));
     return redirect()->to('items/new')->with('success', 'Item insertado exitosamente.');
+  }
+  public function update($id = null)
+  {
+    $post = $this->request->getPost(
+      ['name', 'type', 'category_number', 'cost',
+      'selling_price', 'current_stock', 'min_stock', 'measure_unit']
+    );
+    $row = [];
+    foreach ($post as $key => $value) {
+      if ($value) $row[$key] = $value;
+    }
+    if (empty($row)) return redirect()->to('items');
+
+    if (!$this->validate($this->form_validator->showRules())) {
+      return redirect()->back()->withInput(); 
+    }
+
+    $this->model->update(uuid_to_bytes($id), new Item($row));
+    return redirect()->to('items');
   }
 }
