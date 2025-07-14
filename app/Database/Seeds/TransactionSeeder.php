@@ -4,30 +4,29 @@ namespace App\Database\Seeds;
 
 use CodeIgniter\Database\Seeder;
 use App\Entities\Transaction;
-use App\Models\TransactionsModel;
-use DateTime;
+use App\Models\TransactionModel;
 use Ramsey\Uuid\Uuid;
 
 class TransactionSeeder extends Seeder
 {
     public function run()
     {
-        $model = new TransactionsModel();
-        $model->createTransaction(new Transaction([
+        $model = new TransactionModel();
+        $model->insert(new Transaction([
             'invoice_id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
             'description' => 'Empanada',
             'category' => 'Ventas',
             'amount' => 3,
             'subtotal' => 1.50,
         ]));
-        $model->createTransaction(new Transaction([
+        $model->insert(new Transaction([
             'invoice_id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '2'),
             'description' => 'Lavado de auto',
             'category' => 'Gastos Operativos',
             'amount' => null,
             'subtotal' => 20.00,
         ]));
-        $model->createTransaction(new Transaction([
+        $model->insert(new Transaction([
             'invoice_id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '3'),
             'description' => 'Artesanía',
             'category' => 'Ventas',
