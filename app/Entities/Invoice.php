@@ -38,4 +38,23 @@ class Invoice extends Entity
     protected $castHandlers = [
         'uuid' => Cast\UuidCast::class
     ];
+    public function getStatusDisplayName(): string
+    {
+        return match ($this->payment_status) {
+            'paid' => 'Pagada',
+            'pending' => 'Pendiente',
+            'overdue' => 'Atrasada',
+            'cancelled' => 'Cancelada',
+            '' => ''
+        };
+    }
+    public function getMethodDisplayName(): string
+    {
+        return match ($this->payment_method) {
+            'cash' => 'Efectivo',
+            'card' => 'Tarjeta de Débito/Crédito',
+            'transfer' => 'Transferencia Bancaria',
+            '' => ''
+        };
+    }
 }

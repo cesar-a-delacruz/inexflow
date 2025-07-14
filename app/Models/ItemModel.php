@@ -83,20 +83,9 @@ class ItemModel extends Model
     {
         $builder = $this->builder();
         $result = $builder->select('categories.name as category_name, categories.type as category_type, items.*')
-        ->join('categories', 'categories.category_number = items.category_number')->where('items.deleted_at', null)->orderBy('id', 'DESC');
-        $transaction = $result->get()->getCustomResultObject($this->returnType);
+        ->join('categories', 'categories.category_number = items.category_number')->where('items.deleted_at', null)->orderBy('type', 'DESC');
+        $items = $result->get()->getCustomResultObject($this->returnType);
         $result->get()->freeResult();
-        return $transaction;
-    }
-    public function newDelete($id) {
-        try {
-            $result = $this->where('id',uuid_to_bytes($id))->delete();
-            if (!$result)
-                 throw new DatabaseException('Error al eliminar itemm: ' . implode(', ', $this->errors()));
-            echo var_dump($result); 
-        } catch (Exception $e) {
-            log_message('error', 'Error creando usuario: ' . $e->getMessage());
-            throw $e;
-        }
+        return $items;
     }
 }

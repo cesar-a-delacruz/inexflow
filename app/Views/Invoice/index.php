@@ -3,36 +3,33 @@
 <?= $this->section('content') ?>
 <div class="container-fluid">
   <h1 class="mb-4"><?= $title ?></h1>
-  <a href="/transactions/new" class="btn btn-primary">Registrar Transacción</a>
-  <a href="/categories" class="btn btn-success">Ver Categorías</a>
+  <a href="/invoices/new" class="btn btn-primary">Crear Factura</a>
   <div class="table-responsive" >
     <table id="showtable" class="table table-striped table-hover table-bordered">
       <thead class="table-dark">
         <tr>
-          <th></th>
-          <th>Categoría</th>
-          <th>Descripción</th>
-          <th>Monto</th>
+          <th>Número</th>
+          <th>Emisión</th>
+          <th>Vencimiento</th>
+          <th>Estado del Pago</th>
           <th>Método de Pago</th>
-          <th>Fecha</th>
-          <th>Notas</th>
+          <th>Contacto</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
-        <?php if (!empty($transactions)): ?>
-          <?php for ($i = 0; $i < count($transactions); $i++): ?>
+        <?php if (!empty($invoices)): ?>
+          <?php for ($i = 0; $i < count($invoices); $i++): ?>
             <tr>
-              <td><?= $i+1 ?></td>
-              <td><?= $transactions[$i]->category_name ?></td>
-              <td><?= $transactions[$i]->description ?></td>
-              <td><?= '$'.number_format($transactions[$i]->amount, 2) ?></td>
-              <td><?= $transactions[$i]->getMethodDisplayName() ?></td>
-              <td><?= $transactions[$i]->transaction_date ?></td>
-              <td><?= $transactions[$i]->notes ?></td>
+              <td><?= $invoices[$i]->invoice_number ?></td>
+              <td><?= $invoices[$i]->invoice_date ?></td>
+              <td><?= $invoices[$i]->due_date ?></td>
+              <td><?= $invoices[$i]->getStatusDisplayName() ?></td>
+              <td><?= $invoices[$i]->getMethodDisplayName() ?></td>
+              <td><?= $invoices[$i]->contact_id ?></td>
               <td>
                 <div class="btn-group" role="group">
-                  <a href="/transaction/<?= $transactions[$i]->id ?>" class="btn btn-success btn-sm">
+                  <a href="/transaction/<?= $invoices[$i]->id ?>" class="btn btn-success btn-sm">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit">
                       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>

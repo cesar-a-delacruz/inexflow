@@ -41,14 +41,6 @@ $routes->get('categories', 'CategoryController::index');
 $routes->post('categories', 'CategoryController::create');
 $routes->delete('category/(:segment)', 'CategoryController::delete/$1');
 
-// Rutas de transacciones
-//vistas
-$routes->get('transaction/(:segment)', 'TransactionController::show/$1');
-$routes->get('transactions', 'TransactionController::index');
-$routes->get('transactions/new', 'TransactionController::new');
-// otras
-$routes->post('transactions', 'TransactionController::create');
-$routes->put('transaction/(:segment)', 'TransactionController::update/$1');
 
 // Rutas de Contactos
 // vistas
@@ -70,4 +62,13 @@ $routes->post('items', 'ItemController::create');
 $routes->put('items/(:segment)', 'ItemController::update/$1');
 $routes->delete('items/(:segment)', 'ItemController::delete/$1');
 
-$routes->get('/example', 'ExampleController::index');
+// Rutas de invoices
+//vistas
+// $routes->get('transaction/(:segment)', 'TransactionController::show/$1');
+$routes->get('invoices', 'InvoiceController::index');
+$routes->get('invoices/new', 'InvoiceController::new');
+// // otras
+// $routes->post('transactions', 'TransactionController::create');
+// $routes->put('transaction/(:segment)', 'TransactionController::update/$1');
+
+// $routes->get('/example', 'ExampleController::index');

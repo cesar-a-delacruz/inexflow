@@ -1,0 +1,108 @@
+<?php
+
+namespace App\Controllers;
+
+use App\Controllers\BaseController;
+// use App\Entities\Transaction;
+use App\Models\InvoiceModel;
+use App\Models\ItemModel;
+// use App\Validation\Validators\TransactionValidator;
+// use CodeIgniter\I18n\Time;
+
+class InvoiceController extends BaseController
+{
+  protected InvoiceModel $model;
+  protected ItemModel $item_model;
+  // protected TransactionValidator $form_validator;
+  public function __construct() {
+    $this->model = new InvoiceModel();
+    $this->item_model = new ItemModel();
+    // $this->form_validator = new TransactionValidator();
+
+    helper('form');
+    helper('session');
+  }
+  
+  public function index()
+  {
+    $current_page = session()->get('current_page');
+    if (is_admin() && $current_page) return redirect()->to($current_page);
+
+    if (!user_logged()) return redirect()->to('/');
+    else session()->set('current_page', 'invoices');
+
+    $data['title'] = 'Facturas';
+    $data['invoices'] = $this->model->findAll();
+    return view('Invoice/index', $data);
+  }
+  public function new()
+  {
+    $current_page = session()->get('current_page');
+    if (is_admin() && $current_page) return redirect()->to($current_page);
+
+    if (!user_logged()) return redirect()->to('/');
+    else session()->set('current_page', 'invoices/new');
+    
+    $all_items = $this->item_model->findAllWithCategory();
+    $income = array_filter($all_items, function($value) { return $value->category_type === 'income';});
+    $expense = array_filter($all_items, function($value) { return $value->category_type === 'expense';});
+    $items = (object) ['income' => array_values($income), 'expense' => array_values($expense)];
+    $data = [
+        'title' => 'Nueva Factura',
+        'items' => $items  
+    ];
+    return view('Invoice/new', $data);
+  }
+  // public function show($id = null)
+  // {
+  //   $current_page = session()->get('current_page');
+  //   if (is_admin() && $current_page) return redirect()->to($current_page);
+
+  //   if (!user_logged()) return redirect()->to('/');
+  //   else session()->set('current_page', "transactions/$id");
+
+  //   $transaction = $this->model->find($id);
+  //   // $categories = $this->category_model->getByBusiness(uuid_to_bytes(session()->get('business_id')));
+
+  //   $data = [
+  //       'title' => 'Información de Transacción',
+  //       'transaction' => $transaction,
+  //       // 'categories' => $categories
+  //   ];
+  //   return view('Transaction/show', $data);
+  // }
+
+  // public function create()
+  // {
+  //   $transaction = $this->request->getPost(
+  //     ['description','category_number', 'amount', 'payment_method', 'notes']
+  //   );
+  //   if (!$this->validate($this->form_validator->newRules())) {
+  //       return redirect()->back()->withInput();
+  //   }
+
+  //   $transaction['business_id'] = uuid_to_bytes(session()->get('business_id'));
+  //   $transaction['transaction_date'] = date('Y-m-d', Time::now()->timestamp);
+
+  //   $this->model->createTransaction(new Transaction($transaction));
+  //   return redirect()->to('transactions/new')->with('success', 'Transacción exitosamente.');
+  // }
+  // public function update($id = null)
+  // {
+  //   $post = $this->request->getPost(
+  //     ['description','category_number', 'amount', 'payment_method', 'notes']
+  //   );
+  //   $row = [];
+  //   foreach ($post as $key => $value) {
+  //     if ($value) $row[$key] = $value;
+  //   }
+  //   if (empty($row)) return redirect()->to('transactions');
+
+  //   if (!$this->validate($this->form_validator->showRules())) {
+  //     return redirect()->back()->withInput(); 
+  //   }
+
+  //   $this->model->update($id, new Transaction($row));
+  //   return redirect()->to('transactions');
+  // }
+}
