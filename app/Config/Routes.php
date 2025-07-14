@@ -62,7 +62,7 @@ $routes->post('items', 'ItemController::create');
 $routes->put('items/(:segment)', 'ItemController::update/$1');
 $routes->delete('items/(:segment)', 'ItemController::delete/$1');
 
-// Rutas de invoices
+// Rutas de Facturas
 //vistas
 $routes->get('invoices', 'InvoiceController::index');
 $routes->get('invoices/new', 'InvoiceController::new');

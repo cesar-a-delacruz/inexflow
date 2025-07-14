@@ -17,7 +17,8 @@
                 <div class="alert alert-danger"><?= validation_list_errors() ?></div>
             <?php endif; ?>
 
-            <form action="/invoices" method="POST" novalidate>
+            <form action="/invoices/<?= $invoice->id ?>" method="POST" novalidate>
+                <input type="hidden" name="_method" value="PUT">
                 <div class="mb-3">
                     <label for="invoice_date" class="form-label">Fecha</label>
                     <input type="date" name="invoice_date" class="form-control" value="<?= substr($invoice->invoice_date, 0, 10) ?>" disabled>

@@ -35,20 +35,14 @@ class InvoiceValidator {
             ],
         ];
     }
-    // public function showRules() {
-    //     return [
-    //         'category_number' => [
-    //             'rules' => 'permit_empty|integer',
-    //             'errors' => [
-    //                 'integer' => 'El número de ser entero',
-    //             ],
-    //         ],
-    //         'amount' => [
-    //             'rules' => 'permit_empty|decimal',
-    //             'errors' => [
-    //                 'decimal' => 'El número debe ser decimal',
-    //             ],
-    //         ],
-    //     ];
-    // }
+    public function showRules() {
+        return [
+            'due_date' => [
+                'rules' => 'permit_empty|valid_date[Y-m-d]',
+                'errors' => [
+                    'valid_date' => 'La fecha no es válida',
+                ],
+            ],
+        ];
+    }
 }

@@ -28,20 +28,4 @@ class TransactionValidator {
             ],
         ];
     }
-    // public function showRules() {
-    //     return [
-    //         'category_number' => [
-    //             'rules' => 'permit_empty|integer',
-    //             'errors' => [
-    //                 'integer' => 'El número de ser entero',
-    //             ],
-    //         ],
-    //         'amount' => [
-    //             'rules' => 'permit_empty|decimal',
-    //             'errors' => [
-    //                 'decimal' => 'El número debe ser decimal',
-    //             ],
-    //         ],
-    //     ];
-    // }
 }

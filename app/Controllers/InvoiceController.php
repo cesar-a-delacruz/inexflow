@@ -107,22 +107,22 @@ class InvoiceController extends BaseController
     $this->transaction_model->insertBatch($transactions_objects);
     return redirect()->to('invoices/new')->with('success', 'Transacción registrada exitosamente.');
   }
-  // public function update($id = null)
-  // {
-  //   $post = $this->request->getPost(
-  //     ['description','category_number', 'amount', 'payment_method', 'notes']
-  //   );
-  //   $row = [];
-  //   foreach ($post as $key => $value) {
-  //     if ($value) $row[$key] = $value;
-  //   }
-  //   if (empty($row)) return redirect()->to('transactions');
+  public function update($id = null)
+  {
+    $post = $this->request->getPost(
+      ['due_date', 'payment_status', 'payment_method']
+    );
+    $row = [];
+    foreach ($post as $key => $value) {
+      if ($value) $row[$key] = $value;
+    }
+    if (empty($row)) return redirect()->to('invoices');
 
-  //   if (!$this->validate($this->form_transaction_validator->showRules())) {
-  //     return redirect()->back()->withInput(); 
-  //   }
+    if (!$this->validate($this->form_invoice_validator->showRules())) {
+      return redirect()->back()->withInput(); 
+    }
 
-  //   $this->model->update($id, new Transaction($row));
-  //   return redirect()->to('transactions');
-  // }
+    $this->model->update(uuid_to_bytes($id), new Invoice($row));
+    return redirect()->to('invoices');
+  }
 }
