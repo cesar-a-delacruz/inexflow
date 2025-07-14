@@ -17,9 +17,7 @@ class Contact extends Entity
         'email' => 'string',
         'phone' => 'string',
         'address' => 'string',
-        'tax_id' => 'string',
-        'is_active' => 'boolean',
-        'is_provider' => 'boolean',
+        'type' => 'string',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => '?datetime',
@@ -32,12 +30,17 @@ class Contact extends Entity
         'email' => null,
         'phone' => null,
         'address' => null,
-        'tax_id' => null,
-        'is_active' => true,
-        'is_provider' => false,
     ];
 
     protected $castHandlers = [
         'uuid' => Cast\UuidCast::class
     ];
+
+    public function getTypeDisplayName(): string
+    {
+        return match ($this->type) {
+            'customer' => 'Cliente',
+            'provider' => 'Proveedor',
+        };
+    }
 }

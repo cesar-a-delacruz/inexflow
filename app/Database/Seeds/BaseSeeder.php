@@ -14,5 +14,6 @@ class BaseSeeder extends Seeder
         new ItemSeeder($this->config)->run();
         new InvoiceSeeder($this->config)->run();
         new TransactionSeeder($this->config)->run();
+        new ContactsSeeder($this->config)->run();
     }
 }

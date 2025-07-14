@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 
 class ContactModel extends Model
 {
-    protected $table = 'customers';
+    protected $table = 'contacts';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = false;
     protected $returnType = Contact::class;
@@ -20,9 +20,7 @@ class ContactModel extends Model
         'email',
         'phone',
         'address',
-        'tax_id',
-        'is_active',
-        'is_provider'
+        'type'
     ];
 
     protected $useTimestamps = true;
@@ -36,9 +34,6 @@ class ContactModel extends Model
         'name' => 'required|max_length[255]',
         'email' => 'permit_empty|valid_email|max_length[255]',
         'phone' => 'permit_empty|max_length[50]',
-        'tax_id' => 'permit_empty|max_length[50]',
-        'is_active' => 'required|in_list[0,1]',
-        'is_provider' => 'required|in_list[0,1]',
     ];
 
     protected $validationMessages = [
@@ -56,18 +51,11 @@ class ContactModel extends Model
         'phone' => [
             'max_length' => 'El teléfono no puede exceder 50 caracteres'
         ],
-        'tax_id' => [
-            'max_length' => 'La cédula/RUC no puede exceder 50 caracteres'
-        ],
-        'is_active' => [
-            'required' => 'El estado es requerido',
-            'in_list' => 'El estado debe ser 0 o 1'
-        ],
-        'is_privider' => [
-            'required' => 'El si es proveedor es requerido',
-            'in_list' => 'El si es proveedor debe ser 0 o 1'
-        ],
     ];
 
     protected $skipValidation = false;
+    
+    public function findAllByBusiness($id) {
+        return $this->where('business_id', uuid_to_bytes($id))->findAll();
+    }
 }

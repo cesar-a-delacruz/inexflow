@@ -39,21 +39,11 @@ class CreateContactsTable extends Migration
                 'type' => 'TEXT',
                 'null' => true,
             ],
-            'tax_id' => [
-                'type'       => 'VARCHAR',
-                'constraint' => 50,
-                'null'       => true,
-                'comment'    => 'Cédula/RUC del cliente'
-            ],
-            'is_active' => [
-                'type'    => 'BOOLEAN',
-                'default' => true,
-                'null'    => false,
-            ],
-            'is_provider' => [
-                'type'    => 'BOOLEAN',
-                'default' => false,
-                'null'    => false,
+            'type' => [
+                'type'       => 'ENUM',
+                'constraint' => ['customer', 'provider'],
+                'default' => 'customer',
+                'null'       => false,
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -71,8 +61,6 @@ class CreateContactsTable extends Migration
 
         $this->forge->addKey('id', true);
         $this->forge->addKey(['business_id', 'name'], false, false, 'idx_business_customer_name');
-        $this->forge->addKey(['business_id', 'is_active'], false, false, 'idx_business_active');
-        $this->forge->addKey(['business_id', 'is_provider'], false, false, 'idx_business_provider');
 
         $this->forge->addForeignKey('business_id', 'businesses', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->createTable('contacts');

@@ -7,22 +7,14 @@
             <h4 class="mb-0">Detalles del Contacto</h4>
         </div>
         <div class="card-body">
-            <?php if (session()->getFlashdata('success')): ?>
+           <?php if (session()->getFlashdata('success')): ?>
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <?= session()->getFlashdata('success') ?>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
                 </div>
             <?php endif; ?>
-            <?php if (session()->getFlashdata('error')): ?>
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <?= session()->getFlashdata('error') ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-                </div>
-            <?php endif; ?>
-            <?php if (isset($validation)): ?>
-                <div class="alert alert-danger">
-                    <?= $validation->listErrors() ?>
-                </div>
+            <?php if (!empty(validation_errors())): ?>
+                <div class="alert alert-danger"><?= validation_list_errors() ?></div>
             <?php endif; ?>
 
             <form action="/contacts/<?= esc($contact->id) ?>" method="POST" novalidate>
@@ -47,16 +39,15 @@
                     <input type="text" id="address" name="address" value="<?= old('address', $contact->address) ?>" class="form-control" disabled>
                 </div>
                 <div class="mb-3">
-                    <label for="tax_id" class="form-label">Cédula/RUC:</label>
-                    <input type="text" id="tax_id" name="tax_id" value="<?= old('tax_id', $contact->tax_id) ?>" class="form-control" disabled>
-                </div>
-                <div class="mb-3 form-check">
-                    <input type="checkbox" name="is_active" id="is_active" class="form-check-input" value="1" <?= old('is_active', $contact->is_active) ? 'checked' : '' ?> disabled>
-                    <label class="form-check-label" for="is_active">Activo</label>
-                </div>
-                <div class="mb-3 form-check">
-                    <input type="checkbox" name="is_provider" id="is_provider" class="form-check-input" value="1" <?= old('is_provider', $contact->is_provider) ? 'checked' : '' ?> disabled>
-                    <label class="form-check-label" for="is_provider">Es Proveedor</label>
+                    <label for="type" class="form-label">Tipo</label>
+                    <div class="mb-3 form-check">
+                        <input type="radio" name="type"  class="form-check-input" value="customer" <?= $contact->type === 'customer' ? 'checked' : '' ?> disabled>
+                        <label class="form-check-label">Cliente</label>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="radio" name="type" class="form-check-input" value="provider" <?= $contact->type === 'provider' ? 'checked' : '' ?> disabled>
+                        <label class="form-check-label">Proveedor</label>
+                    </div>
                 </div>
                 
                 <div class="field buttons"></div>
@@ -78,7 +69,7 @@
         butSubmit.className = 'btn btn-success me-2';
         butSubmit.innerHTML = 'Guardar Cambios';
 
-        const butReload = document.createElement('a'); // Changed to 'a' tag for cancellation
+        const butReload = document.createElement('a');  
         butReload.className = 'btn btn-secondary';
         butReload.innerHTML = 'Cancelar';
         butReload.href = window.location.href; // Reloads the page to revert changes
