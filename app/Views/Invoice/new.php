@@ -17,7 +17,7 @@
                 <div class="alert alert-danger"><?= validation_list_errors() ?></div>
             <?php endif; ?>
 
-            <form action="/transactions" method="POST" novalidate>
+            <form action="/invoices" method="POST" novalidate>
                 <div class="mb-3">
                     <label for="invoice_date" class="form-label">Fecha</label>
                     <input type="date" name="invoice_date" class="form-control" value="<?= date('Y-m-d')?>">
@@ -40,6 +40,7 @@
                 <div class="mb-3">
                     <label for="payment_status" class="form-label">Estado</label>
                     <select name="payment_status" class="form-select">
+                        <option value="">-- Seleccione el estado --</option>
                         <option value="paid">Pagada</option>
                         <option value="pending">Pendiente</option>
                         <option value="overdue">Atrasada</option>
@@ -154,7 +155,7 @@
         event.preventDefault()
         const heading = document.querySelector('dialog h5');
         const invoiceType = document.querySelector('input[name="type"]:checked');
-        heading.innerHTML = invoiceType ? 'Elige un Item (Haz click en uba fila)' : 'Selecciona el Tipo de Factura primero';
+        heading.innerHTML = invoiceType ? 'Elige un Item (Haz click en una fila)' : 'Selecciona el Tipo de Factura primero';
         dialog.showModal(); 
     }
     function closeDialog(element, event) {
@@ -176,12 +177,13 @@
     // crear fila en tabla de transacciones
     const formTable = document.querySelector('form table').children[1];
     tables.forEach(table => {
-        const newRowIndex = formTable.children.length;
         for (const row of table.children[2].children) {
-            const rowAmount = row.children[4].innerHTML;
             row.addEventListener('click', (event) => {
-                let inputs = [];
+                const newRowIndex = formTable.children.length;
+                const rowAmount = row.children[4].innerHTML;
                 const invoiceType = document.querySelector('input[name="type"]:checked').value;
+
+                let inputs = [];
                 for (let i = 0; i < 2; i++) {
                     const input = document.createElement('input');
                     input.type = 'number';
@@ -189,22 +191,29 @@
                     inputs.push(input);
                 }
                 inputs[0].name = `transactions[${newRowIndex}][amount]`;
-                inputs[0].min = '1';
-                if (invoiceType === 'income') inputs[0].max = rowAmount;
                 inputs[0].className = 'amount form-control';
-                inputs[0].addEventListener('change', () => {
-                    const parent = inputs[0].parentElement.parentElement;
-                    
-                    const moneyCell = document.querySelector(`dialog table.${invoiceType} tbody tr[data-index="${parent.dataset.index}"] td.money`); 
-                    const money = parseFloat(moneyCell.innerHTML.replace('$', '')).toFixed(2);
-                    inputs[1].value = (parseInt(inputs[0].value) * money).toFixed(2);
-                    inputs[1].dispatchEvent(new Event("change"));
-
-                });
+                if (row.children[3].innerHTML === 'Servicio') {
+                    inputs[0].disabled = true;
+                    inputs[1].value = parseFloat(row.children[5].innerHTML.replace('$', '')).toFixed(2);
+                    const totalInput = document.querySelector('input[name="total"]');
+                    totalInput.value = (parseFloat(totalInput.value) + parseFloat(inputs[1].value || 0)).toFixed(2);
+                } else {
+                    inputs[0].min = '1';
+                    if (invoiceType === 'income') inputs[0].max = rowAmount;
+                    inputs[0].addEventListener('change', () => {
+                        const parent = inputs[0].parentElement.parentElement;
+                        
+                        const moneyCell = document.querySelector(`dialog table.${invoiceType} tbody tr[data-index="${parent.dataset.index}"] td.money`); 
+                        const money = parseFloat(moneyCell.innerHTML.replace('$', '')).toFixed(2);
+                        inputs[1].value = (parseInt(inputs[0].value) * money).toFixed(2);
+                        inputs[1].dispatchEvent(new Event("change"));
+    
+                    });
+                }
                 inputs[1].name = `transactions[${newRowIndex}][subtotal]`;
                 inputs[1].className = 'subtotal form-control';
                 inputs[1].readOnly = true;
-                inputs[1].addEventListener('change', () => calculateSubtotal());
+                inputs[1].addEventListener('change', () => calculateTotal());
 
 
                 const relevantData = [
@@ -244,7 +253,7 @@
                     const hiddenRow = document.querySelector(`dialog table.${invoiceType} tbody tr[data-index="${parent.dataset.index}"]`); 
                     hiddenRow.style.display = 'table-row';
                     parent.remove();
-                    calculateSubtotal();
+                    calculateTotal();
                 });
                 removeCell.append(removeButton);
                 newRow.append(removeCell);
@@ -254,7 +263,7 @@
         }
     });
     // calcular valor del subtotal
-    function calculateSubtotal() {
+    function calculateTotal() {
         const totalInput = document.querySelector('input[name="total"]');
         const subtotals = document.querySelectorAll('form table tbody input.subtotal');
         let total = 0;

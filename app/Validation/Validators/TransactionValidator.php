@@ -2,47 +2,46 @@
 namespace App\Validation\Validators;
 
 /**
- * Son reglas de validación y mensajes de error utilizados en los formularios de App\Views\Transaction
+ * Son reglas de validación y mensajes de error utilizados en los formularios de App\Views\Invoice en los campos "transactions"
  */
 class TransactionValidator {
     public function newRules() {
         return [
-            'description' => [
+            'transactions' => [
                 'rules' => 'required',
                 'errors' => [
-                    'required' => 'la descripción es requerida',
+                    'required' => 'No hay transaccciones',
                 ],
             ],
-            'category_number' => [
+            'transactions.*.amount' => [
                 'rules' => 'required|integer',
                 'errors' => [
-                    'required' => 'El número de categoría es requerido',
-                    'integer' => 'El número de ser entero',
+                    'required' => 'La cantidad de uno o mas items son requeridos',
+                    'integer' => 'La cantidades deben ser un número entero',
                 ],
             ],
-            'amount' => [
-                'rules' => 'required|decimal',
+            'transactions.*.subtotal' => [
+                'rules' => 'required',
                 'errors' => [
-                    'required' => 'El número de categoría es requerido',
-                    'decimal' => 'El número debe ser decimal',
+                    'required' => 'Uno o mas subtotales están vacíos',
                 ],
             ],
         ];
     }
-    public function showRules() {
-        return [
-            'category_number' => [
-                'rules' => 'permit_empty|integer',
-                'errors' => [
-                    'integer' => 'El número de ser entero',
-                ],
-            ],
-            'amount' => [
-                'rules' => 'permit_empty|decimal',
-                'errors' => [
-                    'decimal' => 'El número debe ser decimal',
-                ],
-            ],
-        ];
-    }
+    // public function showRules() {
+    //     return [
+    //         'category_number' => [
+    //             'rules' => 'permit_empty|integer',
+    //             'errors' => [
+    //                 'integer' => 'El número de ser entero',
+    //             ],
+    //         ],
+    //         'amount' => [
+    //             'rules' => 'permit_empty|decimal',
+    //             'errors' => [
+    //                 'decimal' => 'El número debe ser decimal',
+    //             ],
+    //         ],
+    //     ];
+    // }
 }

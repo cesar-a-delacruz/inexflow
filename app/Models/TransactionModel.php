@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 use App\Entities\Transaction;
 use CodeIgniter\Database\Exceptions\DatabaseException;
 
-class TransactionsModel extends Model
+class TransactionModel extends Model
 {
     protected $table            = 'transactions';
     protected $primaryKey       = 'id';

@@ -68,7 +68,7 @@ $routes->delete('items/(:segment)', 'ItemController::delete/$1');
 $routes->get('invoices', 'InvoiceController::index');
 $routes->get('invoices/new', 'InvoiceController::new');
 // // otras
-// $routes->post('transactions', 'TransactionController::create');
+$routes->post('invoices', 'InvoiceController::create');
 // $routes->put('transaction/(:segment)', 'TransactionController::update/$1');
 
 // $routes->get('/example', 'ExampleController::index');
