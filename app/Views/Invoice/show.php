@@ -17,50 +17,102 @@
                 <div class="alert alert-danger"><?= validation_list_errors() ?></div>
             <?php endif; ?>
 
-            <form action="/transaction/<?= $transaction->id ?>" method="POST" novalidate>
-                <input type="hidden" name="_method" value="PUT">
-
+            <form action="/invoices" method="POST" novalidate>
                 <div class="mb-3">
-                    <label for="description" class="form-label">Descripcion</label>
-                    <input type="text" name="description" class="form-control" value="<?= $transaction->description ?>">
+                    <label for="invoice_date" class="form-label">Fecha</label>
+                    <input type="date" name="invoice_date" class="form-control" value="<?= substr($invoice->invoice_date, 0, 10) ?>" disabled>
                 </div>
                 <div class="mb-3">
-                    <label for="category_number" class="form-label">Categoría</label>
-                    <select name="category_number" class="form-select">
-                        <?php foreach ($categories as $category): ?>
-                            <option value="<?= $category->category_number ?>"
-                            <?= $category->category_number === $transaction->category_number ? 'selected' : null ?>>
-                                <?= $category->name ?>
-                            </option>
-                        <?php endforeach; ?>
+                    <label for="due_date" class="form-label">Fecha de vencimiento</label>
+                    <input type="date" name="due_date" class="form-control" value="<?= substr($invoice->due_date, 0, 10) ?>">
+                </div>
+                <div class="mb-3">
+                    <label for="payment_status" class="form-label">Estado</label>
+                    <select name="payment_status" class="form-select">
+                        <option value="">-- Seleccione el estado --</option>
+                        <option value="paid">Pagada</option>
+                        <option value="pending">Pendiente</option>
+                        <option value="overdue">Atrasada</option>
+                        <option value="cancelled">Cancelada</option>
                     </select>
-                </div>
-                <div class="mb-3">
-                    <label for="amount" class="form-label">Monto</label>
-                    <input type="number" name="amount" class="form-control" value="<?= number_format($transaction->amount, 2) ?>">
                 </div>
                 <div class="mb-3">
                     <label for="payment_method" class="form-label">Método de Pago</label>
-                    <select name="payment_method" class="form-select">
-                        <?php foreach ($transaction->getMethods() as $key => $value): ?>
-                            <option value="<?= $key ?>" <?= $key === $transaction->payment_method ? 'selected' : null ?>>
-                                <?= $value ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="mb-3">  
-                    <div class="form-floating">
-                        <textarea class="form-control" name="notes"><?= $transaction->notes ?></textarea>
-                        <label for="notes">Notas</label>
+                    <div class="form-check">
+                        <input type="radio" name="payment_method" class="form-check-imput" id="payment_method1" value="cash">
+                        <label for="payment_method1" class="form-check-label">Efectivo</label>
                     </div>
+                    <div class="form-check">
+                        <input type="radio" name="payment_method" class="form-check-imput" id="payment_method3" value="card">
+                        <label for="payment_method3" class="form-check-label">Tarjeta de Débito/Crédito</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" name="payment_method" class="form-check-imput" id="payment_method2" value="transfer">
+                        <label for="payment_method2" class="form-check-label">Transferencia Bancaria</label>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="transactions" class="form-label">Transacciones</label>
+                    <table class="table table-striped table-hover table-bordered caption-top">
+                        <thead class="table-dark">
+                            <th>Categoría</th>
+                            <th>Descripción</th>
+                            <th>Cantidad</th>
+                            <th>Subtotal</th>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($transactions as $transaction):?>
+                                <tr>
+                                    <td><?= $transaction->category ?></td>
+                                    <td><?= $transaction->description ?></td>
+                                    <td><?= $transaction->amount ?></td>
+                                    <td class="subtotal"><?= $transaction->subtotal ?></td>
+                                </tr>
+                            <?php endforeach;?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mb-3">
+                    <label for="total" class="form-label">Total</label>
+                    <input type="number" name="total" class="form-control" readonly>
                 </div>
                 <div class="grid text-center">
                     <button type="submit" class="btn btn-success">Guardar Cambios</button>
-                    <a href="/transactions" class="btn btn-secondary">Cancelar</a>
+                    <a href="/invoices" class="btn btn-secondary">Cancelar</a>
                 </div>
             </form>
         </div>
     </div>
 </div>
+<script>
+    const dialog = document.querySelector('dialog.items');
+    function openDialog(element, event) {
+        event.preventDefault()
+        const heading = document.querySelector('dialog h5');
+        const invoiceType = document.querySelector('input[name="type"]:checked');
+        heading.innerHTML = invoiceType ? 'Elige un Item (Haz click en una fila)' : 'Selecciona el Tipo de Factura primero';
+        dialog.showModal(); 
+    }
+    function closeDialog(element, event) {
+        event.preventDefault()
+        dialog.close();
+    }
+    // selecionar radios y options
+    const statusOptions = document.querySelectorAll('select[name="payment_status"] option   ');
+    statusOptions.forEach(option => {
+        option.selected = option.value === '<?= $invoice->payment_status ?>' ? true : false;
+    });
+    const methodRadios = document.querySelectorAll('input[name="payment_method"]');
+    methodRadios.forEach(radio => {
+        radio.checked = radio.value === '<?= $invoice->payment_method ?>' ? true : false;
+    });
+    // calcular valor del total
+    const totalInput = document.querySelector('input[name="total"]');
+    const subtotals = document.querySelectorAll('form table tbody td.subtotal');
+    let total = 0;
+    subtotals.forEach(subtotal => {
+        total = total + parseFloat(subtotal.innerHTML || 0)
+    })
+    totalInput.value = total.toFixed(2);
+</script>
 <?= $this->endSection()?>

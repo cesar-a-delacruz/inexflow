@@ -58,24 +58,24 @@ class InvoiceController extends BaseController
     ];
     return view('Invoice/new', $data);
   }
-  // public function show($id = null)
-  // {
-  //   $current_page = session()->get('current_page');
-  //   if (is_admin() && $current_page) return redirect()->to($current_page);
+  public function show($id = null)
+  {
+    $current_page = session()->get('current_page');
+    if (is_admin() && $current_page) return redirect()->to($current_page);
 
-  //   if (!user_logged()) return redirect()->to('/');
-  //   else session()->set('current_page', "transactions/$id");
+    if (!user_logged()) return redirect()->to('/');
+    else session()->set('current_page', "invoices/$id");
 
-  //   $transaction = $this->model->find($id);
-  //   // $categories = $this->category_model->getByBusiness(uuid_to_bytes(session()->get('business_id')));
+    $invoice = $this->model->find(uuid_to_bytes($id));
+    $transactions = $this->transaction_model->findAllByInvoice(uuid_to_bytes($id));
 
-  //   $data = [
-  //       'title' => 'Información de Transacción',
-  //       'transaction' => $transaction,
-  //       // 'categories' => $categories
-  //   ];
-  //   return view('Transaction/show', $data);
-  // }
+    $data = [
+        'title' => 'Información de Factura',
+        'invoice' => $invoice,
+        'transactions' => $transactions,
+    ];
+    return view('Invoice/show', $data);
+  }
 
   public function create()
   {

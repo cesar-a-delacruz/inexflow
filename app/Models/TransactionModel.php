@@ -5,6 +5,7 @@ namespace App\Models;
 use CodeIgniter\Model;
 use App\Entities\Transaction;
 use CodeIgniter\Database\Exceptions\DatabaseException;
+use Ramsey\Uuid\Rfc4122\UuidInterface;
 
 class TransactionModel extends Model
 {
@@ -54,33 +55,26 @@ class TransactionModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
-
-    public function createTransaction(Transaction $transaction, $returnID = true): bool|int
-    {
-        try {
-
-            $result = $this->insert($transaction);
-
-            if ($result === false) {
-                throw new DatabaseException('Error al insertar la transacción: ' . implode(', ', $this->errors()));
-            }
-            if ($returnID) return $returnID;
-
-            return $result;
-        } catch (\Exception $e) {
-            log_message('error', 'Error creando transacción: ' . $e->getMessage());
-            throw $e;
-        }
+    
+    public function selectQuery() {
+        return $this->builder()->select();
     }
-    public function findAllWithCategory()
+
+    public function findAllWithCategory(): array
     {
-        $builder = $this->builder();
-        $result = $builder->select('categories.name as category_name, transactions.*')
-            ->join('categories', 'categories.category_number = transactions.category_number')->orderBy('id', 'ASC');
-        $transaction = $result->get()->getCustomResultObject($this->returnType);
+        $result = $this->selectQuery()->orderBy('id', 'ASC');
+        $transactions = $result->get()->getCustomResultObject($this->returnType);
         $result->get()->freeResult();
-        return $transaction;
+        return $transactions;
     }
+    public function findAllByInvoice(UuidInterface|string $id): array
+    {
+        $result = $this->selectQuery()->where('invoice_id', $id)->orderBy('id', 'ASC');
+        $transactions = $result->get()->getCustomResultObject($this->returnType);
+        $result->get()->freeResult();
+        return $transactions;
+    }
+    
 
     // ===========================================
     // MÉTODOS PARA REPORTES FINANCIEROS

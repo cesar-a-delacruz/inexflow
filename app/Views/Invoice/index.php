@@ -23,13 +23,13 @@
             <tr>
               <td><?= $invoices[$i]->invoice_number ?></td>
               <td><?= $invoices[$i]->invoice_date ?></td>
-              <td><?= $invoices[$i]->due_date ?></td>
+              <td><?= substr($invoices[$i]->due_date, 0, 10) ?></td>
               <td><?= $invoices[$i]->getStatusDisplayName() ?></td>
               <td><?= $invoices[$i]->getMethodDisplayName() ?></td>
               <td><?= $invoices[$i]->contact_id ?></td>
               <td>
                 <div class="btn-group" role="group">
-                  <a href="/transaction/<?= $invoices[$i]->id ?>" class="btn btn-success btn-sm">
+                  <a href="/invoices/<?= $invoices[$i]->id ?>" class="btn btn-success btn-sm">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit">
                       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>

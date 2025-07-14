@@ -64,11 +64,11 @@ $routes->delete('items/(:segment)', 'ItemController::delete/$1');
 
 // Rutas de invoices
 //vistas
-// $routes->get('transaction/(:segment)', 'TransactionController::show/$1');
 $routes->get('invoices', 'InvoiceController::index');
 $routes->get('invoices/new', 'InvoiceController::new');
+$routes->get('invoices/(:segment)', 'InvoiceController::show/$1');
 // // otras
 $routes->post('invoices', 'InvoiceController::create');
-// $routes->put('transaction/(:segment)', 'TransactionController::update/$1');
+$routes->put('invoices/(:segment)', 'InvoiceController::update/$1');
 
-// $routes->get('/example', 'ExampleController::index');
+$routes->get('/example', 'ExampleController::index');
