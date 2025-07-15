@@ -62,6 +62,7 @@ class Invoice extends Entity
         return match ($this->contact_type) {
             'customer' => 'Cliente',
             'provider' => 'Proveedor',
+            null => ''
         };
     }
 }

@@ -67,6 +67,6 @@ class InvoiceModel extends Model
 
     public function findAllByBusiness($id) {
         return $this->select('invoices.*, contacts.name as contact_name, contacts.type as contact_type')
-        ->where('invoices.business_id', uuid_to_bytes($id))->join('contacts', 'contacts.id = invoices.contact_id')->findAll();
+        ->where('invoices.business_id', uuid_to_bytes($id))->join('contacts', 'contacts.id = invoices.contact_id', 'left')->findAll();
     }
 }

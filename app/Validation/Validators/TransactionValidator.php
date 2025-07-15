@@ -13,13 +13,6 @@ class TransactionValidator {
                     'required' => 'No hay transaccciones',
                 ],
             ],
-            'transactions.*.amount' => [
-                'rules' => 'required|integer',
-                'errors' => [
-                    'required' => 'La cantidad de uno o mas items son requeridos',
-                    'integer' => 'La cantidades deben ser un número entero',
-                ],
-            ],
             'transactions.*.subtotal' => [
                 'rules' => 'required',
                 'errors' => [

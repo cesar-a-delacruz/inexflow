@@ -90,19 +90,7 @@
     </div>
 </div>
 <script>
-    const dialog = document.querySelector('dialog.items');
-    function openDialog(element, event) {
-        event.preventDefault()
-        const heading = document.querySelector('dialog h5');
-        const invoiceType = document.querySelector('input[name="type"]:checked');
-        heading.innerHTML = invoiceType ? 'Elige un Item (Haz click en una fila)' : 'Selecciona el Tipo de Factura primero';
-        dialog.showModal(); 
-    }
-    function closeDialog(element, event) {
-        event.preventDefault()
-        dialog.close();
-    }
-    // selecionar radios y options
+    // selecionar radios y option del select
     const statusOptions = document.querySelectorAll('select[name="payment_status"] option   ');
     statusOptions.forEach(option => {
         option.selected = option.value === '<?= $invoice->payment_status ?>' ? true : false;

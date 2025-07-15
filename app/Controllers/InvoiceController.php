@@ -106,7 +106,7 @@ class InvoiceController extends BaseController
     $invoice['invoice_date'] = date('Y-m-d H:i:s', Time::now()->timestamp);
     $invoice['invoice_number'] = strval(Time::now()->timestamp);
     $invoice['due_date'] = date('Y-m-d', new Time($invoice['due_date'])->timestamp);
-    $invoice['contact_id'] = uuid_to_bytes($invoice['contact_id']);
+    $invoice['contact_id'] = ($invoice['contact_id'] !== '') ? uuid_to_bytes($invoice['contact_id']) : null;
     
     $transactions_objects = [];
     foreach ($transactions as $transaction) {
