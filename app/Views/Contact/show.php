@@ -7,36 +7,28 @@
             <h4 class="mb-0">Detalles del Contacto</h4>
         </div>
         <div class="card-body">
-           <?php if (session()->getFlashdata('success')): ?>
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <?= session()->getFlashdata('success') ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-                </div>
-            <?php endif; ?>
             <?php if (!empty(validation_errors())): ?>
                 <div class="alert alert-danger"><?= validation_list_errors() ?></div>
             <?php endif; ?>
 
-            <form action="/contacts/<?= esc($contact->id) ?>" method="POST" novalidate>
-                <?= csrf_field() ?>
+            <form action="/contacts/<?= $contact->id ?>" method="POST" novalidate>
                 <input type="hidden" name="_method" value="PUT">
-                <input type="hidden" name="id" value="<?= esc($contact->id) ?>">
 
                 <div class="mb-3">
                     <label for="name" class="form-label">Nombre:</label>
-                    <input type="text" id="name" name="name" value="<?= old('name', $contact->name) ?>" class="form-control" disabled>
+                    <input type="text" id="name" name="name" value="<?= $contact->name ?>" class="form-control" disabled>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email:</label>
-                    <input type="email" id="email" name="email" value="<?= old('email', $contact->email) ?>" class="form-control" disabled>
+                    <input type="email" id="email" name="email" value="<?= $contact->email ?>" class="form-control" disabled>
                 </div>
                 <div class="mb-3">
                     <label for="phone" class="form-label">Teléfono:</label>
-                    <input type="tel" id="phone" name="phone" value="<?= old('phone', $contact->phone) ?>" class="form-control" disabled>
+                    <input type="tel" id="phone" name="phone" value="<?= $contact->phone ?>" class="form-control" disabled>
                 </div>
                 <div class="mb-3">
                     <label for="address" class="form-label">Dirección:</label>
-                    <input type="text" id="address" name="address" value="<?= old('address', $contact->address) ?>" class="form-control" disabled>
+                    <input type="text" id="address" name="address" value="<?= $contact->address ?>" class="form-control" disabled>
                 </div>
                 <div class="mb-3">
                     <label for="type" class="form-label">Tipo</label>
@@ -52,7 +44,7 @@
                 
                 <div class="field buttons"></div>
             </form>
-            <button class="edit btn btn-primary mt-3" onclick="activateInputs()">Editar Contacto</button>
+            <button class="edit btn btn-primary mt-3" onclick="activateInputs()">Editar</button>
         </div>
     </div>
 </div>
@@ -72,7 +64,7 @@
         const butReload = document.createElement('a');  
         butReload.className = 'btn btn-secondary';
         butReload.innerHTML = 'Cancelar';
-        butReload.href = window.location.href; // Reloads the page to revert changes
+        butReload.href = location.href;
 
         document.querySelector('form div.buttons').append(butSubmit, butReload);
         document.querySelector('button.edit').remove();

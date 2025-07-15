@@ -29,33 +29,8 @@ class ContactModel extends Model
     protected $updatedField = 'updated_at';
     protected $deletedField = 'deleted_at';
 
-    protected $validationRules = [
-        'business_id' => 'required',
-        'name' => 'required|max_length[255]',
-        'email' => 'permit_empty|valid_email|max_length[255]',
-        'phone' => 'permit_empty|max_length[50]',
-    ];
-
-    protected $validationMessages = [
-        'business_id' => [
-            'required' => 'El ID del negocio es requerido'
-        ],
-        'name' => [
-            'required' => 'El nombre del cliente es requerido',
-            'max_length' => 'El nombre no puede exceder 255 caracteres'
-        ],
-        'email' => [
-            'valid_email' => 'El email debe tener un formato válido',
-            'max_length' => 'El email no puede exceder 255 caracteres'
-        ],
-        'phone' => [
-            'max_length' => 'El teléfono no puede exceder 50 caracteres'
-        ],
-    ];
-
-    protected $skipValidation = false;
-    
-    public function findAllByBusiness($id) {
-        return $this->where('business_id', uuid_to_bytes($id))->findAll();
+    public function findAllByBusiness($business_id): array
+    {
+        return $this->where('business_id', uuid_to_bytes($business_id))->findAll();
     }
 }

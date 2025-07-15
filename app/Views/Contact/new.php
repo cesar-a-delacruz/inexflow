@@ -18,7 +18,6 @@
             <?php endif; ?>
 
             <form action="/contacts" method="POST" novalidate>
-                <?= csrf_field() ?>
                  <div class="mb-3">
                     <label for="name" class="form-label">Nombre:</label>
                     <input type="text" id="name" name="name"  class="form-control">
@@ -47,7 +46,7 @@
                     </div>
                 </div>
                 <div class="d-grid">
-                    <button type="submit" class="btn btn-success">Guardar Contacto</button>
+                    <button type="submit" class="btn btn-success">Registrar</button>
                 </div>
             </form>
         </div>

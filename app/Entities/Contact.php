@@ -6,8 +6,6 @@ use CodeIgniter\Entity\Entity;
 
 class Contact extends Entity
 {
-    protected $datamap = [];
-
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     protected $casts = [
@@ -23,20 +21,11 @@ class Contact extends Entity
         'deleted_at' => '?datetime',
     ];
 
-    protected $attributes = [
-        'id' => null,
-        'business_id' => null,
-        'name' => null,
-        'email' => null,
-        'phone' => null,
-        'address' => null,
-    ];
-
     protected $castHandlers = [
         'uuid' => Cast\UuidCast::class
     ];
 
-    public function getTypeDisplayName(): string
+    public function displayType(): string
     {
         return match ($this->type) {
             'customer' => 'Cliente',
