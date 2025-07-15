@@ -32,7 +32,7 @@ class ItemController extends BaseController
     else session()->set('current_page', 'items');
 
     $data['title'] = 'Items';
-    $data['items'] = $this->model->findAllWithCategory();
+    $data['items'] = $this->model->findAllWithCategory(session()->get('business_id'));
     return view('Item/index', $data);
   }
   public function new()

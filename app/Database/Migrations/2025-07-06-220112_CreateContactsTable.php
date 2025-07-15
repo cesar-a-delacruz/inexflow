@@ -60,9 +60,8 @@ class CreateContactsTable extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->addKey(['business_id', 'name'], false, false, 'idx_business_customer_name');
-
         $this->forge->addForeignKey('business_id', 'businesses', 'id', 'CASCADE', 'RESTRICT');
+        
         $this->forge->createTable('contacts');
     }
 
