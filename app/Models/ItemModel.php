@@ -79,13 +79,9 @@ class ItemModel extends Model
 
     protected $skipValidation = false;
 
-    public function findAllWithCategory()
+    public function findAllWithCategory($id)
     {
-        $builder = $this->builder();
-        $result = $builder->select('categories.name as category_name, categories.type as category_type, items.*')
-        ->join('categories', 'categories.category_number = items.category_number')->where('items.deleted_at', null)->orderBy('type', 'DESC');
-        $items = $result->get()->getCustomResultObject($this->returnType);
-        $result->get()->freeResult();
-        return $items;
+        return $this->select('items.*, categories.name as category_name, categories.type as category_type')
+        ->where('items.business_id', uuid_to_bytes($id))->join('categories', 'categories.category_number = items.category_number')->findAll();;
     }
 }

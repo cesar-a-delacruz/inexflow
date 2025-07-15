@@ -28,6 +28,10 @@
                     <input type="date" name="due_date" class="form-control" value="<?= substr($invoice->due_date, 0, 10) ?>">
                 </div>
                 <div class="mb-3">
+                    <label for="invoice_date" class="form-label">Contacto</label>
+                    <input type="text" class="contact form-control" value="<?= $contact->name.' | '.$contact->address ?>" disabled>
+                </div>
+                <div class="mb-3">
                     <label for="payment_status" class="form-label">Estado</label>
                     <select name="payment_status" class="form-select">
                         <option value="">-- Seleccione el estado --</option>

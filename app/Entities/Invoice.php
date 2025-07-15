@@ -57,4 +57,11 @@ class Invoice extends Entity
             '' => ''
         };
     }
+    public function getContactTypeDisplayName(): string
+    {
+        return match ($this->contact_type) {
+            'customer' => 'Cliente',
+            'provider' => 'Proveedor',
+        };
+    }
 }

@@ -38,6 +38,12 @@
                     </div>
                 </div>
                 <div class="mb-3">
+                    <label for="invoice_date" class="form-label">Contacto</label>
+                    <input type="text" class="contact form-control" readonly>
+                    <input type="hidden" name="contact_id" class="form-control">
+                    <button type="button" class="btn btn-secondary mt-3" onclick="openDialog(this, event, 'contacts')">Buscar Contacto</button>
+                </div>
+                <div class="mb-3">
                     <label for="payment_status" class="form-label">Estado</label>
                     <select name="payment_status" class="form-select">
                         <option value="">-- Seleccione el estado --</option>
@@ -75,7 +81,7 @@
                         <tbody>
                         </tbody>
                     </table>
-                    <button type="button" class="btn btn-secondary mt-3" onclick="openDialog(this, event)">Añadir Item</button>
+                    <button type="button" class="btn btn-secondary mt-3" onclick="openDialog(this, event, 'items')">Añadir Item</button>
                 </div>
                 <div class="mb-3">
                     <label for="total" class="form-label">Total</label>
@@ -136,7 +142,7 @@
       <tbody>
         <?php if (!empty($items->expense)): ?>
           <?php for ($i = 0; $i < count($items->expense); $i++): ?>
-            <tr data-index="<?= $i?>">
+            <tr data-id="<?= $i?>">
               <td><?= $i + 1 ?></td>
               <td class="category"><?= $items->expense[$i]->category_name ?></td>
               <td class="description"><?= $items->expense[$i]->name ?></td>
@@ -149,20 +155,76 @@
       </tbody>
     </table>
 </dialog>
+<dialog class="contacts">
+    <button class="btn btn-secondary btn-sm mb-3" onclick="this.parentElement.close()">X</button>
+    <h5>Elige un Contacto (Haz click en la tabla)</h5>
+    <table class="income table table-striped table-hover table-bordered caption-top"
+    style="display: none">
+        <caption>Clientes</caption>
+      <thead class="table-dark">
+        <tr>
+          <th></th>
+          <th>Nombre</th>
+          <th>Correo</th>
+          <th>Teléfono</th>
+          <th>Dirreción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php if (!empty($contacts->customer)): ?>
+          <?php for ($i = 0; $i < count($contacts->customer); $i++): ?>
+            <tr data-id="<?= $contacts->customer[$i]->id ?>">
+              <td><?= $i + 1 ?></td>
+              <td class="name"><?= $contacts->customer[$i]->name ?></td>
+              <td><?= $contacts->customer[$i]->email ?></td>
+              <td><?= $contacts->customer[$i]->phone ?></td>
+              <td class="address"><?= $contacts->customer[$i]->address ?></td>
+            </tr>
+          <?php endfor; ?>
+        <?php endif; ?>
+      </tbody>
+    </table>
+    <table class="expense table table-striped table-hover table-bordered caption-top"
+    style="display: none">
+        <caption>Proveedores</caption>
+      <thead class="table-dark">
+        <tr>
+          <th></th>
+          <th>Nombre</th>
+          <th>Correo</th>
+          <th>Teléfono</th>
+          <th>Dirreción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php if (!empty($contacts->provider)): ?>
+          <?php for ($i = 0; $i < count($contacts->provider); $i++): ?>
+            <tr data-id="<?= $contacts->provider[$i]->id ?>">
+              <td><?= $i + 1 ?></td>
+              <td class="name"><?= $contacts->provider[$i]->name ?></td>
+              <td><?= $contacts->provider[$i]->email ?></td>
+              <td><?= $contacts->provider[$i]->phone ?></td>
+              <td class="address"><?= $contacts->provider[$i]->address ?></td>
+            </tr>
+          <?php endfor; ?>
+        <?php endif; ?>
+      </tbody>
+    </table>
+</dialog>
 <script>
-    const dialog = document.querySelector('dialog.items');
-    function openDialog(element, event) {
+    function openDialog(element, event, dataset) {
         event.preventDefault()
         const heading = document.querySelector('dialog h5');
         const invoiceType = document.querySelector('input[name="type"]:checked');
-        heading.innerHTML = invoiceType ? 'Elige un Item (Haz click en una fila)' : 'Selecciona el Tipo de Factura primero';
+        heading.innerHTML = invoiceType ? 'Elige un registro (Haz click en una fila)' : 'Selecciona el Tipo de Factura primero';
+        const dialog = document.querySelector(`dialog.${dataset}`);
         dialog.showModal(); 
     }
     function closeDialog(element, event) {
-        event.preventDefault()
+        event.preventDefault();
         dialog.close();
     }
-    // mostrar tabla de items segun tipo de factura
+    // mostrar tablas segun tipo de factura
     const typeRadios = document.querySelectorAll('input[name="type"]');
     const tables = document.querySelectorAll('dialog table');
     typeRadios.forEach(radio => {
@@ -171,12 +233,28 @@
                 table.style.display = radio.value === table.classList[0]
                 ? 'table' : 'none';
             })
-            radio.disabled = true;
+            typeRadios.forEach(radio => radio.disabled = true);
         })
+    });
+    // llenar input de contacto
+    const contactsTables = document.querySelectorAll('dialog.contacts table');
+    contactsTables.forEach(table => {
+        for (const row of table.children[2].children) {
+            row.addEventListener('click', (event) => {
+                const contactInput = document.querySelector('input.contact');
+                const contactIdInput = document.querySelector('input[name="contact_id"]');
+                const contactData = [row.children[1].innerHTML, row.children[4].innerHTML]
+                const contactId = row.dataset.id;
+
+                contactInput.value = `${contactData[0]} | ${contactData[1]}`;
+                contactIdInput.value = contactId;
+            })
+        }
     });
     // crear fila en tabla de transacciones
     const formTable = document.querySelector('form table').children[1];
-    tables.forEach(table => {
+    const itemsTables = document.querySelectorAll('dialog.items table');
+    itemsTables.forEach(table => {
         for (const row of table.children[2].children) {
             row.addEventListener('click', (event) => {
                 const newRowIndex = formTable.children.length;

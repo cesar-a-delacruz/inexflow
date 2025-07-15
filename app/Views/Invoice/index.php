@@ -10,10 +10,10 @@
         <tr>
           <th>Número</th>
           <th>Emisión</th>
-          <th>Vencimiento</th>
           <th>Estado del Pago</th>
           <th>Método de Pago</th>
           <th>Contacto</th>
+          <th>Tipo de Contacto</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -23,10 +23,10 @@
             <tr>
               <td><?= $invoices[$i]->invoice_number ?></td>
               <td><?= $invoices[$i]->invoice_date ?></td>
-              <td><?= substr($invoices[$i]->due_date, 0, 10) ?></td>
               <td><?= $invoices[$i]->getStatusDisplayName() ?></td>
               <td><?= $invoices[$i]->getMethodDisplayName() ?></td>
-              <td><?= $invoices[$i]->contact_id ?></td>
+              <td><?= $invoices[$i]->contact_name ?></td>
+              <td><?= $invoices[$i]->getContactTypeDisplayName() ?></td>
               <td>
                 <div class="btn-group" role="group">
                   <a href="/invoices/<?= $invoices[$i]->id ?>" class="btn btn-success btn-sm">
