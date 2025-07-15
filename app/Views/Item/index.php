@@ -5,6 +5,20 @@
   <h1 class="mb-4"><?= $title ?></h1>
   <a href="/items/new" class="btn btn-primary">Registrar Item</a>
   <a href="/categories" class="btn btn-success">Ver Categorías</a>
+
+  <?php if (session()->getFlashdata('success')): ?>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <?= session()->getFlashdata('success') ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+  <?php endif; ?>
+  <?php if (session()->getFlashdata('error')): ?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <?= session()->getFlashdata('error') ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+  <?php endif; ?>
+
   <div class="table-responsive" >
     <table id="showtable" class="table table-striped table-hover table-bordered">
       <thead class="table-dark">
@@ -25,13 +39,13 @@
           <?php for ($i = 0; $i < count($items); $i++): ?>
             <tr>
               <td><?= $i+1 ?></td>
-              <td><?= $items[$i]->getCategoryTypeDisplayName().' | '.$items[$i]->category_name ?></td>
-              <td><?= $items[$i]->name ?></td>
-              <td><?= $items[$i]->getTypeDisplayName() ?></td>
-              <td><?= '$'.number_format($items[$i]->cost, 2) ?></td>
-              <td><?= $items[$i]->selling_price ? '$'.number_format($items[$i]->selling_price, 2) : 'No Aplica' ?></td>
-              <td><?= $items[$i]->current_stock ? $items[$i]->current_stock : 'No Aplica' ?></td>
-              <td><?= $items[$i]->measure_unit ? $items[$i]->measure_unit : 'No Aplica' ?></td>
+              <td><?= $items[$i]->displayCategoryType().' | '.$items[$i]->category_name ?></td>
+              <td><?= $items[$i]->displayProperty('name') ?></td>
+              <td><?= $items[$i]->displayType() ?></td>
+              <td><?= $items[$i]->displayMoney('cost') ?></td>
+              <td><?= $items[$i]->displayMoney('selling_price') ?></td>
+              <td><?= $items[$i]->displayProperty('stock') ?></td>
+              <td><?= $items[$i]->displayProperty('measure_unit') ?></td>
               <td>
                 <div class="btn-group">
                   <button class="btn btn-success btn-sm" onclick="location.assign('/items/<?= uuid_to_string($items[$i]->id) ?>')">
@@ -64,7 +78,7 @@
   </div>
 </div>
 <dialog class="delete">
-    <h5>¿Estas seguro de que deseas eliminar este producto?</h5>
+    <h5>¿Estas seguro de que deseas eliminar este item?</h5>
     <form action="" method="POST">
         <input type="hidden" name="_method" value="DELETE">
         <button type="submit" class="btn btn-danger btn-sm">Sí</button>

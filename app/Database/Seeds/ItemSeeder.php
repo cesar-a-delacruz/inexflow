@@ -20,10 +20,9 @@ class ItemSeeder extends Seeder
             'type' => 'product',
             'cost' => 0.50,
             'selling_price' => 0.75,
-            'current_stock' => 20,
+            'stock' => 20,
             'min_stock' => 5,
             'measure_unit' => 'Unidad',
-            'is_active' => 1,
         ]));
         $model->insert(new Item([
             'id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '2'),
@@ -33,10 +32,9 @@ class ItemSeeder extends Seeder
             'type' => 'product',
             'cost' => 60.00,
             'selling_price' => null,
-            'current_stock' => 2,
+            'stock' => 2,
             'min_stock' => 1,
             'measure_unit' => 'Unidad',
-            'is_active' => 1,
         ]));
         $model->insert(new Item([
             'id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '3'),
@@ -46,10 +44,9 @@ class ItemSeeder extends Seeder
             'type' => 'service',
             'cost' => 40.00,
             'selling_price' => null,
-            'current_stock' => null,
+            'stock' => null,
             'min_stock' => null,
             'measure_unit' => null,
-            'is_active' => 1,
         ]));
     }
 }

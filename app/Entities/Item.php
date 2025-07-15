@@ -6,8 +6,6 @@ use CodeIgniter\Entity\Entity;
 
 class Item extends Entity
 {
-    protected $datamap = [];
-
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     protected $casts = [
@@ -18,45 +16,38 @@ class Item extends Entity
         'type' => 'string',
         'cost' => 'float',
         'selling_price' => 'float',
-        'current_stock' => 'int',
+        'stock' => 'int',
         'min_stock' => 'int',
         'measure_unit' => 'string',
-        'is_active' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => '?datetime',
-    ];
-
-    protected $attributes = [
-        'id' => null,
-        'business_id' => null,
-        'category_number' => null,
-        'name' => null,
-        'type' => 'product',
-        'cost' => 0.00,
-        'selling_price' => null,
-        'current_stock' => 0,
-        'min_stock' => 0,
-        'measure_unit' => 'unidad',
-        'is_active' => 1,
     ];
 
     protected $castHandlers = [
         'uuid' => Cast\UuidCast::class
     ];
 
-    public function getTypeDisplayName(): string
+    public function displayType(): string
     {
         return match ($this->type) {
             'service' => 'Servicio',
             'product' => 'Producto  ',
         };
     }
-    public function getCategoryTypeDisplayName(): string
+    public function displayCategoryType(): string
     {
         return match ($this->category_type) {
             'income' => 'Ingreso',
             'expense' => 'Gasto',
         };
+    }
+    public function displayProperty($property): string
+    {
+        return $this->{$property} ? $this->{$property} : 'No Aplica';
+    }
+    public function displayMoney($money): string
+    {
+        return $this->{$money} ? '$'.number_format($this->{$money}, 2) : 'No Aplica';
     }
 }
