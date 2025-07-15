@@ -25,14 +25,14 @@ class Invoice extends Entity
     ];
 
     protected $attributes = [
-        'id' => null,
-        'business_id' => null,
-        'contact_id' => null,
-        'invoice_number' => null,
-        'invoice_date' => null,
-        'due_date' => null,
-        'payment_status' => 'paid',
-        'payment_method' => null,
+        // 'id' => null,
+        // 'business_id' => null,
+        // 'contact_id' => null,
+        // 'invoice_number' => null,
+        // 'invoice_date' => null,
+        // 'due_date' => null,
+        // 'payment_status' => 'paid',
+        // 'payment_method' => null,
     ];
 
     protected $castHandlers = [

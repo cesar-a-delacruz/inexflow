@@ -60,7 +60,7 @@
 <script>
     function activateInputs() {
         const inputs = document.querySelectorAll('form div.mb-3 input, form div.mb-3 select');
-        for (let i = 0; i < inputs.length; i++) {
+        for (let i = 0; i < inputs.length -2 ; i++) {
             inputs[i].disabled = false;
         }
 

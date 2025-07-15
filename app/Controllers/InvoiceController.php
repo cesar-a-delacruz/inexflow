@@ -128,7 +128,7 @@ class InvoiceController extends BaseController
       if ($value) $row[$key] = $value;
     }
     if (empty($row)) return redirect()->to('invoices');
-
+    
     if (!$this->validate($this->form_invoice_validator->showRules())) {
       return redirect()->back()->withInput(); 
     }

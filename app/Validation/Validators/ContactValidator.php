@@ -47,12 +47,6 @@ class ContactValidator {
                     'max_length' => 'El teléfono no puede exceder 50 caracteres'
                 ],
             ],
-            'type' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'El tipo es requerido',
-                ],
-            ],
         ];
     }
 }

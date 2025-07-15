@@ -71,7 +71,7 @@
                                     <td><?= $transaction->category ?></td>
                                     <td><?= $transaction->description ?></td>
                                     <td><?= $transaction->amount ?></td>
-                                    <td class="subtotal"><?= $transaction->subtotal ?></td>
+                                    <td class="subtotal"><?= number_format($transaction->subtotal, 2) ?></td>
                                 </tr>
                             <?php endforeach;?>
                         </tbody>
