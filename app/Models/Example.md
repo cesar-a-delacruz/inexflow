@@ -76,7 +76,7 @@ Array
                     [expenses] => 85.5
                     [net_flow] => -85.5
                     [running_balance] => -85.5
-                    [transaction_count] => 1
+                    [record_count] => 1
                 )
 
             [1] => Array
@@ -86,7 +86,7 @@ Array
                     [expenses] => 140
                     [net_flow] => 0
                     [running_balance] => -85.5
-                    [transaction_count] => 2
+                    [record_count] => 2
                 )
 
             [2] => Array
@@ -96,7 +96,7 @@ Array
                     [expenses] => 120
                     [net_flow] => 0
                     [running_balance] => -85.5
-                    [transaction_count] => 2
+                    [record_count] => 2
                 )
 
         )
@@ -172,7 +172,7 @@ Este es el **detalle por período**. Cada ítem es un **bloque de un día**.
     [expenses] => 85.5
     [net_flow] => -85.5
     [running_balance] => -85.5
-    [transaction_count] => 1
+    [record_count] => 1
 )
 ```
 
@@ -183,7 +183,7 @@ Este es el **detalle por período**. Cada ítem es un **bloque de un día**.
 | **expenses**           | Total de gastos (**\$85.5**) ese día.                                            |
 | **net\_flow**          | Flujo neto (**incomes - expenses**) = **0 - 85.5 = -85.5**.                      |
 | **running\_balance**   | Saldo acumulado hasta ese momento = saldo anterior (`0`) + `net_flow` → `-85.5`. |
-| **transaction\_count** | Cantidad de transacciones ese día = `1`.                                         |
+| **record\_count** | Cantidad de registros ese día = `1`.                                         |
 
 ---
 
@@ -197,7 +197,7 @@ Este es el **detalle por período**. Cada ítem es un **bloque de un día**.
     [expenses] => 140
     [net_flow] => 0
     [running_balance] => -85.5
-    [transaction_count] => 2
+    [record_count] => 2
 )
 ```
 
@@ -208,7 +208,7 @@ Este es el **detalle por período**. Cada ítem es un **bloque de un día**.
 | **expenses**           | \$140 se gastaron.                                              |
 | **net\_flow**          | 140 - 140 = 0                                                   |
 | **running\_balance**   | Sigue igual porque `net_flow` = 0 → acumulado sigue en `-85.5`. |
-| **transaction\_count** | 2 transacciones ese día.                                        |
+| **record\_count** | 2 registros ese día.                                        |
 
 ---
 
@@ -222,7 +222,7 @@ Este es el **detalle por período**. Cada ítem es un **bloque de un día**.
     [expenses] => 120
     [net_flow] => 0
     [running_balance] => -85.5
-    [transaction_count] => 2
+    [record_count] => 2
 )
 ```
 
@@ -233,7 +233,7 @@ Este es el **detalle por período**. Cada ítem es un **bloque de un día**.
 | **expenses**           | \$120 se gastaron.     |
 | **net\_flow**          | 120 - 120 = 0          |
 | **running\_balance**   | Sigue igual → `-85.5`. |
-| **transaction\_count** | 2 transacciones.       |
+| **record\_count** | 2 registros.       |
 
 ---
 
@@ -259,9 +259,9 @@ period 3: net_flow = 0 → running_balance = -85.5 + 0 = -85.5
 
 **Función clave:**
 
-* **Agrupa transacciones** por fecha (`day`, `week`, `month`).
+* **Agrupa registros** por fecha (`day`, `week`, `month`).
 * **Suma ingresos y gastos** por período.
-* **Cuenta cuántas transacciones hay.**
+* **Cuenta cuántas registros hay.**
 * **Calcula:** flujo neto y saldo acumulado (`running_balance`).
 
 # metodo getBusinessMetrics()
@@ -279,7 +279,7 @@ Array
                     [month] => 2023-11
                     [incomes] => 0
                     [expenses] => 85.5
-                    [transactions] => 1
+                    [records] => 1
                     [active_days] => 1
                 )
 
@@ -288,7 +288,7 @@ Array
                     [month] => 2024-12
                     [incomes] => 0
                     [expenses] => 140
-                    [transactions] => 1
+                    [records] => 1
                     [active_days] => 1
                 )
 
@@ -297,7 +297,7 @@ Array
                     [month] => 2025-02
                     [incomes] => 120
                     [expenses] => 0
-                    [transactions] => 1
+                    [records] => 1
                     [active_days] => 1
                 )
 
@@ -306,7 +306,7 @@ Array
                     [month] => 2025-07
                     [incomes] => 10
                     [expenses] => 20
-                    [transactions] => 2
+                    [records] => 2
                     [active_days] => 1
                 )
 
@@ -316,7 +316,7 @@ Array
         (
             [monthly_income] => 32.5
             [monthly_expenses] => 61.375
-            [monthly_transactions] => 1.25
+            [monthly_records] => 1.25
             [daily_income] => 32.5
             [daily_expenses] => 61.375
         )
@@ -339,7 +339,7 @@ Este método construye **Métricas de rendimiento** (*Performance Metrics*) del 
 Sirve para responder:
 
 * ¿Cuánto ingreso (*income*) y gasto (*expense*) hay cada mes?
-* ¿Cuántas transacciones ocurren cada mes?
+* ¿Cuántas registros ocurren cada mes?
 * ¿En cuántos días del mes hubo actividad?
 * ¿Cuál es el **promedio mensual**?
 * ¿Cuál es la **tendencia de crecimiento** (*growth rate*)?
@@ -351,15 +351,15 @@ Sirve para responder:
 ```php
 $builder->select('
     categories.type,
-    DATE_FORMAT(transactions.transaction_date, "%Y-%m") as month,
-    SUM(transactions.amount) as total_amount,
-    COUNT(transactions.id) as transaction_count,
-    COUNT(DISTINCT DATE(transactions.transaction_date)) as active_days
+    DATE_FORMAT(records.record_date, "%Y-%m") as month,
+    SUM(records.amount) as total_amount,
+    COUNT(records.id) as record_count,
+    COUNT(DISTINCT DATE(records.record_date)) as active_days
 ')
 ->join(
     'categories',
-    'categories.business_id = transactions.business_id 
-     AND categories.category_number = transactions.category_number'
+    'categories.business_id = records.business_id 
+     AND categories.category_number = records.category_number'
 )
 ->groupBy('categories.type, month')
 ->orderBy('month', 'ASC');
@@ -369,8 +369,8 @@ $builder->select('
 
 * **`categories.type`** → Distingue si es `income` o `expense`.
 * **`DATE_FORMAT(..., "%Y-%m")`** → Agrupa por mes (`YYYY-MM`).
-* **`SUM(transactions.amount)`** → Suma los montos por tipo y mes.
-* **`COUNT(transactions.id)`** → Cuenta cuántas transacciones hubo.
+* **`SUM(records.amount)`** → Suma los montos por tipo y mes.
+* **`COUNT(records.id)`** → Cuenta cuántas registros hubo.
 * **`COUNT(DISTINCT DATE(...))`** → Cuenta cuántos días del mes tuvieron actividad (*active days*).
 
 ---
@@ -393,7 +393,7 @@ foreach ($results as $row) {
             'month' => $month,
             'incomes' => 0,
             'expenses' => 0,
-            'transactions' => 0,
+            'records' => 0,
             'active_days' => 0
         ];
     }
@@ -404,7 +404,7 @@ foreach ($results as $row) {
         $months[$month]['expenses'] = (float) $row['total_amount'];
     }
 
-    $months[$month]['transactions'] += (int) $row['transaction_count'];
+    $months[$month]['records'] += (int) $row['record_count'];
     $months[$month]['active_days'] = max(
         $months[$month]['active_days'],
         (int) $row['active_days']
@@ -418,7 +418,7 @@ foreach ($results as $row) {
 ✅ Para cada mes:
 
 * Guarda ingresos o gastos.
-* Suma cuántas transacciones hubo.
+* Suma cuántas registros hubo.
 * Guarda cuántos días del mes estuvieron activos (**`active_days`**).
 
 **💡 Clave:** como cada fila tiene `type` (`income` o `expense`), vas separando los totales.
@@ -433,7 +433,7 @@ $metrics = [
     'averages' => [
         'monthly_income' => total_income / meses,
         'monthly_expenses' => total_expenses / meses,
-        'monthly_transactions' => total_transacciones / meses,
+        'monthly_records' => total_registros / meses,
         'daily_income' => total_income / total_días_activos,
         'daily_expenses' => total_expenses / total_días_activos
     ],
@@ -443,7 +443,7 @@ $metrics = [
 
 ✅ **monthly\_income** → Promedio mensual de ingresos.
 ✅ **monthly\_expenses** → Promedio mensual de gastos.
-✅ **monthly\_transactions** → Promedio de transacciones por mes.
+✅ **monthly\_records** → Promedio de registros por mes.
 ✅ **daily\_income** y **daily\_expenses** → promedio **diario**, basado en días activos.
 
 ---
@@ -497,7 +497,7 @@ En tu `Array`:
     [month] => 2023-11
     [incomes] => 0
     [expenses] => 85.5
-    [transactions] => 1
+    [records] => 1
     [active_days] => 1
 )
 ```
@@ -507,8 +507,8 @@ En tu `Array`:
 | **month**        | Mes (`2023-11`).                          |
 | **incomes**      | Total ingresos del mes.                   |
 | **expenses**     | Total gastos del mes.                     |
-| **transactions** | Cantidad de transacciones.                |
-| **active\_days** | Días distintos del mes con transacciones. |
+| **records** | Cantidad de registros.                |
+| **active\_days** | Días distintos del mes con registros. |
 
 ---
 
@@ -521,7 +521,7 @@ En tu `Array`:
 | Crecimiento             | Growth Rate         | Cambio porcentual entre períodos. |
 | Promedio mensual        | Monthly Average     | Media por mes.                    |
 | Promedio diario         | Daily Average       | Media por día.                    |
-| Transacciones           | Transactions        | Operaciones individuales.         |
+| registros               | records             | Operaciones individuales.         |
 
 ---
 

@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateInvoicesTable extends Migration
+class CreateTransactionsTable extends Migration
 {
     public function up()
     {
@@ -62,15 +62,15 @@ class CreateInvoicesTable extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->addUniqueKey(['business_id', 'number'], 'uk_business_invoice_number');
+        $this->forge->addUniqueKey(['business_id', 'number'], 'uk_business_transaction_number');
         $this->forge->addForeignKey('business_id', 'businesses', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->addForeignKey('contact_id', 'contacts', 'id', 'CASCADE', 'RESTRICT');
         
-        $this->forge->createTable('invoices');
+        $this->forge->createTable('transactions');
     }
 
     public function down()
     {
-        $this->forge->dropTable('invoices');
+        $this->forge->dropTable('transactions');
     }
 }

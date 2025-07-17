@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
-use App\Entities\Transaction;
+use App\Entities\Record;
 
 class ExampleModel extends Model
 {
-    protected $table = 'transactions';
+    protected $table = 'records';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType = Transaction::class;
+    protected $returnType = Record::class;
 
     protected $allowedFields = [
         'business_id',
@@ -18,7 +18,7 @@ class ExampleModel extends Model
         'category',
         'amount',
         'subtotal',
-        'invoice_id',
+        'transaction_id',
     ];
 
     protected $useTimestamps = true;
@@ -46,10 +46,10 @@ class ExampleModel extends Model
         $builder->select('
             categories.type,
             categories.name as category_name,
-            SUM(transactions.amount) as total_amount,
-            COUNT(transactions.id) as transaction_count
+            SUM(records.amount) as total_amount,
+            COUNT(records.id) as record_count
         ')
-            ->join('categories', 'categories.business_id = transactions.business_id AND categories.category_number = transactions.category_number')
+            ->join('categories', 'categories.business_id = records.business_id AND categories.category_number = records.category_number')
             ->groupBy('categories.type, categories.name');
 
         // Aplicar filtros
@@ -68,14 +68,14 @@ class ExampleModel extends Model
                 $incomes[] = [
                     'category' => $row['category_name'],
                     'amount' => (float) $row['total_amount'],
-                    'count' => (int) $row['transaction_count']
+                    'count' => (int) $row['record_count']
                 ];
                 $totalIncomes += (float) $row['total_amount'];
             } elseif ($row['type'] === 'expense') {
                 $expenses[] = [
                     'category' => $row['category_name'],
                     'amount' => (float) $row['total_amount'],
-                    'count' => (int) $row['transaction_count']
+                    'count' => (int) $row['record_count']
                 ];
                 $totalExpenses += (float) $row['total_amount'];
             }
@@ -111,14 +111,14 @@ class ExampleModel extends Model
         $dateFormat = $this->getDateFormat($groupBy);
 
         $builder->select("
-            DATE_FORMAT(transactions.transaction_date, '$dateFormat') as period,
+            DATE_FORMAT(records.record_date, '$dateFormat') as period,
             categories.type,
-            SUM(transactions.amount) as total_amount,
-            COUNT(transactions.id) as transaction_count
+            SUM(records.amount) as total_amount,
+            COUNT(records.id) as record_count
         ")
-            ->join('categories', 'categories.business_id = transactions.business_id AND categories.category_number = transactions.category_number')
+            ->join('categories', 'categories.business_id = records.business_id AND categories.category_number = records.category_number')
             ->groupBy('period, categories.type')
-            ->orderBy('transactions.transaction_date', 'ASC');
+            ->orderBy('records.record_date', 'ASC');
 
         // Aplicar filtros
         $this->applyFilters($builder, $businessId, $filters);
@@ -139,7 +139,7 @@ class ExampleModel extends Model
                     'expenses' => 0,
                     'net_flow' => 0,
                     'running_balance' => $runningBalance,
-                    'transaction_count' => 0
+                    'record_count' => 0
                 ];
             }
 
@@ -149,7 +149,7 @@ class ExampleModel extends Model
                 $cashFlow[$period]['expenses'] += (float) $row['total_amount'];
             }
 
-            $cashFlow[$period]['transaction_count'] += (int) $row['transaction_count'];
+            $cashFlow[$period]['record_count'] += (int) $row['record_count'];
         }
 
         // Calcular flujo neto y balance acumulado
@@ -184,13 +184,13 @@ class ExampleModel extends Model
         $builder->select('
             categories.type,
             categories.name as category_name,
-            SUM(transactions.amount) as total_amount,
-            COUNT(transactions.id) as transaction_count,
-            AVG(transactions.amount) as average_amount,
-            MIN(transactions.amount) as min_amount,
-            MAX(transactions.amount) as max_amount
+            SUM(records.amount) as total_amount,
+            COUNT(records.id) as record_count,
+            AVG(records.amount) as average_amount,
+            MIN(records.amount) as min_amount,
+            MAX(records.amount) as max_amount
         ')
-            ->join('categories', 'categories.business_id = transactions.business_id AND categories.category_number = transactions.category_number')
+            ->join('categories', 'categories.business_id = records.business_id AND categories.category_number = records.category_number')
             ->groupBy('categories.type, categories.name')
             ->orderBy('total_amount', 'DESC');
 
@@ -216,7 +216,7 @@ class ExampleModel extends Model
                 'category' => $row['category_name'],
                 'amount' => $amount,
                 'percentage' => $totalAmount > 0 ? ($amount / $totalAmount) * 100 : 0,
-                'count' => (int) $row['transaction_count'],
+                'count' => (int) $row['record_count'],
                 'average' => (float) $row['average_amount'],
                 'min' => (float) $row['min_amount'],
                 'max' => (float) $row['max_amount']
@@ -227,7 +227,7 @@ class ExampleModel extends Model
             'period' => $this->getPeriodDescription($filters),
             'filter_type' => $filters['category_type'] ?? 'all',
             'total_amount' => $totalAmount,
-            'total_transactions' => array_sum(array_column($results, 'transaction_count')),
+            'total_records' => array_sum(array_column($results, 'record_count')),
             'categories' => $categories
         ];
     }
@@ -245,12 +245,12 @@ class ExampleModel extends Model
 
         $builder->select('
             categories.type,
-            DATE_FORMAT(transactions.transaction_date, "%Y-%m") as month,
-            SUM(transactions.amount) as total_amount,
-            COUNT(transactions.id) as transaction_count,
-            COUNT(DISTINCT DATE(transactions.transaction_date)) as active_days
+            DATE_FORMAT(records.record_date, "%Y-%m") as month,
+            SUM(records.amount) as total_amount,
+            COUNT(records.id) as record_count,
+            COUNT(DISTINCT DATE(records.record_date)) as active_days
         ')
-            ->join('categories', 'categories.business_id = transactions.business_id AND categories.category_number = transactions.category_number')
+            ->join('categories', 'categories.business_id = records.business_id AND categories.category_number = records.category_number')
             ->groupBy('categories.type, month')
             ->orderBy('month', 'ASC');
 
@@ -268,7 +268,7 @@ class ExampleModel extends Model
                     'month' => $month,
                     'incomes' => 0,
                     'expenses' => 0,
-                    'transactions' => 0,
+                    'records' => 0,
                     'active_days' => 0
                 ];
             }
@@ -279,7 +279,7 @@ class ExampleModel extends Model
                 $months[$month]['expenses'] = (float) $row['total_amount'];
             }
 
-            $months[$month]['transactions'] += (int) $row['transaction_count'];
+            $months[$month]['records'] += (int) $row['record_count'];
             $months[$month]['active_days'] = max($months[$month]['active_days'], (int) $row['active_days']);
         }
 
@@ -292,7 +292,7 @@ class ExampleModel extends Model
             'averages' => [
                 'monthly_income' => $totalMonths > 0 ? array_sum(array_column($monthlyData, 'incomes')) / $totalMonths : 0,
                 'monthly_expenses' => $totalMonths > 0 ? array_sum(array_column($monthlyData, 'expenses')) / $totalMonths : 0,
-                'monthly_transactions' => $totalMonths > 0 ? array_sum(array_column($monthlyData, 'transactions')) / $totalMonths : 0,
+                'monthly_records' => $totalMonths > 0 ? array_sum(array_column($monthlyData, 'records')) / $totalMonths : 0,
                 'daily_income' => 0,
                 'daily_expenses' => 0
             ],
@@ -321,14 +321,14 @@ class ExampleModel extends Model
         $builder = $this->builder();
 
         $builder->select('
-            transactions.payment_method,
+            records.payment_method,
             categories.type,
-            SUM(transactions.amount) as total_amount,
-            COUNT(transactions.id) as transaction_count,
-            AVG(transactions.amount) as average_amount
+            SUM(records.amount) as total_amount,
+            COUNT(records.id) as record_count,
+            AVG(records.amount) as average_amount
         ')
-            ->join('categories', 'categories.category_number = transactions.category_number')
-            ->groupBy('transactions.payment_method, categories.type')
+            ->join('categories', 'categories.category_number = records.category_number')
+            ->groupBy('records.payment_method, categories.type')
             ->orderBy('total_amount', 'DESC');
 
         // Aplicar filtros
@@ -352,7 +352,7 @@ class ExampleModel extends Model
                     'incomes' => 0,
                     'expenses' => 0,
                     'total_amount' => 0,
-                    'transaction_count' => 0,
+                    'record_count' => 0,
                     'average_amount' => 0
                 ];
             }
@@ -364,7 +364,7 @@ class ExampleModel extends Model
             }
 
             $paymentMethods[$method]['total_amount'] += $amount;
-            $paymentMethods[$method]['transaction_count'] += (int) $row['transaction_count'];
+            $paymentMethods[$method]['record_count'] += (int) $row['record_count'];
             $paymentMethods[$method]['average_amount'] = (float) $row['average_amount'];
         }
 
@@ -391,33 +391,33 @@ class ExampleModel extends Model
     {
         // Filtro por negocio
         if ($businessId) {
-            $builder->where('transactions.business_id', uuid_to_bytes($businessId));
+            $builder->where('records.business_id', uuid_to_bytes($businessId));
         }
 
         // Filtros de fecha
         if (!empty($filters['start_date'])) {
-            $builder->where('transactions.transaction_date >=', $filters['start_date']);
+            $builder->where('records.record_date >=', $filters['start_date']);
         }
 
         if (!empty($filters['end_date'])) {
-            $builder->where('transactions.transaction_date <=', $filters['end_date']);
+            $builder->where('records.record_date <=', $filters['end_date']);
         }
 
         // Filtros de período predefinido
         if (!empty($filters['period'])) {
             $dates = $this->getPeriodDates($filters['period']);
-            $builder->where('transactions.transaction_date >=', $dates['start']);
-            $builder->where('transactions.transaction_date <=', $dates['end']);
+            $builder->where('records.record_date >=', $dates['start']);
+            $builder->where('records.record_date <=', $dates['end']);
         }
 
         // Filtro por método de pago
         if (!empty($filters['payment_method'])) {
-            $builder->where('transactions.payment_method', $filters['payment_method']);
+            $builder->where('records.payment_method', $filters['payment_method']);
         }
 
         // Filtro por categoría
         if (!empty($filters['category_number'])) {
-            $builder->where('transactions.category_number', $filters['category_number']);
+            $builder->where('records.category_number', $filters['category_number']);
         }
     }
 

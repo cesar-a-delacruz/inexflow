@@ -13,7 +13,7 @@ class BaseSeeder extends Seeder
         new CategorySeeder($this->config)->run();
         new ItemSeeder($this->config)->run();
         new ContactsSeeder($this->config)->run();
-        new InvoiceSeeder($this->config)->run();
         new TransactionSeeder($this->config)->run();
+        new RecordSeeder($this->config)->run();
     }
 }

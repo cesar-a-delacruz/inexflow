@@ -40,8 +40,8 @@ class CreateTableTransactions extends Migration
                 'null'    => false,
             ],
             'updated_at' => [
-                'type'    => 'DATETIME',
-                'null'    => false,
+                'type' => 'DATETIME',
+                'null' => false,
             ],
             'deleted_at' => [
                 'type' => 'DATETIME',
@@ -51,11 +51,11 @@ class CreateTableTransactions extends Migration
 
         $this->forge->addKey('id', true);
 
-        $this->forge->createTable('transactions');
+        $this->forge->createTable('records');
     }
 
     public function down()
     {
-        $this->forge->dropTable('transactions');
+        $this->forge->dropTable('records');
     }
 }

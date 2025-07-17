@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 <div class="container-fluid">
   <h1 class="mb-4"><?= $title ?></h1>
-  <a href="/invoices/new" class="btn btn-primary">Crear Factura</a>
+  <a href="/transactions/new" class="btn btn-primary">Crear Transacción</a>
 
   <?php if (session()->getFlashdata('success')): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -32,18 +32,18 @@
         </tr>
       </thead>
       <tbody>
-        <?php if (!empty($invoices)): ?>
-          <?php foreach ($invoices as $invoice): ?>
+        <?php if (!empty($transactions)): ?>
+          <?php foreach ($transactions as $transaction): ?>
             <tr>
-              <td><?= $invoice->number ?></td>
-              <td><?= $invoice->created_at ?></td>
-              <td><?= $invoice->displayPaymentStatus() ?></td>
-              <td><?= $invoice->displayPaymentMethod() ?></td>
-              <td><?= $invoice->contact_name ?></td>
-              <td><?= $invoice->displayContactType() ?></td>
+              <td><?= $transaction->number ?></td>
+              <td><?= $transaction->created_at ?></td>
+              <td><?= $transaction->displayPaymentStatus() ?></td>
+              <td><?= $transaction->displayPaymentMethod() ?></td>
+              <td><?= $transaction->contact_name ?></td>
+              <td><?= $transaction->displayContactType() ?></td>
               <td>
                 <div class="btn-group" role="group">
-                  <a href="/invoices/<?= $invoice->id ?>" class="btn btn-success btn-sm">
+                  <a href="/transactions/<?= $transaction->id ?>" class="btn btn-success btn-sm">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit">
                       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>

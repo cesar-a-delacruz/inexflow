@@ -2,20 +2,35 @@
 namespace App\Validation\Validators;
 
 /**
- * Son reglas de validación y mensajes de error utilizados en los formularios de App\Views\Invoice en los campos "transactions"
+ * Son reglas de validación y mensajes de error utilizados en los formularios de App\Views\Transaction
  */
 class TransactionValidator {
-    public $create =  [
-        'transactions' => [
-            'rules' => 'required',
+    public $create = [
+        'due_date' => [
+            'rules' => 'required|valid_date[Y-m-d]',
             'errors' => [
-                'required' => 'No hay transaccciones',
+                'required' => 'La fecha de vencimiento es requerida',
+                'valid_date' => 'La fecha no es válida',
             ],
         ],
-        'transactions.*.subtotal' => [
+        'payment_status' => [
             'rules' => 'required',
             'errors' => [
-                'required' => 'Uno o mas subtotales están vacíos',
+                'required' => 'El estado de la transacción es requerido',
+            ],
+        ],
+        'payment_method' => [
+            'rules' => 'required',
+            'errors' => [
+                'required' => 'El método de pago es requerido',
+            ],
+        ],
+    ];
+    public $update = [
+        'due_date' => [
+            'rules' => 'permit_empty|valid_date[Y-m-d]',
+            'errors' => [
+                'valid_date' => 'La fecha no es válida',
             ],
         ],
     ];

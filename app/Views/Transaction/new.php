@@ -17,13 +17,13 @@
                 <div class="alert alert-danger"><?= validation_list_errors() ?></div>
             <?php endif; ?>
 
-            <form action="/invoices" method="POST" novalidate>
+            <form action="/transactions" method="POST" novalidate>
                 <div class="mb-3">
                     <label for="due_date" class="form-label">Fecha de vencimiento</label>
                     <input type="date" name="due_date" class="form-control" value="<?= date('Y-m-d')?>">
                 </div>
                 <div class="mb-3">
-                    <label for="payment_method" class="form-label">Tipo de Factura</label>
+                    <label for="payment_method" class="form-label">Tipo de Transacción</label>
                     <div class="form-check">
                         <input type="radio" name="type" class="form-check-imput" id="type1" value="income">
                         <label for="type1" class="form-check-label">Ingreso</label>
@@ -34,7 +34,7 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label for="invoice_date" class="form-label">Contacto</label>
+                    <label for="contact_id" class="form-label">Contacto</label>
                     <input type="text" class="contact form-control" readonly>
                     <input type="hidden" name="contact_id" class="form-control">
                     <button type="button" class="btn btn-secondary mt-3" onclick="openDialog(this, event, 'contacts')">Buscar Contacto</button>
@@ -65,7 +65,7 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label for="transactions" class="form-label">Transacciones</label>
+                    <label for="records" class="form-label">Registros</label>
                     <table class="table table-striped table-hover table-bordered caption-top">
                         <thead class="table-dark">
                             <th>Categoría</th>

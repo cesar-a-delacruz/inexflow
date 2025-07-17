@@ -79,7 +79,7 @@
                 <hgroup>
                     <p><strong>Promedio mensual de ingresos</strong>: <?= $results[3]['averages']['monthly_income'] ?>$</p>
                     <p><strong>Promedio mensual de gastos</strong>: <?= $results[3]['averages']['monthly_expenses'] ?>$</p>
-                    <p><strong>Promedio de transacciones por mes</strong>: <?= $results[3]['averages']['monthly_transactions'] ?></p>
+                    <p><strong>Promedio de transacciones por mes</strong>: <?= $results[3]['averages']['monthly_records'] ?></p>
                     <p><strong>promedio diario, basado en días activos de ingresos</strong>: <?= $results[3]['averages']['daily_income'] ?>$</p>
                     <p><strong>promedio diario, basado en días activos de egresos</strong>: <?= $results[3]['averages']['daily_expenses'] ?>$</p>
                 </hgroup>

@@ -8,8 +8,8 @@ class ModifyTransactionsAddInvoiceId extends Migration
 {
     public function up()
     {
-        $this->forge->addColumn('transactions', [
-            'invoice_id' => [
+        $this->forge->addColumn('records', [
+            'transaction_id' => [
                 'type'       => 'BINARY',
                 'constraint' => 16,
                 'null'       => true,
@@ -17,9 +17,9 @@ class ModifyTransactionsAddInvoiceId extends Migration
         ]);
 
         $this->db->query('
-            ALTER TABLE `transactions`
-            ADD CONSTRAINT `fk_transactions_invoice_id`
-            FOREIGN KEY (`invoice_id`) REFERENCES `invoices`(`id`)
+            ALTER TABLE `records`
+            ADD CONSTRAINT `fk_records_transaction_id`
+            FOREIGN KEY (`transaction_id`) REFERENCES `transactions`(`id`)
             ON DELETE SET NULL
             ON UPDATE CASCADE
         ');
@@ -28,10 +28,10 @@ class ModifyTransactionsAddInvoiceId extends Migration
     public function down()
     {
         $this->db->query('
-            ALTER TABLE `transactions`
-            DROP FOREIGN KEY `fk_transactions_invoice_id`
+            ALTER TABLE `records`
+            DROP FOREIGN KEY `fk_records_transaction_id`
         ');
 
-        $this->forge->dropColumn('transactions', 'invoice_id');
+        $this->forge->dropColumn('records', 'transaction_id');
     }
 }

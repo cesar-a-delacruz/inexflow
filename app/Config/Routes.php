@@ -62,13 +62,13 @@ $routes->post('items', 'ItemController::create');
 $routes->put('items/(:segment)', 'ItemController::update/$1');
 $routes->delete('items/(:segment)', 'ItemController::delete/$1');
 
-// Rutas de Facturas
+// Rutas de Transacciones
 //vistas
-$routes->get('invoices', 'InvoiceController::index');
-$routes->get('invoices/new', 'InvoiceController::new');
-$routes->get('invoices/(:segment)', 'InvoiceController::show/$1');
+$routes->get('transactions', 'TransactionController::index');
+$routes->get('transactions/new', 'TransactionController::new');
+$routes->get('transactions/(:segment)', 'TransactionController::show/$1');
 // // otras
-$routes->post('invoices', 'InvoiceController::create');
-$routes->put('invoices/(:segment)', 'InvoiceController::update/$1');
+$routes->post('transactions', 'TransactionController::create');
+$routes->put('transactions/(:segment)', 'TransactionController::update/$1');
 
 $routes->get('/example', 'ExampleController::index');

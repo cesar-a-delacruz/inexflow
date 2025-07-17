@@ -6,16 +6,16 @@ use CodeIgniter\Entity\Entity;
 
 class Transaction extends Entity
 {
-    protected $dates = ['deleted_at', 'created_at', 'updated_at'];
+    protected $dates = ['due_date', 'created_at', 'updated_at', 'deleted_at'];
 
     protected $casts = [
-        'id' => 'integer',
+        'id' => 'uuid',
         'business_id' => 'uuid',
-        'category' => 'string',
-        'description' => 'string',
-        'amount' => 'integer',
-        'subtotal' => 'float',
-        'invoice_id' => 'uuid',
+        'contact_id' => 'uuid',
+        'number' => 'string',
+        'due_date' => '?datetime',
+        'payment_status' => 'string',
+        'payment_method' => 'string',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => '?datetime',
@@ -25,12 +25,31 @@ class Transaction extends Entity
         'uuid' => Cast\UuidCast::class
     ];
 
-    public function displayAmount(): string
+    public function displayPaymentStatus(): string
     {
-        return $this->amount ? $this->amount : 'No Aplica';
+        return match ($this->payment_status) {
+            'paid' => 'Pagada',
+            'pending' => 'Pendiente',
+            'overdue' => 'Atrasada',
+            'cancelled' => 'Cancelada',
+            '' => ''
+        };
     }
-    public function displaySubtotal(): string
+    public function displayPaymentMethod(): string
     {
-        return $this->subtotal ? '$'.number_format($this->subtotal, 2) : 'No Aplica';
+        return match ($this->payment_method) {
+            'cash' => 'Efectivo',
+            'card' => 'Tarjeta de Débito/Crédito',
+            'transfer' => 'Transferencia Bancaria',
+            '' => ''
+        };
+    }
+    public function displayContactType(): string
+    {
+        return match ($this->contact_type) {
+            'customer' => 'Cliente',
+            'provider' => 'Proveedor',
+            '' => ''
+        };
     }
 }

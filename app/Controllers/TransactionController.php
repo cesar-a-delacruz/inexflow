@@ -3,28 +3,28 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Entities\{Invoice, Transaction};
-use App\Models\{InvoiceModel, TransactionModel, ItemModel, ContactModel};
+use App\Entities\{Transaction, Record};
+use App\Models\{TransactionModel, RecordModel, ItemModel, ContactModel};
 use CodeIgniter\I18n\Time;
 use Ramsey\Uuid\Uuid;
 
-use App\Validation\Validators\{InvoiceValidator, TransactionValidator};
+use App\Validation\Validators\{TransactionValidator, RecordValidator};
 
-class InvoiceController extends BaseController
+class TransactionController extends BaseController
 {
   protected $model;
   protected $formValidator;
-  protected $transactionModel;
-  protected $transactionValidator;
+  protected $recordModel;
+  protected $recordValidator;
   protected $itemModel;
   protected $contactModel;
 
   public function __construct() 
   {
-    $this->model = new InvoiceModel();
-    $this->formValidator = new InvoiceValidator();
-    $this->transactionModel = new TransactionModel();
-    $this->transactionValidator = new TransactionValidator();
+    $this->model = new TransactionModel();
+    $this->formValidator = new TransactionValidator();
+    $this->recordModel = new RecordModel();
+    $this->recordValidator = new RecordValidator();
     $this->itemModel = new ItemModel();
     $this->contactModel = new ContactModel();
   }
@@ -32,22 +32,24 @@ class InvoiceController extends BaseController
   // vistas
   public function index()
   {
+    if (!session()->get('business_id')) return redirect()->to('business/new');
     $redirect = check_user('businessman');
     if ($redirect !== null) return redirect()->to($redirect);
-    else session()->set('current_page', 'invoices');
+    else session()->set('current_page', 'transactions');
 
     $data = [
-      'title' => 'Facturas',
-      'invoices' => $this->model->findAllWithContact(session()->get('business_id'))
+      'title' => 'Transacciones',
+      'transactions' => $this->model->findAllWithContact(session()->get('business_id'))
     ];
-    return view('Invoice/index', $data);
+    return view('Transaction/index', $data);
   }
 
   public function new()
   {
+    if (!session()->get('business_id')) return redirect()->to('business/new');
     $redirect = check_user('businessman');
     if ($redirect !== null) return redirect()->to($redirect);
-    else session()->set('current_page', 'invoices/new');
+    else session()->set('current_page', 'transactions/new');
     
     $items = $this->itemModel->findAllWithCategory(session()->get('business_id'));
     $items = (function($array) {
@@ -75,37 +77,38 @@ class InvoiceController extends BaseController
     })($contacts);
     
     $data = [
-      'title' => 'Nueva Factura',
+      'title' => 'Nueva Transacción',
       'items' => $items,  
       'contacts' => $contacts  
     ];
-    return view('Invoice/new', $data);
+    return view('Transaction/new', $data);
   }
 
   public function show($id = null)
   {
+    if (!session()->get('business_id')) return redirect()->to('business/new');
     $redirect = check_user('businessman');
     if ($redirect !== null) return redirect()->to($redirect);
-    else session()->set('current_page', "invoices/$id");
+    else session()->set('current_page', "transactions/$id");
 
-    $invoice = $this->model->find(uuid_to_bytes($id));
-    $transactions = $this->transactionModel->findAllByInvoice(uuid_to_bytes($id));
-    $contact = $this->contactModel->find(uuid_to_bytes($invoice->contact_id));
+    $transaction = $this->model->find(uuid_to_bytes($id));
+    $records = $this->recordModel->findAllByTransaction(uuid_to_bytes($id));
+    $contact = $this->contactModel->find(uuid_to_bytes($transaction->contact_id));
 
     $data = [
-      'title' => 'Información de Factura',
-      'invoice' => $invoice,
-      'transactions' => $transactions,
+      'title' => 'Información de Transacción',
+      'transaction' => $transaction,
+      'records' => $records,
       'contact' => $contact,
     ];
-    return view('Invoice/show', $data);
+    return view('Transaction/show', $data);
   }
 
   // peticiones
   public function create()
   {
     if (!$this->validate($this->formValidator->create) ||
-      !$this->validate($this->transactionValidator->create)) {
+      !$this->validate($this->recordValidator->create)) {
       return redirect()->back()->withInput();
     }
 
@@ -117,15 +120,15 @@ class InvoiceController extends BaseController
     $post['number'] = strval(Time::now()->timestamp);
     $post['due_date'] = date('Y-m-d', new Time($post['due_date'])->timestamp);
     
-    $transactions = [];
-    foreach ($post['transactions'] as $transaction) {
-      $transaction['invoice_id'] = $post['id'];
-      array_push($transactions, new Transaction($transaction));
+    $records = [];
+    foreach ($post['records'] as $record) {
+      $record['transaction_id'] = $post['id'];
+      array_push($records, new Record($record));
     }
 
-    $this->model->insert(new Invoice($post));
-    $this->transactionModel->insertBatch($transactions);
-    return redirect()->to('invoices/new')->with('success', 'Factura registrada exitosamente.');
+    $this->model->insert(new Transaction($post));
+    $this->recordModel->insertBatch($records);
+    return redirect()->to('transactions/new')->with('success', 'Transacción registrada exitosamente.');
   }
 
   public function update($id = null)
@@ -137,11 +140,11 @@ class InvoiceController extends BaseController
     $post = $this->request->getPost();
     $row = [];
     foreach ($post as $key => $value) {
-      if ($value) $row[$key] = $value;
+      if ($value && $key !== '_method') $row[$key] = $value;
     }
-    if (empty($row)) return redirect()->to('invoices');
+    if (empty($row)) return redirect()->to('transactions');
 
-    $this->model->update(uuid_to_bytes($id), new Invoice($row));
-    return redirect()->to('invoices')->with('success', 'Factura actualizada exitosamente.');;
+    $this->model->update(uuid_to_bytes($id), new Transaction($row));
+    return redirect()->to('transactions')->with('success', 'Transacción actualizada exitosamente.');;
   }
 }

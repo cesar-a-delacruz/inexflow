@@ -11,14 +11,14 @@
                 <div class="alert alert-danger"><?= validation_list_errors() ?></div>
             <?php endif; ?>
 
-            <form action="/invoices/<?= $invoice->id ?>" method="POST" novalidate>
+            <form action="/transactions/<?= $transaction->id ?>" method="POST" novalidate>
                 <input type="hidden" name="_method" value="PUT">
                 <div class="mb-3">
                     <label for="due_date" class="form-label">Fecha de vencimiento</label>
-                    <input type="date" name="due_date" class="form-control" value="<?= substr($invoice->due_date, 0, 10) ?>">
+                    <input type="date" name="due_date" class="form-control" value="<?= substr($transaction->due_date, 0, 10) ?>">
                 </div>
                 <div class="mb-3">
-                    <label for="invoice_date" class="form-label">Contacto</label>
+                    <label for="contact" class="form-label">Contacto</label>
                     <input type="text" class="contact form-control" value="<?= $contact->name.' | '.$contact->address ?>" disabled>
                 </div>
                 <div class="mb-3">
@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label for="transactions" class="form-label">Transacciones</label>
+                    <label for="records" class="form-label">Registros</label>
                     <table class="table table-striped table-hover table-bordered caption-top">
                         <thead class="table-dark">
                             <th>Categoría</th>
@@ -56,12 +56,12 @@
                             <th>Subtotal</th>
                         </thead>
                         <tbody>
-                            <?php foreach ($transactions as $transaction):?>
+                            <?php foreach ($records as $record):?>
                                 <tr>
-                                    <td><?= $transaction->category ?></td>
-                                    <td><?= $transaction->description ?></td>
-                                    <td><?= $transaction->displayAmount() ?></td>
-                                    <td class="subtotal"><?= $transaction->displaySubtotal() ?></td>
+                                    <td><?= $record->category ?></td>
+                                    <td><?= $record->description ?></td>
+                                    <td><?= $record->displayAmount() ?></td>
+                                    <td class="subtotal"><?= $record->displaySubtotal() ?></td>
                                 </tr>
                             <?php endforeach;?>
                         </tbody>
@@ -73,7 +73,7 @@
                 </div>
                 <div class="grid text-center">
                     <button type="submit" class="btn btn-success">Guardar Cambios</button>
-                    <a href="/invoices" class="btn btn-secondary">Cancelar</a>
+                    <a href="/transactions" class="btn btn-secondary">Cancelar</a>
                 </div>
             </form>
         </div>
@@ -83,11 +83,11 @@
     // selecionar radios y option del select
     const statusOptions = document.querySelectorAll('select[name="payment_status"] option');
     statusOptions.forEach(option => {
-        option.selected = option.value === '<?= $invoice->payment_status ?>' ? true : false;
+        option.selected = option.value === '<?= $transaction->payment_status ?>' ? true : false;
     });
     const methodRadios = document.querySelectorAll('input[name="payment_method"]');
     methodRadios.forEach(radio => {
-        radio.checked = radio.value === '<?= $invoice->payment_method ?>' ? true : false;
+        radio.checked = radio.value === '<?= $transaction->payment_method ?>' ? true : false;
     });
     
     // calcular valor del total

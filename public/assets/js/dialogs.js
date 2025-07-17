@@ -5,12 +5,12 @@ function openDialog(element, event, dataset) {
     const headings = document.querySelectorAll('dialog h5');
     const type = document.querySelector('input[name="type"]:checked');
     headings.forEach(heading => {
-        heading.innerHTML = type ? 'Elige un registro (Haz click en una fila)' : 'Selecciona el Tipo de Factura primero';
+        heading.innerHTML = type ? 'Elige un registro (Haz click en una fila)' : 'Selecciona el Tipo de Transacción primero';
     });
 
     document.querySelector(`dialog.${dataset}`).showModal(); 
 }
-// mostrar tablas de todos los dialogos segun el tipo de factura
+// mostrar tablas de todos los dialogos segun el tipo de transacción
 const typeRadios = document.querySelectorAll('input[name="type"]');
 const tables = document.querySelectorAll('dialog table');
 typeRadios.forEach(radio => {
@@ -42,17 +42,17 @@ contactsTables.forEach(table => {
         })
     }
 });
-// crear fila en tabla de transacciones con datos de las tablas de items
+// crear fila en tabla de registros con datos de las tablas de items
 const formTableTbody = document.querySelector('form table tbody');
 const itemsTables = document.querySelectorAll('dialog.items table');
 itemsTables.forEach(table => {
     const tbody = table.children[2].children;
     for (const row of tbody) {
-        // al hacer click en la fila la tabla items de se crea la fila de transacciones
+        // al hacer click en la fila la tabla items de se crea la fila de registros
         row.addEventListener('click', () => {
-            const transactionIndex = formTableTbody.children.length;
+            const recordIndex = formTableTbody.children.length;
             const amount = row.children[4].innerHTML;
-            const invoiceType = document.querySelector('input[name="type"]:checked').value;
+            const transactionType = document.querySelector('input[name="type"]:checked').value;
 
             const inputs = {
                 amount: document.createElement('input'),
@@ -62,7 +62,7 @@ itemsTables.forEach(table => {
                 inputs[input].type = 'number';
             }
 
-            inputs.amount.name = `transactions[${transactionIndex}][amount]`;
+            inputs.amount.name = `records[${recordIndex}][amount]`;
             inputs.amount.className = 'amount form-control';
             inputs.amount.step = '1';
 
@@ -80,12 +80,12 @@ itemsTables.forEach(table => {
             } else {
                 //si es producto la cantidad tiene limite y al cambiar se calcula el subtotal y total
                 inputs.amount.min = '1';
-                if (invoiceType === 'income') inputs.amount.max = amount;
+                if (transactionType === 'income') inputs.amount.max = amount;
 
                 inputs.amount.addEventListener('change', () => {
-                    const transactionRow = inputs.amount.parentElement.parentElement;
-                    const moneyCell = document.querySelector(`dialog table.${invoiceType} tbody ` +
-                        `tr[data-index="${transactionRow.dataset.index}"] td.money`); 
+                    const recordRow = inputs.amount.parentElement.parentElement;
+                    const moneyCell = document.querySelector(`dialog table.${transactionType} tbody ` +
+                        `tr[data-index="${recordRow.dataset.index}"] td.money`); 
                     const money = parseFloat(moneyCell.innerHTML.replace('$', '')).toFixed(2);
 
                     inputs.subtotal.value = (parseInt(inputs.amount.value) * money).toFixed(2);
@@ -93,7 +93,7 @@ itemsTables.forEach(table => {
                 });
             }
 
-            inputs.subtotal.name = `transactions[${transactionIndex}][subtotal]`;
+            inputs.subtotal.name = `records[${recordIndex}][subtotal]`;
             inputs.subtotal.className = 'subtotal form-control';
             inputs.subtotal.readOnly = true;
             inputs.subtotal.addEventListener('change', () => calculateTotal());
@@ -103,24 +103,24 @@ itemsTables.forEach(table => {
                 description: row.children[2],
             }
             
-            // colocar elementos en la nueva fila en la tabla de transacciones
-            const transactionRow = document.createElement('tr');
-            transactionRow.dataset.index = row.dataset.index;
-            const transactionContent = [cells.category, cells.description, inputs.amount, inputs.subtotal];
+            // colocar elementos en la nueva fila en la tabla de registros
+            const recordRow = document.createElement('tr');
+            recordRow.dataset.index = row.dataset.index;
+            const recordContent = [cells.category, cells.description, inputs.amount, inputs.subtotal];
 
-            for (const content of transactionContent) {
+            for (const content of recordContent) {
                 if (content.tagName === 'INPUT') {
                     const cell = document.createElement('td');
                     cell.append(content);
-                    transactionRow.append(cell);
+                    recordRow.append(cell);
                 } else {
                     const input = document.createElement('input');
                     input.type = 'hidden';
-                    input.name = `transactions[${transactionIndex}][${content.className}]`;
+                    input.name = `records[${recordIndex}][${content.className}]`;
                     input.value = content.innerHTML;
                     const dataClone = content.cloneNode(true);
                     dataClone.append(input);
-                    transactionRow.append(dataClone);
+                    recordRow.append(dataClone);
                 }
             }
             // celda de eliminar fila con boton
@@ -135,16 +135,16 @@ itemsTables.forEach(table => {
                     <line x1="14" y1="11" x2="14" y2="17"></line>
                 </svg>`;
             removeButton.addEventListener('click', () => {
-                const transactionRow = removeButton.parentElement.parentElement;
-                const hiddenRow = document.querySelector(`dialog table.${invoiceType} tbody `+
-                    `tr[data-index="${transactionRow.dataset.index}"]`); 
+                const recordRow = removeButton.parentElement.parentElement;
+                const hiddenRow = document.querySelector(`dialog table.${transactionType} tbody `+
+                    `tr[data-index="${recordRow.dataset.index}"]`); 
                 hiddenRow.style.display = 'table-row';
-                transactionRow.remove();
+                recordRow.remove();
                 calculateTotal();
             });
             removeCell.append(removeButton);
-            transactionRow.append(removeCell);
-            formTableTbody.append(transactionRow);
+            recordRow.append(removeCell);
+            formTableTbody.append(recordRow);
             row.style.display = 'none';
         })
     }
