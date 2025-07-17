@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 <div class="container-fluid">
   <h1 class="mb-4"><?= $title ?></h1>
-  <a href="/transactions/new" class="btn btn-primary">Crear Transacción</a>
+  <a href="/transactions/new" class="btn btn-primary mb-3">Crear Transacción</a>
 
   <?php if (session()->getFlashdata('success')): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">

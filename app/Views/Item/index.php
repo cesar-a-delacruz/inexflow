@@ -3,8 +3,10 @@
 <?= $this->section('content') ?>
 <div class="container-fluid">
   <h1 class="mb-4"><?= $title ?></h1>
-  <a href="/items/new" class="btn btn-primary">Registrar Item</a>
-  <a href="/categories" class="btn btn-success">Ver Categorías</a>
+  <div class="button-container mb-3">
+    <a href="/items/new" class="btn btn-primary">Registrar Item</a>
+    <a href="/categories" class="btn btn-success">Ver Categorías</a>
+  </div>
 
   <?php if (session()->getFlashdata('success')): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -55,7 +57,7 @@
                       <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                     </svg>
                   </button>
-                  <button class="btn btn-danger" onclick="openDialog('<?= uuid_to_string($items[$i]->id) ?>')">
+                  <button class="btn btn-danger" onclick="openDialog('/items/', '<?= uuid_to_string($items[$i]->id) ?>')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2">
                       <polyline points="3 6 5 6 21 6"></polyline>
@@ -85,16 +87,5 @@
         <button class="btn btn-secondary btn-sm" onclick="closeDialog(this, event)">No</button>
     </form>
 </dialog>
-<script>
-  const dialog = document.querySelector('dialog.delete');
-  function openDialog(id) {
-    dialog.showModal();
-    document.querySelector('dialog.delete form').action = "/items/" + id;
-    document.querySelector('dialog.delete form input[name="id"]').value = id;
-  }
-  function closeDialog(element, event) {
-    event.preventDefault()
-    dialog.close();
-  }
-</script>
+<script src="/assets/js/delete-dialog.js"></script>
 <?= $this->endSection() ?>

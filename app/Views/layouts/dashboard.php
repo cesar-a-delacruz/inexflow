@@ -17,7 +17,7 @@
   <script src="https://cdn.datatables.net/2.3.2/js/dataTables.js" defer></script>
   <!-- css y javascript personalizado -->
   <link rel="stylesheet" href="/assets/css/style.css">
-  <script src="/assets/js/table.js" defer></script>
+  <script src="/assets/js/data-table.js" defer></script>
 </head>
 <body class="vh-100 mw-vw-100">
   <nav class="navbar navbar-light bg-light p-3 h-10 w-100">

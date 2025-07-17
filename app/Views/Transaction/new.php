@@ -208,5 +208,5 @@
     </table>
 </dialog>
 
-<script src="/assets/js/dialogs.js"></script>
+<script src="/assets/js/table-dialogs.js"></script>
 <?= $this->endSection()?>
