@@ -6,34 +6,31 @@ use CodeIgniter\Entity\Entity;
 
 class Transaction extends Entity
 {
-    protected $attributes = [
-        'id' => null,
-        'description'        => null,
-        'category'        => null,
-        'amount'             => null,
-        'subtotal'             => null,
-        'invoice_id'         => null,
-        'created_at'         => null,
-        'updated_at'         => null,
-        'deleted_at'         => null,
-    ];
-
     protected $dates = ['deleted_at', 'created_at', 'updated_at'];
 
     protected $casts = [
-        'id'                 => 'integer',
-        'business_id'        => 'uuid',
-        'category'    => 'string',
-        'description'        => 'string',
-        'amount'             => 'integer',
-        'subtotal'             => 'float',
-        'invoice_id'         => 'uuid',
-        'created_at'         => 'datetime',
-        'updated_at'         => 'datetime',
-        'deleted_at'         => '?datetime',
+        'id' => 'integer',
+        'business_id' => 'uuid',
+        'category' => 'string',
+        'description' => 'string',
+        'amount' => 'integer',
+        'subtotal' => 'float',
+        'invoice_id' => 'uuid',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => '?datetime',
     ];
 
     protected $castHandlers = [
         'uuid' => Cast\UuidCast::class
     ];
+
+    public function displayAmount(): string
+    {
+        return $this->amount ? $this->amount : 'No Aplica';
+    }
+    public function displaySubtotal(): string
+    {
+        return $this->subtotal ? '$'.number_format($this->subtotal, 2) : 'No Aplica';
+    }
 }

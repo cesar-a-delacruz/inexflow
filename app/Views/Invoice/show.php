@@ -60,8 +60,8 @@
                                 <tr>
                                     <td><?= $transaction->category ?></td>
                                     <td><?= $transaction->description ?></td>
-                                    <td><?= $transaction->amount ?></td>
-                                    <td class="subtotal"><?= number_format($transaction->subtotal, 2) ?></td>
+                                    <td><?= $transaction->displayAmount() ?></td>
+                                    <td class="subtotal"><?= $transaction->displaySubtotal() ?></td>
                                 </tr>
                             <?php endforeach;?>
                         </tbody>

@@ -105,7 +105,7 @@ class InvoiceController extends BaseController
   public function create()
   {
     if (!$this->validate($this->formValidator->create) ||
-      !$this->validate($this->transactionValidator->newRules())) {
+      !$this->validate($this->transactionValidator->create)) {
       return redirect()->back()->withInput();
     }
 
@@ -127,7 +127,7 @@ class InvoiceController extends BaseController
     $this->transactionModel->insertBatch($transactions);
     return redirect()->to('invoices/new')->with('success', 'Factura registrada exitosamente.');
   }
-  
+
   public function update($id = null)
   {
     if (!$this->validate($this->formValidator->update)) {
