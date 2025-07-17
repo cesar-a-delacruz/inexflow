@@ -6,16 +6,13 @@ use CodeIgniter\Entity\Entity;
 
 class Invoice extends Entity
 {
-    protected $datamap = [];
-
     protected $dates = ['invoice_date', 'due_date', 'created_at', 'updated_at', 'deleted_at'];
 
     protected $casts = [
         'id' => 'uuid',
         'business_id' => 'uuid',
         'contact_id' => 'uuid',
-        'invoice_number' => 'string',
-        'invoice_date' => 'datetime',
+        'number' => 'string',
         'due_date' => '?datetime',
         'payment_status' => 'string',
         'payment_method' => 'string',
@@ -24,21 +21,11 @@ class Invoice extends Entity
         'deleted_at' => '?datetime',
     ];
 
-    protected $attributes = [
-        // 'id' => null,
-        // 'business_id' => null,
-        // 'contact_id' => null,
-        // 'invoice_number' => null,
-        // 'invoice_date' => null,
-        // 'due_date' => null,
-        // 'payment_status' => 'paid',
-        // 'payment_method' => null,
-    ];
-
     protected $castHandlers = [
         'uuid' => Cast\UuidCast::class
     ];
-    public function getStatusDisplayName(): string
+
+    public function displayPaymentStatus(): string
     {
         return match ($this->payment_status) {
             'paid' => 'Pagada',
@@ -48,7 +35,7 @@ class Invoice extends Entity
             '' => ''
         };
     }
-    public function getMethodDisplayName(): string
+    public function displayPaymentMethod(): string
     {
         return match ($this->payment_method) {
             'cash' => 'Efectivo',
@@ -57,12 +44,12 @@ class Invoice extends Entity
             '' => ''
         };
     }
-    public function getContactTypeDisplayName(): string
+    public function displayContactType(): string
     {
         return match ($this->contact_type) {
             'customer' => 'Cliente',
             'provider' => 'Proveedor',
-            null => ''
+            '' => ''
         };
     }
 }

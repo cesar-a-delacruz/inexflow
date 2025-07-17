@@ -19,10 +19,6 @@
 
             <form action="/invoices" method="POST" novalidate>
                 <div class="mb-3">
-                    <label for="invoice_date" class="form-label">Fecha</label>
-                    <input type="date" name="invoice_date" class="form-control" value="<?= date('Y-m-d')?>">
-                </div>
-                <div class="mb-3">
                     <label for="due_date" class="form-label">Fecha de vencimiento</label>
                     <input type="date" name="due_date" class="form-control" value="<?= date('Y-m-d')?>">
                 </div>
@@ -118,9 +114,9 @@
               <td><?= $i + 1 ?></td>
               <td class="category"><?= $items->income[$i]->category_name ?></td>
               <td class="description"><?= $items->income[$i]->name ?></td>
-              <td><?= $items->income[$i]->getTypeDisplayName() ?></td>
-              <td class="amount"><?= $items->income[$i]->current_stock ? $items->income[$i]->current_stock : 'No Aplica' ?></td>
-              <td class="money"><?= '$'.number_format($items->income[$i]->selling_price, 2) ?></td>
+              <td><?= $items->income[$i]->displayType() ?></td>
+              <td class="amount"><?= $items->income[$i]->displayProperty('current_stock') ?></td>
+              <td class="money"><?= $items->income[$i]->displayMoney('selling_price') ?></td>
             </tr>
           <?php endfor; ?>
         <?php endif; ?>
@@ -146,9 +142,9 @@
               <td><?= $i + 1 ?></td>
               <td class="category"><?= $items->expense[$i]->category_name ?></td>
               <td class="description"><?= $items->expense[$i]->name ?></td>
-              <td><?= $items->expense[$i]->getTypeDisplayName() ?></td>
-              <td class="amount"><?= $items->expense[$i]->current_stock ? $items->expense[$i]->current_stock : 'No Aplica' ?></td>
-              <td class="money"><?= '$'.number_format($items->expense[$i]->cost, 2) ?></td>
+              <td><?= $items->expense[$i]->displayType() ?></td>
+              <td class="amount"><?= $items->expense[$i]->displayProperty('current_stock') ?></td>
+              <td class="money"><?= $items->expense[$i]->displayMoney('cost') ?></td>
             </tr>
           <?php endfor; ?>
         <?php endif; ?>
@@ -211,5 +207,6 @@
       </tbody>
     </table>
 </dialog>
+
 <script src="/assets/js/dialogs.js"></script>
 <?= $this->endSection()?>

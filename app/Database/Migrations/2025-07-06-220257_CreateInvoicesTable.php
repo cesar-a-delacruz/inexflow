@@ -14,7 +14,7 @@ class CreateInvoicesTable extends Migration
                 'constraint' => 16,
                 'null'       => false,
             ],
-            'invoice_number' => [
+            'number' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 50,
                 'null'       => false,
@@ -42,10 +42,6 @@ class CreateInvoicesTable extends Migration
                 'constraint' => ['cash', 'card', 'transfer'],
                 'null'       => true,
             ],
-            'invoice_date' => [
-                'type' => 'DATETIME',
-                'null' => false,
-            ],
             'due_date' => [
                 'type' => 'DATE',
                 'null' => true,
@@ -66,12 +62,10 @@ class CreateInvoicesTable extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->addKey(['business_id', 'invoice_date'], false, false, 'idx_business_invoice_date');
-        $this->forge->addKey(['business_id', 'payment_status'], false, false, 'idx_business_payment_status');
-        $this->forge->addUniqueKey(['business_id', 'invoice_number'], 'uk_business_invoice_number');
-
+        $this->forge->addUniqueKey(['business_id', 'number'], 'uk_business_invoice_number');
         $this->forge->addForeignKey('business_id', 'businesses', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->addForeignKey('contact_id', 'contacts', 'id', 'CASCADE', 'RESTRICT');
+        
         $this->forge->createTable('invoices');
     }
 

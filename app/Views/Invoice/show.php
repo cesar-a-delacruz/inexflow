@@ -7,22 +7,12 @@
             <h4 class="mb-0"><?= $title ?></h4>
         </div>
         <div class="card-body">
-            <?php if (session()->getFlashdata('success')): ?>
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <?= session()->getFlashdata('success') ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-                </div>
-            <?php endif; ?>
             <?php if (!empty(validation_errors())): ?>
                 <div class="alert alert-danger"><?= validation_list_errors() ?></div>
             <?php endif; ?>
 
             <form action="/invoices/<?= $invoice->id ?>" method="POST" novalidate>
                 <input type="hidden" name="_method" value="PUT">
-                <div class="mb-3">
-                    <label for="invoice_date" class="form-label">Fecha</label>
-                    <input type="date" name="invoice_date" class="form-control" value="<?= substr($invoice->invoice_date, 0, 10) ?>" disabled>
-                </div>
                 <div class="mb-3">
                     <label for="due_date" class="form-label">Fecha de vencimiento</label>
                     <input type="date" name="due_date" class="form-control" value="<?= substr($invoice->due_date, 0, 10) ?>">
@@ -91,7 +81,7 @@
 </div>
 <script>
     // selecionar radios y option del select
-    const statusOptions = document.querySelectorAll('select[name="payment_status"] option   ');
+    const statusOptions = document.querySelectorAll('select[name="payment_status"] option');
     statusOptions.forEach(option => {
         option.selected = option.value === '<?= $invoice->payment_status ?>' ? true : false;
     });
@@ -99,6 +89,7 @@
     methodRadios.forEach(radio => {
         radio.checked = radio.value === '<?= $invoice->payment_method ?>' ? true : false;
     });
+    
     // calcular valor del total
     const totalInput = document.querySelector('input[name="total"]');
     const subtotals = document.querySelectorAll('form table tbody td.subtotal');
