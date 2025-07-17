@@ -7,7 +7,7 @@ use App\Entities\Record;
 use App\Models\RecordModel;
 use Ramsey\Uuid\Uuid;
 
-class RecordSeeder extends Seeder
+class RecordsSeeder extends Seeder
 {
     public function run()
     {

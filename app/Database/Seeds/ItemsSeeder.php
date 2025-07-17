@@ -7,7 +7,7 @@ use App\Entities\Item;
 use App\Models\ItemModel;
 use Ramsey\Uuid\Uuid;
 
-class ItemSeeder extends Seeder
+class ItemsSeeder extends Seeder
 {
     public function run()
     {

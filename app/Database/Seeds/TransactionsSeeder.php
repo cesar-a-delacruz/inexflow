@@ -8,7 +8,7 @@ use CodeIgniter\Database\Seeder;
 use CodeIgniter\I18n\Time;
 use Ramsey\Uuid\Uuid;
 
-class TransactionSeeder extends Seeder
+class TransactionsSeeder extends Seeder
 {
     public function run()
     {
