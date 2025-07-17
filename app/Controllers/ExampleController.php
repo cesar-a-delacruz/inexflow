@@ -3,14 +3,13 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\TransactionsModel;
-use CodeIgniter\HTTP\ResponseInterface;
+use App\Models\ExampleModel;
 
 class ExampleController extends BaseController
 {
     public function index()
     {
-        $model = new TransactionsModel();
+        $model = new ExampleModel();
         // echo "<h3>Estado de Resultados</h3><code><pre>";
         // print_r($model->getIncomeStatement("9311744c-3746-3502-84c9-d06e8b5ea2d6", ['period' => 'this_week']));
         // echo "</pre> </code>";
