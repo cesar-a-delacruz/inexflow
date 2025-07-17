@@ -57,8 +57,10 @@ $routes->delete('items/(:segment)', 'ItemController::delete/$1');
 //vistas
 $routes->get('categories/new', 'CategoryController::new');
 $routes->get('categories', 'CategoryController::index');
+$routes->get('categories/(:segment)', 'CategoryController::show/$1');
 // otras
 $routes->post('categories', 'CategoryController::create');
+$routes->put('categories/(:segment)', 'CategoryController::update/$1');
 $routes->delete('categories/(:segment)', 'CategoryController::delete/$1');
 
 

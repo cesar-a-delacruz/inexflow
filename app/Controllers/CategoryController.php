@@ -77,10 +77,27 @@ class CategoryController extends BaseController
         return redirect()->to('categories/new')->with('success', 'Categoría creada exitosamente.');
     }
     
+    public function update($id = null)
+    {
+        if (!$this->validate($this->formValidator->update)) {
+            return redirect()->back()->withInput(); 
+        }
+
+        $post = $this->request->getPost();
+        $row = [];
+        foreach ($post as $key => $value) {
+            if ($value && $key !== '_method') $row[$key] = $value;
+        }
+        if (empty($row)) return redirect()->to('categories');
+
+        $this->model->update($id, new Category($row));
+        return redirect()->to('categories')->with('success', 'Categoría actualizada exitosamente.');
+    }
+
     public function delete($id)
     {
         if ($this->model->delete($id)) {
-            return redirect()->to('categories')->with('success', 'Categoría eliminado exitosamente.');
+            return redirect()->to('categories')->with('success', 'Categoría eliminada exitosamente.');
         } else {
             return redirect()->to('categories')->with('error', 'No se pudo eliminar la categoríia.');
         }

@@ -7,10 +7,18 @@ namespace App\Validation\Validators;
 class CategoryValidator {
     public $create = [
         'name' => [
-            'rules' => 'required|is_unique[categories.name]',
+            'rules' => 'required|unique_in_business',
             'errors' => [
                 'required' => 'El nombre es requerido',
-                'is_unique' => 'El nombre ya existe',
+                'unique_in_business' => 'El nombre ya existe',
+            ],
+        ],
+    ];
+    public $update = [
+        'name' => [
+            'rules' => 'permit_empty|unique_in_business',
+            'errors' => [
+                'unique_in_business' => 'El nombre ya existe',
             ],
         ],
     ];
