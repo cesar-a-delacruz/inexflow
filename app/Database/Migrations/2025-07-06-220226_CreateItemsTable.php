@@ -19,9 +19,9 @@ class CreateItemsTable extends Migration
                 'constraint' => 16,
                 'null'       => false,
             ],
-            'category_number' => [
-                'type'           => 'SMALLINT',
-                'constraint'     => 5,
+            'category_id' => [
+                'type'           => 'INT',
+                'constraint'     => 10,
                 'unsigned'       => true,
                 'null'           => true,
             ],
@@ -78,7 +78,7 @@ class CreateItemsTable extends Migration
 
         $this->forge->addKey('id', true);
         $this->forge->addForeignKey('business_id', 'businesses', 'id', 'CASCADE', 'RESTRICT');
-        $this->forge->addForeignKey(['business_id', 'category_number'], 'categories', ['business_id', 'category_number'], 'CASCADE', 'RESTRICT', 'fk_product_category');
+        $this->forge->addForeignKey('category_id', 'categories','id', 'CASCADE', 'RESTRICT', 'fk_product_category');
         
         $this->forge->createTable('items');
     }

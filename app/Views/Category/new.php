@@ -4,7 +4,7 @@
  <div class="container mt-5 " >
     <div class="card shadow-sm border-0 mx-auto" style="width: 600px;">
         <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">Crear Nueva Categoría</h4>
+            <h4 class="mb-0">Nueva Categoría</h4>
         </div>
         <div class="card-body">
             <?php if (session()->getFlashdata('success')): ?>
@@ -19,22 +19,18 @@
 
             <form action="/categories" method="post" novalidate>
                 <div class="mb-3">
-                    <label for="category_number" class="form-label">Número de Categoría</label>
-                    <input type="number" name="category_number" class="form-control">
-                </div>
-                <div class="mb-3">
                     <label for="name" class="form-label">Nombre</label>
                     <input type="text" name="name" class="form-control" >
                 </div>
                 <div class="mb-3">
                     <label for="type" class="form-label">Tipo</label>
-                    <select name="type" class="form-select" required>
+                    <select name="type" class="form-select">
                         <option value="income">Ingreso</option>
                         <option value="expense">Gasto</option>
                     </select>
                 </div>
                 <div class="d-grid">
-                    <button type="submit" class="btn btn-success">Guardar</button>
+                    <button type="submit" class="btn btn-success">Registrar</button>
                 </div>
             </form>
         </div>

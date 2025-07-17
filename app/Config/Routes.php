@@ -33,16 +33,7 @@ $routes->get('business/new', 'BusinessController::new');
 $routes->post('business', 'BusinessController::create');
 $routes->put('business', 'BusinessController::update');
 
-// Rutas de categoríaa
-//vistas
-$routes->get('categories/new', 'CategoryController::new');
-$routes->get('categories', 'CategoryController::index');
-// otras
-$routes->post('categories', 'CategoryController::create');
-$routes->delete('category/(:segment)', 'CategoryController::delete/$1');
-
-
-// Rutas de Contactos
+// Rutas de Contact
 // vistas
 $routes->get('contacts', 'ContactController::index');
 $routes->get('contacts/new', 'ContactController::new');
@@ -52,7 +43,7 @@ $routes->post('contacts', 'ContactController::create');
 $routes->put('contacts/(:segment)', 'ContactController::update/$1');
 $routes->delete('contacts/(:segment)', 'ContactController::delete/$1');
 
-// Rutas de Items
+// Rutas de Item
 // vistas
 $routes->get('items', 'ItemController::index');
 $routes->get('items/new', 'ItemController::new');
@@ -62,7 +53,16 @@ $routes->post('items', 'ItemController::create');
 $routes->put('items/(:segment)', 'ItemController::update/$1');
 $routes->delete('items/(:segment)', 'ItemController::delete/$1');
 
-// Rutas de Transacciones
+// Rutas de Category
+//vistas
+$routes->get('categories/new', 'CategoryController::new');
+$routes->get('categories', 'CategoryController::index');
+// otras
+$routes->post('categories', 'CategoryController::create');
+$routes->delete('categories/(:segment)', 'CategoryController::delete/$1');
+
+
+// Rutas de Transaction
 //vistas
 $routes->get('transactions', 'TransactionController::index');
 $routes->get('transactions/new', 'TransactionController::new');

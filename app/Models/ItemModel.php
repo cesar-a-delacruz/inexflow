@@ -16,7 +16,7 @@ class ItemModel extends Model
     protected $allowedFields = [
         'id',
         'business_id',
-        'category_number',
+        'category_id',
         'name',
         'type',
         'cost',
@@ -35,7 +35,6 @@ class ItemModel extends Model
     public function findAllWithCategory($business_id): array
     {
         return $this->select('items.*, categories.name as category_name, categories.type as category_type')
-        ->where('items.business_id', uuid_to_bytes($business_id))->join('categories', 
-        'categories.category_number = items.category_number AND categories.business_id = items.business_id')->findAll();
+        ->where('items.business_id', uuid_to_bytes($business_id))->join('categories', 'categories.id = items.category_id')->findAll();
     }
 }

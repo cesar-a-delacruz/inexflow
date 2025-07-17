@@ -45,7 +45,7 @@ class ItemController extends BaseController
     
     $data = [
       'title' => 'Nuevo Item',
-      'categories' => $this->categoryModel->getByBusiness(uuid_to_bytes(session()->get('business_id'))),
+      'categories' => $this->categoryModel->findAllByBusiness(session()->get('business_id')),
     ];
     return view('Item/new', $data);
   } 
@@ -60,7 +60,7 @@ class ItemController extends BaseController
     $data = [
       'title' => 'Editar Item',
       'item' => $this->model->find(uuid_to_bytes($id)),
-      'categories' => $this->categoryModel->getByBusiness(uuid_to_bytes(session()->get('business_id'))),
+      'categories' => $this->categoryModel->findAllByBusiness(session()->get('business_id')),
     ];
     return view('Item/show', $data);
   }

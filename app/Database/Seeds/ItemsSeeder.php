@@ -15,7 +15,7 @@ class ItemsSeeder extends Seeder
         $model->insert(new Item([
             'id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
             'business_id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
-            'category_number' => 1,
+            'category_id' => 1,
             'name' => 'Empanada',
             'type' => 'product',
             'cost' => 0.50,
@@ -27,7 +27,7 @@ class ItemsSeeder extends Seeder
         $model->insert(new Item([
             'id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '2'),
             'business_id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
-            'category_number' => 2,
+            'category_id' => 2,
             'name' => 'Gas',
             'type' => 'product',
             'cost' => 60.00,
@@ -39,7 +39,7 @@ class ItemsSeeder extends Seeder
         $model->insert(new Item([
             'id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '3'),
             'business_id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
-            'category_number' => 3,
+            'category_id' => 3,
             'name' => 'Agua',
             'type' => 'service',
             'cost' => 40.00,

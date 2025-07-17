@@ -18,7 +18,7 @@ class ItemValidator {
                 'required' => 'El tipo es requerido',
             ],
         ],
-        'category_number' => [
+        'category_id' => [
             'rules' => 'required',
             'errors' => [
                 'required' => 'La categoría es requerida',

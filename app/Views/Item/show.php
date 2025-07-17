@@ -26,13 +26,13 @@
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="category_number" class="form-label">Categoría</label>
-                    <select name="category_number" class="form-select" onchange="activatePrice(this, event)">
+                    <label for="category_id" class="form-label">Categoría</label>
+                    <select name="category_id" class="form-select" onchange="activatePrice(this, event)">
                         <option value="">-- Seleccione una categoría --</option>
                         <?php foreach ($categories as $category): ?>
-                            <option value="<?= $category->category_number ?>"
-                            <?= $item->category_number === $category->category_number ? 'selected': null ?>>
-                                <?= $category->getTypeDisplayName()." | ".$category->name ?>
+                            <option value="<?= $category->id ?>"
+                            <?= $item->category_id === $category->id ? 'selected': null ?>>
+                                <?= $category->displayType()." | ".$category->name ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
