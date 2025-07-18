@@ -25,7 +25,7 @@ $routes->post('password', 'UserController::password');
 $routes->post('recovery', 'UserController::recovery');
 $routes->post('token', 'UserController::token');
 
-// Rutas del negocio
+// Rutas de Business
 // vistas
 $routes->get('business', 'BusinessController::show');
 $routes->get('business/new', 'BusinessController::new');
@@ -40,8 +40,8 @@ $routes->get('contacts/new', 'ContactController::new');
 $routes->get('contacts/(:segment)', 'ContactController::show/$1');
 // otras
 $routes->post('contacts', 'ContactController::create');
-$routes->put('contacts/(:segment)', 'ContactController::update/$1');
 $routes->delete('contacts/(:segment)', 'ContactController::delete/$1');
+$routes->put('contacts/(:segment)', 'ContactController::update/$1');
 
 // Rutas de Item
 // vistas
@@ -50,26 +50,25 @@ $routes->get('items/new', 'ItemController::new');
 $routes->get('items/(:segment)', 'ItemController::show/$1');
 // otras
 $routes->post('items', 'ItemController::create');
-$routes->put('items/(:segment)', 'ItemController::update/$1');
 $routes->delete('items/(:segment)', 'ItemController::delete/$1');
+$routes->put('items/(:segment)', 'ItemController::update/$1');
 
 // Rutas de Category
-//vistas
-$routes->get('categories/new', 'CategoryController::new');
+// vistas
 $routes->get('categories', 'CategoryController::index');
+$routes->get('categories/new', 'CategoryController::new');
 $routes->get('categories/(:segment)', 'CategoryController::show/$1');
 // otras
 $routes->post('categories', 'CategoryController::create');
-$routes->put('categories/(:segment)', 'CategoryController::update/$1');
 $routes->delete('categories/(:segment)', 'CategoryController::delete/$1');
-
+$routes->put('categories/(:segment)', 'CategoryController::update/$1');
 
 // Rutas de Transaction
-//vistas
+// vistas
 $routes->get('transactions', 'TransactionController::index');
 $routes->get('transactions/new', 'TransactionController::new');
 $routes->get('transactions/(:segment)', 'TransactionController::show/$1');
-// // otras
+// otras
 $routes->post('transactions', 'TransactionController::create');
 $routes->put('transactions/(:segment)', 'TransactionController::update/$1');
 
