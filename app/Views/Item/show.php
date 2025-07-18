@@ -44,7 +44,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="selling_price" class="form-label">Precio de Venta</label>
-                    <input type="number" name="selling_price" class="form-control" step="0.01" min="0" placeholder="0.75" 
+                    <input type="number" name="selling_price" class="form-control" step="0.01" min="0" 
                     <?= $item->selling_price ? "value=\"$item->selling_price\"": 'disabled' ?>>
                 </div>
                 <div class="mb-3">

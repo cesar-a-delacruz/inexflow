@@ -95,7 +95,7 @@
     const subtotals = document.querySelectorAll('form table tbody td.subtotal');
     let total = 0;
     subtotals.forEach(subtotal => {
-        total = total + parseFloat(subtotal.innerHTML || 0)
+        total = total + parseFloat(subtotal.innerHTML.replace('$', '') || 0)
     })
     totalInput.value = total.toFixed(2);
 </script>
