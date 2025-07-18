@@ -8,7 +8,7 @@ use App\Models\{TransactionModel, RecordModel, ItemModel, ContactModel};
 use CodeIgniter\I18n\Time;
 use Ramsey\Uuid\Uuid;
 
-use App\Validation\Validators\{TransactionValidator, RecordValidator};
+use App\Validation\{TransactionValidator, RecordValidator};
 
 class TransactionController extends BaseController
 {

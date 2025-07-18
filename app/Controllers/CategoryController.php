@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Entities\Category;
 use App\Models\{CategoryModel, BusinessModel};
-use App\Validation\Validators\CategoryValidator;
+use App\Validation\CategoryValidator;
 
 class CategoryController extends BaseController
 {

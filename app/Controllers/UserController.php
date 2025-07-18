@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Entities\User;
 use App\Models\{UserModel, BusinessModel};
-use App\Validation\Validators\UserValidator;
+use App\Validation\UserValidator;
 use Ramsey\Uuid\Uuid;
 
 class UserController extends BaseController

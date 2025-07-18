@@ -1,5 +1,5 @@
 <?php
-namespace App\Validation\Validators;
+namespace App\Validation;
 
 /**
  * Son reglas de validación y mensajes de error utilizados en los formularios de App\Views\Transaction en los campos "records"

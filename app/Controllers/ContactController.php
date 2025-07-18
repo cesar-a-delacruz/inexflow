@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Models\ContactModel;
 use App\Entities\Contact;
-use App\Validation\Validators\ContactValidator;
+use App\Validation\ContactValidator;
 use Ramsey\Uuid\Uuid;
 
 class ContactController extends BaseController

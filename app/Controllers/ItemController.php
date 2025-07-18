@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Entities\Item;
 use App\Models\{ItemModel, CategoryModel};
-use App\Validation\Validators\ItemValidator;
+use App\Validation\ItemValidator;
 use Ramsey\Uuid\Uuid;
 
 class ItemController extends BaseController

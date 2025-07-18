@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Entities\Business;
 use App\Models\BusinessModel;
-use App\Validation\Validators\BusinessValidator;
+use App\Validation\BusinessValidator;
 use Ramsey\Uuid\Uuid;
 
 class BusinessController extends BaseController
