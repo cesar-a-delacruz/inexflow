@@ -8,11 +8,11 @@
         <div class="alert alert-danger"><?= validation_list_errors() ?></div>
     <?php endif; ?>
     
-    <div class="field">
+    <div class="mb-3">
         <label for="name" class="form-label">Nombre:</label>
         <input type="text" id="name" name="name" value="<?= $user->name ?>" class="form-control" disabled>
     </div>
-    <div class="field">
+    <div class="mb-3">
         <label for="email" class="form-label">Correo:</label>
         <input type="email" id="email" name="email" value="<?= $user->email ?>" class="form-control" disabled>
     </div>
@@ -23,8 +23,8 @@
 
 <script>
     function activateInputs() {
-        const inputs = document.querySelectorAll('div.field > input');
-        for (let i = 0; i < inputs.length - 1; i++) {
+        const inputs = document.querySelectorAll('form div.mb-3 > input');
+        for (let i = 0; i < inputs.length; i++) {
             inputs[i].placeholder = inputs[i].value; 
             inputs[i].value = ''; 
             inputs[i].disabled = false; 

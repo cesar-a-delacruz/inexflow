@@ -7,7 +7,7 @@ use App\Entities\Business;
 use App\Models\BusinessModel;
 use Ramsey\Uuid\Uuid;
 
-class BusinessSeeder extends Seeder
+class BusinessesSeeder extends Seeder
 {
     public function run()
     {

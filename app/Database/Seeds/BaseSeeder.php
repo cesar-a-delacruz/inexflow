@@ -8,8 +8,8 @@ class BaseSeeder extends Seeder
 {
     public function run()
     {
-        new UserSeeder($this->config)->run();
-        new BusinessSeeder($this->config)->run();
+        new UsersSeeder($this->config)->run();
+        new BusinessesSeeder($this->config)->run();
         new CategoriesSeeder($this->config)->run();
         new ItemsSeeder($this->config)->run();
         new ContactsSeeder($this->config)->run();

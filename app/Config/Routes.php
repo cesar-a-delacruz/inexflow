@@ -5,7 +5,7 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-// Rutas del usuario
+// Rutas de User
 // vistas
 $routes->get('/', 'UserController::login');
 $routes->get('user', 'UserController::show');
@@ -17,9 +17,9 @@ $routes->get('token', 'UserController::token');
 // otras
 $routes->post('/', 'UserController::verify');
 $routes->put('user', 'UserController::update');
-$routes->delete('user/(:segment)', 'UserController::delete/$1');
 $routes->put('user/(:segment)/activate', 'UserController::activate/$1');
-$routes->post('users', 'UserController::create');
+$routes->post('users/new', 'UserController::create');
+$routes->delete('users/(:segment)', 'UserController::delete/$1');
 $routes->get('logout', 'UserController::logout');
 $routes->post('password', 'UserController::password');
 $routes->post('recovery', 'UserController::recovery');
@@ -40,8 +40,8 @@ $routes->get('contacts/new', 'ContactController::new');
 $routes->get('contacts/(:segment)', 'ContactController::show/$1');
 // otras
 $routes->post('contacts', 'ContactController::create');
-$routes->delete('contacts/(:segment)', 'ContactController::delete/$1');
 $routes->put('contacts/(:segment)', 'ContactController::update/$1');
+$routes->delete('contacts/(:segment)', 'ContactController::delete/$1');
 
 // Rutas de Item
 // vistas
@@ -50,8 +50,8 @@ $routes->get('items/new', 'ItemController::new');
 $routes->get('items/(:segment)', 'ItemController::show/$1');
 // otras
 $routes->post('items', 'ItemController::create');
-$routes->delete('items/(:segment)', 'ItemController::delete/$1');
 $routes->put('items/(:segment)', 'ItemController::update/$1');
+$routes->delete('items/(:segment)', 'ItemController::delete/$1');
 
 // Rutas de Category
 // vistas
@@ -60,8 +60,8 @@ $routes->get('categories/new', 'CategoryController::new');
 $routes->get('categories/(:segment)', 'CategoryController::show/$1');
 // otras
 $routes->post('categories', 'CategoryController::create');
-$routes->delete('categories/(:segment)', 'CategoryController::delete/$1');
 $routes->put('categories/(:segment)', 'CategoryController::update/$1');
+$routes->delete('categories/(:segment)', 'CategoryController::delete/$1');
 
 // Rutas de Transaction
 // vistas
