@@ -19,30 +19,6 @@
     <div class="field buttons"></div>
 </form>
 
-<button class="edit btn btn-primary" onclick="activateInputs()" >Editar Perfil</button>
-
-<script>
-    function activateInputs() {
-        const inputs = document.querySelectorAll('form div.mb-3 > input');
-        for (let i = 0; i < inputs.length; i++) {
-            inputs[i].placeholder = inputs[i].value; 
-            inputs[i].value = ''; 
-            inputs[i].disabled = false; 
-        }
-
-        const butSubmit = document.createElement('button');
-        butSubmit.type = 'submit';
-        butSubmit.className = 'btn btn-primary';
-        butSubmit.innerHTML = 'Guardar Cambios';
-        const butReload = document.createElement('button');
-        butReload.className = 'btn btn-secondary';
-        butReload.innerHTML = 'Cancelar';
-        butReload.onclick = function(e) { 
-            e.preventDefault();
-            window.location.reload();
-        }
-        document.querySelector('form div.buttons').append(butSubmit, butReload);
-        document.querySelector('button.edit').remove();
-    }
-</script>
+<button class="edit btn btn-primary" onclick="activateInputs('form div.mb-3 input')" >Editar</button>
+<script src="/assets/js/inputs-activation.js"></script>
 <?= $this->endSection() ?>

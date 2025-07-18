@@ -44,30 +44,11 @@
                 
                 <div class="field buttons"></div>
             </form>
-            <button class="edit btn btn-primary mt-3" onclick="activateInputs()">Editar</button>
+            <button class="edit btn btn-primary mt-3" onclick="activateInputs(`form div.mb-3 input:not(input[type='radio']), form div.mb-3 select`)">
+                Editar
+            </button>
         </div>
     </div>
 </div>
-
-<script>
-    function activateInputs() {
-        const inputs = document.querySelectorAll('form div.mb-3 input, form div.mb-3 select');
-        for (let i = 0; i < inputs.length -2 ; i++) {
-            inputs[i].disabled = false;
-        }
-
-        const butSubmit = document.createElement('button');
-        butSubmit.type = 'submit';
-        butSubmit.className = 'btn btn-success me-2';
-        butSubmit.innerHTML = 'Guardar Cambios';
-
-        const butReload = document.createElement('a');  
-        butReload.className = 'btn btn-secondary';
-        butReload.innerHTML = 'Cancelar';
-        butReload.href = location.href;
-
-        document.querySelector('form div.buttons').append(butSubmit, butReload);
-        document.querySelector('button.edit').remove();
-    }
-</script>
+<script src="/assets/js/inputs-activation.js"></script>
 <?= $this->endSection() ?>
