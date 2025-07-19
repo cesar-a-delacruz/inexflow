@@ -4,8 +4,6 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 use App\Entities\Category;
-use CodeIgniter\Database\Exceptions\DatabaseException;
-use Ramsey\Uuid\UuidInterface;
 
 class CategoryModel extends Model
 {

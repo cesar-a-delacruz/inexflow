@@ -1,5 +1,4 @@
 <?php
-// app/Helpers/uuid_helper.php
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
@@ -85,17 +84,5 @@ if (!function_exists('uuid_to_object')) {
         }
 
         throw new InvalidArgumentException('Invalid UUID format');
-    }
-}
-
-if (!function_exists('generate_uuid')) {
-    /**
-     * Genera un nuevo UUID (versión 4)
-     * 
-     * @return UuidInterface
-     */
-    function generate_uuid(): UuidInterface
-    {
-        return Uuid::uuid4();
     }
 }

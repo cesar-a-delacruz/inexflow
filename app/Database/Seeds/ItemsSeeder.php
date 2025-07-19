@@ -13,8 +13,8 @@ class ItemsSeeder extends Seeder
     {
         $model = new ItemModel();
         $model->insert(new Item([
-            'id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
-            'business_id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
+            'id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
+            'business_id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
             'category_id' => 1,
             'name' => 'Empanada',
             'type' => 'product',
@@ -25,8 +25,8 @@ class ItemsSeeder extends Seeder
             'measure_unit' => 'Unidad',
         ]));
         $model->insert(new Item([
-            'id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '2'),
-            'business_id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
+            'id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '2'),
+            'business_id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
             'category_id' => 2,
             'name' => 'Gas',
             'type' => 'product',
@@ -37,8 +37,8 @@ class ItemsSeeder extends Seeder
             'measure_unit' => 'Unidad',
         ]));
         $model->insert(new Item([
-            'id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '3'),
-            'business_id' =>Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
+            'id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '3'),
+            'business_id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
             'category_id' => 3,
             'name' => 'Agua',
             'type' => 'service',

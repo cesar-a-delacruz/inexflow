@@ -27,7 +27,6 @@ class Category extends Entity
         return match ($this->type) {
             'income' => 'Ingreso',
             'expense' => 'Gasto',
-            'product' => 'Product',
         };
     }
 }
