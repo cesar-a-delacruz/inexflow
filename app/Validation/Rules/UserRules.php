@@ -17,7 +17,8 @@ class UserRules {
         $this->user = null;
     }
 
-    public function email_exists($email) 
+    /** Verifica si el correo (usuario) existe en la base de datos */
+    public function email_exists(string $email) 
     {
         $user = $this->model->findByEmail($email);
         if ($user) {
@@ -27,21 +28,26 @@ class UserRules {
         return false;
     }
 
+    /** Verifica si el usuario está activo */
     public function is_active()
     {
         return $this->user->is_active;
     }
     
-    public function valid_password($password, $fields, $data) {
+    /** Verifica si la contraseña coincide con el usuario.
+     * Si se le pasa el id, busca el usuario para verificarlo, de lo contrario verifica con el
+     * que tienen actualmente. Se usa para incio de seción y eliminación de usuario.
+     */
+    public function valid_password(string $password, string $fields, array $data) {
         if ($fields === '') return $this->user->verifyPassword($password);
         else {
             $user = $this->model->find(uuid_to_bytes($data['id']));
             return $user->verifyPassword($password);
         }
     }
-
-    public function unique_email($email) 
+    /** Verifica que el correo es único en la base de datos sin contar el del usuario actual  */
+    public function unique_email(string $email) 
     {
-        return !$this->model->emailUnique($email, uuid_to_bytes(session()->get('id')));
+        return !$this->model->emailUnique($email, session()->get('id'));
     }
 }

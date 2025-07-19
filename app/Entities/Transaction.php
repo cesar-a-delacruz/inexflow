@@ -25,6 +25,7 @@ class Transaction extends Entity
         'uuid' => Cast\UuidCast::class
     ];
 
+    /** Muestra el estado de pago de una transacción en español */
     public function displayPaymentStatus(): string
     {
         return match ($this->payment_status) {
@@ -36,6 +37,7 @@ class Transaction extends Entity
         };
     }
     
+    /** Muestra el método de pago de una transacción en español */
     public function displayPaymentMethod(): string
     {
         return match ($this->payment_method) {
@@ -46,6 +48,7 @@ class Transaction extends Entity
         };
     }
 
+    /** Muestra el tipo de contacto de una transacción en español (cuando se hace join con contacto) */
     public function displayContactType(): string
     {
         return match ($this->contact_type) {
@@ -55,6 +58,7 @@ class Transaction extends Entity
         };
     }
 
+    /** Muestra el nombre del contacto de una transacción (cuando se hace join con contacto) */
     public function displayContactName(): string
     {
         return $this->contact_name ? $this->contact_name : 'Anónimo';

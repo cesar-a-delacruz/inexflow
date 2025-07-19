@@ -103,7 +103,7 @@ class TransactionController extends BaseController
     return view('Transaction/show', $data);
   }
 
-  // peticiones
+  // acciones
   public function create()
   {
     if (!$this->validate($this->formValidator->create) ||

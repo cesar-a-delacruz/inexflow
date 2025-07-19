@@ -25,13 +25,15 @@ class Record extends Entity
         'uuid' => Cast\UuidCast::class
     ];
 
+    /** Muestra la cantidad del registro si tiene valor */
     public function displayAmount(): string
     {
         return $this->amount ? $this->amount : 'No Aplica';
     }
-    
+
+    /** Muestra el subtotal de un registro */
     public function displaySubtotal(): string
     {
-        return $this->subtotal ? '$'.number_format($this->subtotal, 2) : 'No Aplica';
+        return '$'.number_format($this->subtotal, 2);
     }
 }

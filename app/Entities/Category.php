@@ -22,6 +22,7 @@ class Category extends Entity
         'uuid' => Cast\UuidCast::class
     ];
 
+    /** Muestra el tipo de categoría en español */
     public function displayType(): string
     {
         return match ($this->type) {

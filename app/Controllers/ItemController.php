@@ -65,7 +65,7 @@ class ItemController extends BaseController
     return view('Item/show', $data);
   }
 
-  // peticiones
+  // acciones
   public function create()
   {
     if (!$this->validate($this->formValidator->create)) {

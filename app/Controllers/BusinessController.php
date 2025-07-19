@@ -44,7 +44,7 @@ class BusinessController extends BaseController
         return view('Business/show', $data);
     }
     
-    // peticiones
+    // acciones
     public function create()
     {
         if (!$this->validate($this->formValidator->create)) {

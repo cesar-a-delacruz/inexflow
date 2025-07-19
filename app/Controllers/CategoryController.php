@@ -64,7 +64,7 @@ class CategoryController extends BaseController
         return view('Category/show', $data);
     }
 
-    // peticiones
+    // acciones
     public function create()
     {
         if (!$this->validate($this->formValidator->create)) {

@@ -32,7 +32,10 @@ class ItemModel extends Model
     protected $updatedField = 'updated_at';
     protected $deletedField = 'deleted_at';
 
-    public function findAllWithCategory($business_id): array
+    /** Busca todos los items con su categoría asociada por su negocio
+     * @return array<Item>
+    */
+    public function findAllWithCategory(string $business_id): array
     {
         return $this->select('items.*, categories.name as category_name, categories.type as category_type')
         ->where('items.business_id', uuid_to_bytes($business_id))->join('categories', 'categories.id = items.category_id')->findAll();

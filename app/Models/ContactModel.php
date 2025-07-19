@@ -29,7 +29,10 @@ class ContactModel extends Model
     protected $updatedField = 'updated_at';
     protected $deletedField = 'deleted_at';
 
-    public function findAllByBusiness($business_id): array
+    /** Busca todos los contactos por su negocio
+     * @return array<Contact>
+     */
+    public function findAllByBusiness(string $business_id): array
     {
         return $this->where('business_id', uuid_to_bytes($business_id))->findAll();
     }

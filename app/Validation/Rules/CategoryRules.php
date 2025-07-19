@@ -1,7 +1,6 @@
 <?php
 namespace App\Validation\Rules;
 
-use App\Entities\Category;
 use App\Models\CategoryModel;
 
 /**
@@ -16,7 +15,8 @@ class CategoryRules
         $this->model = new CategoryModel();
     }
 
-    public function unique_in_business($name) 
+    /** Verifica si la categoría es única en el negocio  */
+    public function unique_in_business(string $name) 
     {
         return !$this->model->nameExists(session()->get('business_id'), $name);
     }

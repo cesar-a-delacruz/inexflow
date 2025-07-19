@@ -27,8 +27,11 @@ class RecordModel extends Model
     protected $updatedField = 'updated_at';
     protected $deletedField = 'deleted_at';
 
-    public function findAllByTransaction($invoice_id): array
+    /** Busca todos los registros con sus transacción asociada
+     * @return array<Record>
+    */
+    public function findAllByTransaction(string $transaction_id): array
     {
-        return $this->where('transaction_id', uuid_to_bytes($invoice_id))->orderBy('id', 'ASC')->findAll();
+        return $this->where('transaction_id', uuid_to_bytes($transaction_id))->orderBy('id', 'ASC')->findAll();
     }
 }

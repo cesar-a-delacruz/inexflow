@@ -29,17 +29,20 @@ class UserModel extends Model
     protected $updatedField  = 'updated_at';
     protected $deletedField  = 'deleted_at';
 
+    /** Busca un usuario por su correo */
     public function findByEmail(string $email): ?User
     {
         return $this->where('email', $email)->first();
     }
 
-    public function emailUnique($email, $user_id): bool
+    /** Verifica si el conteo de usuarios con el correo y que no tengan el id brindados es mayor a 0 */
+    public function emailUnique(string $email, string $user_id): bool
     {
-        return $this->where('email', $email)->whereNotIn('id', [$user_id])->countAllResults() > 0;
+        return $this->where('email', $email)->whereNotIn('id', [uuid_to_bytes($user_id)])->countAllResults() > 0;
     }
 
-    public function toggleActive($id): bool
+    /** Activa o desactiva el usuario con el id brindado */
+    public function toggleActive(string $id): bool
     {
         $id = uuid_to_bytes($id);
         $user = $this->find($id);

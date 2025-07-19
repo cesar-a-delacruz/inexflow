@@ -29,7 +29,10 @@ class TransactionModel extends Model
     protected $updatedField = 'updated_at';
     protected $deletedField = 'deleted_at';
 
-    public function findAllWithContact($business_id): array 
+    /** Busca todos las transacciones con su contacto asociado por su negocio
+     * @return array<Transaction>
+    */
+    public function findAllWithContact(string $business_id): array 
     {
         return $this->select('transactions.*, contacts.name as contact_name, contacts.type as contact_type')
         ->where('transactions.business_id', uuid_to_bytes($business_id))->

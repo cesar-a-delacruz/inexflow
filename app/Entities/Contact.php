@@ -25,6 +25,7 @@ class Contact extends Entity
         'uuid' => Cast\UuidCast::class
     ];
 
+    /** Muestra el tipo de contacto en español */
     public function displayType(): string
     {
         return match ($this->type) {

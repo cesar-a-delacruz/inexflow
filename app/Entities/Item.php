@@ -28,6 +28,7 @@ class Item extends Entity
         'uuid' => Cast\UuidCast::class
     ];
 
+    /** Muestra el tipo de item en español */
     public function displayType(): string
     {
         return match ($this->type) {
@@ -36,6 +37,7 @@ class Item extends Entity
         };
     }
     
+    /** Muestra el tipo de categoría en español (cuando se hace join con categoría) */
     public function displayCategoryType(): string
     {
         return match ($this->category_type) {
@@ -44,12 +46,14 @@ class Item extends Entity
         };
     }
 
-    public function displayProperty($property): string
+    /** Muestra propiedades si tienen valor  */
+    public function displayProperty(string $property): string
     {
         return $this->{$property} ? $this->{$property} : 'No Aplica';
     }
 
-    public function displayMoney($money): string
+    /** Muestra propiedades (monetarias) si tienen valor */
+    public function displayMoney(string $money): string
     {
         return $this->{$money} ? '$'.number_format($this->{$money}, 2) : 'No Aplica';
     }

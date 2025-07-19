@@ -65,6 +65,7 @@ class UserController extends BaseController
         return view('User/login', $data);
     }
 
+    // vistas no alteradas
     public function token()
     {
         $current_page = session()->get('current_page');
@@ -106,8 +107,9 @@ class UserController extends BaseController
         $data['title'] = 'Recuperar Cuenta';
         return view('User/recovery', $data);
     }
-    
-    // peticiones
+    // fin de vistas no alteradas
+
+    // acciones
     public function create()
     {
         if (!$this->validate($this->formValidator->create)) {

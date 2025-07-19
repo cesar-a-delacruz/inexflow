@@ -4,6 +4,7 @@ namespace App\Database\Seeds;
 
 use CodeIgniter\Database\Seeder;
 
+/** Ejecuta todos los Seeders de manera secuencial. */
 class BaseSeeder extends Seeder
 {
     public function run()

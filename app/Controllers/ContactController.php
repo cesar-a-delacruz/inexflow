@@ -58,7 +58,7 @@ class ContactController extends BaseController
         return view('Contact/show', $data);
     }
 
-    // peticiones
+    // acciones
     public function create()
     {
         if (!$this->validate($this->formValidator->create)) {
