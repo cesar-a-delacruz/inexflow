@@ -50,8 +50,8 @@
                     <input type="number" name="selling_price" class="form-control" step="0.01" min="0" placeholder="0.75">
                 </div>
                 <div class="mb-3">
-                    <label for="current_stock" class="form-label">Cantidad</label>
-                    <input type="number" name="current_stock" class="form-control" step="1" min="1" value="1">
+                    <label for="stock" class="form-label">Cantidad</label>
+                    <input type="number" name="stock" class="form-control" step="1" min="1" value="1">
                 </div>
                 <div class="mb-3">
                     <label for="min_stock" class="form-label">Cantidad Mínima (para alertar)</label>
@@ -70,10 +70,10 @@
 </div>
 <script>
 function activateStock (element, event) {
-    const inputCurrentStock = document.querySelector("input[name='current_stock']");
+    const inputStock = document.querySelector("input[name='stock']");
     const inputMinStock = document.querySelector("input[name='min_stock']");
     const inputMeasureUnit = document.querySelector("input[name='measure_unit']");
-    const inputs = [inputCurrentStock, inputMinStock, inputMeasureUnit];
+    const inputs = [inputStock, inputMinStock, inputMeasureUnit];
 
     for (const input of inputs) {
         input.disabled = event.target.value === "product" ? false : true;
