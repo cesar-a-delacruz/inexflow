@@ -35,6 +35,7 @@ class Item extends Entity
             'product' => 'Producto  ',
         };
     }
+    
     public function displayCategoryType(): string
     {
         return match ($this->category_type) {
@@ -42,10 +43,12 @@ class Item extends Entity
             'expense' => 'Gasto',
         };
     }
+
     public function displayProperty($property): string
     {
         return $this->{$property} ? $this->{$property} : 'No Aplica';
     }
+
     public function displayMoney($money): string
     {
         return $this->{$money} ? '$'.number_format($this->{$money}, 2) : 'No Aplica';

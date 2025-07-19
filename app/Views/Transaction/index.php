@@ -39,7 +39,7 @@
               <td><?= $transaction->created_at ?></td>
               <td><?= $transaction->displayPaymentStatus() ?></td>
               <td><?= $transaction->displayPaymentMethod() ?></td>
-              <td><?= $transaction->contact_name ?></td>
+              <td><?= $transaction->displayContactName() ?></td>
               <td><?= $transaction->displayContactType() ?></td>
               <td>
                 <div class="btn-group" role="group">

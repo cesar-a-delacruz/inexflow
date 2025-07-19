@@ -19,7 +19,8 @@
                 </div>
                 <div class="mb-3">
                     <label for="contact" class="form-label">Contacto</label>
-                    <input type="text" class="contact form-control" value="<?= $contact->name.' | '.$contact->address ?>" disabled>
+                    <input type="text" class="contact form-control" 
+                    value="<?= gettype($contact) !== gettype('') ? $contact->name.' | '.$contact->address : $contact ?>" disabled>
                 </div>
                 <div class="mb-3">
                     <label for="payment_status" class="form-label">Estado</label>

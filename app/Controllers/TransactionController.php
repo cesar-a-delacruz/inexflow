@@ -92,7 +92,7 @@ class TransactionController extends BaseController
 
     $transaction = $this->model->find(uuid_to_bytes($id));
     $records = $this->recordModel->findAllByTransaction(uuid_to_bytes($id));
-    $contact = $this->contactModel->find(uuid_to_bytes($transaction->contact_id));
+    $contact = $transaction->contact_id ? $this->contactModel->find(uuid_to_bytes($transaction->contact_id)) : 'Anónimo';
 
     $data = [
       'title' => 'Información de Transacción',

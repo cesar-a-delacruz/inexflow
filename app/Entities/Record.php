@@ -29,6 +29,7 @@ class Record extends Entity
     {
         return $this->amount ? $this->amount : 'No Aplica';
     }
+    
     public function displaySubtotal(): string
     {
         return $this->subtotal ? '$'.number_format($this->subtotal, 2) : 'No Aplica';

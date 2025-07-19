@@ -35,6 +35,7 @@ class Transaction extends Entity
             '' => ''
         };
     }
+    
     public function displayPaymentMethod(): string
     {
         return match ($this->payment_method) {
@@ -44,12 +45,18 @@ class Transaction extends Entity
             '' => ''
         };
     }
+
     public function displayContactType(): string
     {
         return match ($this->contact_type) {
             'customer' => 'Cliente',
             'provider' => 'Proveedor',
-            null => ''
+            null => 'No Aplica'
         };
+    }
+
+    public function displayContactName(): string
+    {
+        return $this->contact_name ? $this->contact_name : 'Anónimo';
     }
 }
