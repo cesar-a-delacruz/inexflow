@@ -122,6 +122,7 @@ class TransactionController extends BaseController
     $records = [];
     foreach ($post['records'] as $record) {
       $record['transaction_id'] = $post['id'];
+      if (!isset($record['amount'])) $record['amount'] = null;
       array_push($records, new Record($record));
     }
 
