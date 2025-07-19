@@ -33,6 +33,6 @@ class TransactionModel extends Model
     {
         return $this->select('transactions.*, contacts.name as contact_name, contacts.type as contact_type')
         ->where('transactions.business_id', uuid_to_bytes($business_id))->
-        join('contacts', 'contacts.id = transactions.contact_id')->findAll();
+        join('contacts', 'contacts.id = transactions.contact_id', 'left')->findAll();
     }
 }

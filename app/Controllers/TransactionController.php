@@ -5,10 +5,9 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Entities\{Transaction, Record};
 use App\Models\{TransactionModel, RecordModel, ItemModel, ContactModel};
+use App\Validation\{TransactionValidator, RecordValidator};
 use CodeIgniter\I18n\Time;
 use Ramsey\Uuid\Uuid;
-
-use App\Validation\{TransactionValidator, RecordValidator};
 
 class TransactionController extends BaseController
 {
