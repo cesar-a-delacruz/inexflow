@@ -68,9 +68,9 @@ class TransactionController extends BaseController
       $customer = [];
       $provider = [];
       
-      foreach ($array as $item) {
-        if ($item->category_type === 'customer') array_push($customer, $item);
-        else array_push($provider, $item);
+      foreach ($array as $contact) {
+        if ($contact->type === 'customer') array_push($customer, $contact);
+        else array_push($provider, $contact);
       }
 
       return (object) ['customer' => $customer, 'provider' => $provider];
@@ -116,7 +116,7 @@ class TransactionController extends BaseController
     
     $post['id'] = Uuid::uuid4();
     $post['business_id'] = uuid_to_bytes(session()->get('business_id'));
-    $post['contact_id'] = ($post['contact_id'] !== '') ? uuid_to_bytes($post['contact_id']) : null;
+    $post['contact_id'] = ($post['contact_id']) ? uuid_to_bytes($post['contact_id']) : null;
     $post['number'] = strval(Time::now()->timestamp);
     $post['due_date'] = date('Y-m-d', new Time($post['due_date'])->timestamp);
     
