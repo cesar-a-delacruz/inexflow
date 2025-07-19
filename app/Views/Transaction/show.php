@@ -15,7 +15,8 @@
                 <input type="hidden" name="_method" value="PUT">
                 <div class="mb-3">
                     <label for="due_date" class="form-label">Fecha de vencimiento</label>
-                    <input type="date" name="due_date" class="form-control" value="<?= substr($transaction->due_date, 0, 10) ?>">
+                    <input type="date" name="due_date" class="form-control" value="<?= substr($transaction->due_date, 0, 10) ?>"
+                    <?= $transaction->payment_status === 'paid' ? 'disabled' : '' ?>>
                 </div>
                 <div class="mb-3">
                     <label for="contact" class="form-label">Contacto</label>
@@ -24,7 +25,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="payment_status" class="form-label">Estado</label>
-                    <select name="payment_status" class="form-select">
+                    <select name="payment_status" class="form-select" <?= $transaction->payment_status === 'paid' ? 'disabled' : '' ?>>
                         <option value="">-- Seleccione el estado --</option>
                         <option value="paid">Pagada</option>
                         <option value="pending">Pendiente</option>
@@ -73,8 +74,10 @@
                     <input type="number" name="total" class="form-control" readonly>
                 </div>
                 <div class="grid text-center">
-                    <button type="submit" class="btn btn-success">Guardar Cambios</button>
-                    <a href="/transactions" class="btn btn-secondary">Cancelar</a>
+                    <?php if ($transaction->payment_status !== 'paid'): ?>
+                        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                    <?php endif; ?>
+                    <a href="/transactions" class="btn btn-secondary">Regresar</a>
                 </div>
             </form>
         </div>
@@ -89,6 +92,7 @@
     const methodRadios = document.querySelectorAll('input[name="payment_method"]');
     methodRadios.forEach(radio => {
         radio.checked = radio.value === '<?= $transaction->payment_method ?>' ? true : false;
+        radio.disabled = <?= $transaction->payment_status === 'paid' ? 'true' : 'false' ?>;
     });
     
     // calcular valor del total
