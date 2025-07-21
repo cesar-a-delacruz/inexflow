@@ -31,26 +31,30 @@ class TransactionController extends BaseController
   // vistas
   public function index()
   {
-    if (!session()->get('business_id')) return redirect()->to('business/new');
+    $businessId = session()->get('business_id');
+
+    if (!$businessId) return redirect()->to('business/new');
     $redirect = check_user('businessman');
     if ($redirect !== null) return redirect()->to($redirect);
     else session()->set('current_page', 'transactions');
 
     $data = [
       'title' => 'Transacciones',
-      'transactions' => $this->model->findAllWithContact(session()->get('business_id'))
+      'transactions' => $this->model->findAllWithContact($businessId)
     ];
     return view('Transaction/index', $data);
   }
 
   public function new()
   {
-    if (!session()->get('business_id')) return redirect()->to('business/new');
+    $businessId = session()->get('business_id');
+
+    if (!$businessId) return redirect()->to('business/new');
     $redirect = check_user('businessman');
     if ($redirect !== null) return redirect()->to($redirect);
     else session()->set('current_page', 'transactions/new');
 
-    $items = $this->itemModel->findAllWithCategory(session()->get('business_id'));
+    $items = $this->itemModel->findAllWithCategory($businessId);
     $items = (function ($array) {
       $income = [];
       $expense = [];
@@ -85,14 +89,16 @@ class TransactionController extends BaseController
 
   public function show($id = null)
   {
-    if (!session()->get('business_id')) return redirect()->to('business/new');
+    $businessId = session()->get('business_id');
+    if (!$businessId) return redirect()->to('business/new');
     $redirect = check_user('businessman');
     if ($redirect !== null) return redirect()->to($redirect);
     else session()->set('current_page', "transactions/$id");
 
-    $transaction = $this->model->find(uuid_to_bytes($id));
-    $records = $this->recordModel->findAllByTransaction(uuid_to_bytes($id));
-    $contact = $transaction->contact_id ? $this->contactModel->find(uuid_to_bytes($transaction->contact_id)) : 'Anónimo';
+    $businessIdBytes = uuid_to_bytes($businessId);
+    $transaction = $this->model->where('business_id', $businessIdBytes)->find(uuid_to_bytes($id));
+    $records = $this->recordModel->findAllByTransaction($id, $businessId);
+    $contact = $transaction->contact_id ? $this->contactModel->where('business_id', $businessIdBytes)->find(uuid_to_bytes($transaction->contact_id)) : 'Anónimo';
 
     $data = [
       'title' => 'Información de Transacción',
@@ -113,9 +119,12 @@ class TransactionController extends BaseController
       return redirect()->back()->withInput();
     }
 
+    $businessId = session()->get('business_id');
+
+
     $post = $this->request->getPost();
 
-    $stockValidation = $this->validateStock($post['records']);
+    $stockValidation = $this->validateStock($post['records'], $businessId);
     if (!is_array($stockValidation)) {
       $validation = \Config\Services::validation();
       $validation->setError('stock', $stockValidation);
@@ -124,7 +133,7 @@ class TransactionController extends BaseController
     }
 
     $post['id'] = Uuid::uuid4();
-    $post['business_id'] = uuid_to_bytes(session()->get('business_id'));
+    $post['business_id'] = uuid_to_bytes($businessId);
     $post['contact_id'] = ($post['contact_id']) ? uuid_to_bytes($post['contact_id']) : null;
     $post['number'] = strval(Time::now()->timestamp);
     $post['due_date'] = date('Y-m-d', new Time($post['due_date'])->timestamp);
@@ -132,6 +141,7 @@ class TransactionController extends BaseController
     $records = [];
     foreach ($post['records'] as $record) {
       $record['transaction_id'] = $post['id'];
+      $record['business_id'] = $post['business_id'];
       if (!isset($record['amount'])) $record['amount'] = null;
       array_push($records, new Record($record));
     }
@@ -164,8 +174,9 @@ class TransactionController extends BaseController
     return redirect()->to('transactions')->with('success', 'Transacción actualizada exitosamente.');;
   }
 
-  private function validateStock(array $records): array|string
+  private function validateStock(array $records, string $businessId): array|string
   {
+    $businessIdBytes = uuid_to_bytes($businessId);
     $items = [];
     foreach ($records as $index => $record) {
       if (!isset($record['amount']) || empty($record['amount'])) {
@@ -179,7 +190,7 @@ class TransactionController extends BaseController
         return "Error en el registro #" . ($index + 1) . ": No se especificó el producto.";
       }
 
-      $item = $this->itemModel->find(uuid_to_bytes($itemId));
+      $item = $this->itemModel->where('business_id', $businessIdBytes)->find(uuid_to_bytes($itemId));
 
       if (!$item) {
         return "Error en el registro #" . ($index + 1) . ": Producto no encontrado.";

@@ -32,7 +32,7 @@ class ContactController extends BaseController
         ];
         return view('Contact/index', $data);
     }
-    
+
     public function new()
     {
         if (!session()->get('business_id')) return redirect()->to('business/new');
@@ -46,14 +46,15 @@ class ContactController extends BaseController
 
     public function show($id = null)
     {
-        if (!session()->get('business_id')) return redirect()->to('business/new');
+        $businessId = session()->get('business_id');
+        if (!$businessId) return redirect()->to('business/new');
         $redirect = check_user('businessman');
         if ($redirect !== null) return redirect()->to($redirect);
         else session()->set('current_page', "contacts/$id");
 
         $data = [
             'title' => 'Detalles del Contacto',
-            'contact' => $this->model->find(uuid_to_bytes($id))
+            'contact' => $this->model->where('business_id', uuid_to_bytes($businessId))->find(uuid_to_bytes($id))
         ];
         return view('Contact/show', $data);
     }
@@ -76,7 +77,7 @@ class ContactController extends BaseController
     public function update($id = null)
     {
         if (!$this->validate($this->formValidator->update)) {
-            return redirect()->back()->withInput(); 
+            return redirect()->back()->withInput();
         }
 
         $post = $this->request->getPost();
