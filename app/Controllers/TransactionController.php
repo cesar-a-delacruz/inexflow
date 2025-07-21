@@ -55,18 +55,15 @@ class TransactionController extends BaseController
     else session()->set('current_page', 'transactions/new');
 
     $items = $this->itemModel->findAllWithCategory($businessId);
-    $items = (function ($array) {
-      $income = [];
-      $expense = [];
+    $income = [];
+    $expense = [];
+    foreach ($items as $item) {
+      if ($item->category_type === 'income') $income[] = $item;
+      else $expense[] = $item;
+    }
+    $items = (object) ['income' => $income, 'expense' => $expense];
 
-      foreach ($array as $item) {
-        if ($item->category_type === 'income') array_push($income, $item);
-        else array_push($expense, $item);
-      }
-
-      return (object) ['income' => $income, 'expense' => $expense];
-    })($items);
-    $contacts = $this->contactModel->findAllByBusiness(session()->get('business_id'));
+    $contacts = $this->contactModel->findAllByBusiness($businessId);
     $contacts = (function ($array) {
       $customer = [];
       $provider = [];
@@ -120,37 +117,110 @@ class TransactionController extends BaseController
     }
 
     $businessId = session()->get('business_id');
-
+    $businessIdBytes = uuid_to_bytes($businessId);
 
     $post = $this->request->getPost();
 
-    $stockValidation = $this->validateStock($post['records'], $businessId);
-    if (!is_array($stockValidation)) {
-      $validation = \Config\Services::validation();
-      $validation->setError('stock', $stockValidation);
+    $transaction = [
+      'id' => Uuid::uuid4(),
+      'business_id' => $businessId,
+      'contact_id' => ($post['contact_id']) ? uuid_to_bytes($post['contact_id']) : null,
+      'number' => strval(Time::now()->timestamp),
+      'due_date' => date('Y-m-d', new Time($post['due_date'])->timestamp),
+      'total' => 0,
+      'payment_method' => $post['payment_method']
+    ];
 
-      return redirect()->back()->withInput();
+    $productsToEdit = [];
+    $recordList = [];
+
+    foreach ($post['records'] as $index => $record) {
+
+      $itemId = $record['item_id'] ?? null;
+
+      if (!$itemId) {
+        return $this->sendError("Error en el registro #" . ($index + 1) . ": No se especificó el producto o servicio.");
+      }
+
+      $item = $this->itemModel->where('business_id', $businessIdBytes)->find(uuid_to_bytes($itemId));
+
+      if (!$item) {
+        return $this->sendError("Error en el registro #" . ($index + 1) . ": Producto o servicio no encontrado.");
+      }
+
+      $recordData = [
+        'transaction_id' => $transaction['id'],
+        'business_id' => $businessId,
+        'item_id' => $item->id,
+        'description' => $item->name,
+        'category' => $record['category'],
+        'type' => $item->type,
+      ];
+
+      $sellingPrice = (int) ($item->selling_price ?? $item->cost);
+
+      if (!$sellingPrice) {
+        return $this->sendError("Error en el registro #" . ($index + 1) . ": Producto no tiene precio.");
+      }
+
+      if ($item->type !== 'product') {
+        $recordData['amount'] = null;
+        $recordData['unit_price'] = null;
+        $recordData['subtotal'] = $sellingPrice;
+        $transaction['total'] += $sellingPrice;
+        $recordList[] = new Record($recordData);
+        continue;
+      }
+
+      if (!isset($record['amount']) || empty($record['amount'])) {
+        return $this->sendError("No se especificó la cantidad para {$item->name}.");
+      }
+
+      $amount = (int) ($record['amount'] ?? 0);
+      $currentStock = (int) ($item->stock ?? 0);
+
+      if ($amount <= 0) {
+        return $this->sendError("Cantidad inválida para '{$item->name}'");
+      }
+
+      if ($currentStock < $amount) {
+        return $this->sendError("Stock insuficiente para '{$item->name}'. Disponible: {$currentStock}, Solicitado: {$amount}.");
+      }
+
+      $subTotal = $sellingPrice * $amount;
+
+      $recordData['amount'] = $amount;
+      $recordData['unit_price'] = $sellingPrice;
+      $recordData['subtotal'] = $subTotal;
+
+      $productsToEdit[] = [
+        'id' => uuid_to_bytes($item->id),
+        'stock' => $currentStock - $amount,
+      ];
+
+      $transaction['total'] += $subTotal;
+      $recordList[] = new Record($recordData);
     }
+    // $post['id'] = Uuid::uuid4();
+    // $post['business_id'] = uuid_to_bytes($businessId);
+    // $post['contact_id'] = ($post['contact_id']) ? uuid_to_bytes($post['contact_id']) : null;
+    // $post['number'] = strval(Time::now()->timestamp);
+    // $post['due_date'] = date('Y-m-d', new Time($post['due_date'])->timestamp);
 
-    $post['id'] = Uuid::uuid4();
-    $post['business_id'] = uuid_to_bytes($businessId);
-    $post['contact_id'] = ($post['contact_id']) ? uuid_to_bytes($post['contact_id']) : null;
-    $post['number'] = strval(Time::now()->timestamp);
-    $post['due_date'] = date('Y-m-d', new Time($post['due_date'])->timestamp);
+    // $records = [];
+    // foreach ($post['records'] as $record) {
+    //   $record['transaction_id'] = $post['id'];
+    //   $record['business_id'] = $post['business_id'];
+    //   if (!isset($record['amount'])) $record['amount'] = null;
+    //   $entity = new Record($record);
+    //   $records = $entity;
+    // }
 
-    $records = [];
-    foreach ($post['records'] as $record) {
-      $record['transaction_id'] = $post['id'];
-      $record['business_id'] = $post['business_id'];
-      if (!isset($record['amount'])) $record['amount'] = null;
-      array_push($records, new Record($record));
-    }
+    $this->model->insert(new Transaction($transaction));
+    $this->recordModel->insertBatch($recordList);
 
-    $this->model->insert(new Transaction($post));
-    $this->recordModel->insertBatch($records);
-
-    foreach ($stockValidation as $item) {
-      $this->itemModel->update(uuid_to_bytes(($item['id'])), ['stock' => $item['stock']]);
+    foreach ($productsToEdit as $item) {
+      $this->itemModel->update(($item['id']), ['stock' => $item['stock']]);
     }
     // $this->itemModel->updateBatch($stockValidation, 'id');
 
@@ -174,40 +244,11 @@ class TransactionController extends BaseController
     return redirect()->to('transactions')->with('success', 'Transacción actualizada exitosamente.');;
   }
 
-  private function validateStock(array $records, string $businessId): array|string
+  protected function sendError(string $message)
   {
-    $businessIdBytes = uuid_to_bytes($businessId);
-    $items = [];
-    foreach ($records as $index => $record) {
-      if (!isset($record['amount']) || empty($record['amount'])) {
-        continue;
-      }
+    $validation = \Config\Services::validation();
+    $validation->setError('stock', $message);
 
-      $amount = (int)$record['amount'];
-      $itemId = $record['item_id'] ?? null;
-
-      if (!$itemId) {
-        return "Error en el registro #" . ($index + 1) . ": No se especificó el producto.";
-      }
-
-      $item = $this->itemModel->where('business_id', $businessIdBytes)->find(uuid_to_bytes($itemId));
-
-      if (!$item) {
-        return "Error en el registro #" . ($index + 1) . ": Producto no encontrado.";
-      }
-
-      if ($item->type !== 'product') continue;
-
-      if ($item->stock < $amount) {
-        return "Error en el registro #" . ($index + 1) . ": Stock insuficiente para '{$item->name}'. Disponible: {$item->stock}, Solicitado: {$amount}.";
-      }
-
-      array_push($items, [
-        'id' => uuid_to_bytes($item->id),
-        'stock' => $item->stock - $amount,
-      ]);
-    }
-
-    return $items;
+    return redirect()->back()->withInput();
   }
 }

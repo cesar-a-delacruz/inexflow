@@ -17,6 +17,9 @@ class RecordModel extends Model
         'description',
         'category',
         'amount',
+        'type',
+        'unit_price',
+        'item_id',
         'subtotal',
         'transaction_id',
     ];

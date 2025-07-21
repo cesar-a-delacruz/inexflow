@@ -40,6 +40,7 @@ class ItemModel extends Model
         return $this
             ->select('items.*, c.name as category_name, c.type as category_type')
             ->where('items.business_id', uuid_to_bytes($business_id))
+            ->where("(items.type = 'product' AND items.stock > 0 ) OR items.type = 'service'")
             ->join('categories c', 'c.business_id = items.business_id AND c.id = items.category_id')
             ->findAll();
     }

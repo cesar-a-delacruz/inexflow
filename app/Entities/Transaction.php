@@ -13,6 +13,7 @@ class Transaction extends Entity
         'business_id' => 'uuid',
         'contact_id' => 'uuid',
         'number' => 'string',
+        'total' => 'float',
         'due_date' => '?datetime',
         'payment_status' => 'string',
         'payment_method' => 'string',
@@ -36,7 +37,7 @@ class Transaction extends Entity
             '' => ''
         };
     }
-    
+
     /** Muestra el método de pago de una transacción en español */
     public function displayPaymentMethod(): string
     {

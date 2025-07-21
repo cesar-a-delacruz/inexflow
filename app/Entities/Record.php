@@ -10,11 +10,14 @@ class Record extends Entity
 
     protected $casts = [
         'id' => 'integer',
-        // 'business_id' => 'uuid',
+        'business_id' => 'uuid',
         'category' => 'string',
         'description' => 'string',
-        'amount' => 'integer',
-        'subtotal' => 'float',
+        'amount' => '?integer',
+        'type' => 'string',
+        'unit_price' => '?integer',
+        'item_id' => 'uuid',
+        'subtotal' => 'integer',
         'transaction_id' => 'uuid',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',

@@ -18,6 +18,7 @@ class TransactionModel extends Model
         'business_id',
         'contact_id',
         'number',
+        'total',
         'due_date',
         'payment_status',
         'payment_method',
