@@ -15,7 +15,7 @@ class Item extends Entity
         'name' => 'string',
         'type' => 'string',
         'cost' => 'float',
-        'selling_price' => 'float',
+        'selling_price' => 'integer',
         'stock' => 'integer',
         'min_stock' => 'integer',
         'measure_unit' => 'string',
@@ -36,7 +36,7 @@ class Item extends Entity
             'product' => 'Producto  ',
         };
     }
-    
+
     /** Muestra el tipo de categoría en español (cuando se hace join con categoría) */
     public function displayCategoryType(): string
     {
@@ -55,6 +55,6 @@ class Item extends Entity
     /** Muestra propiedades (monetarias) si tienen valor */
     public function displayMoney(string $money): string
     {
-        return $this->{$money} ? '$'.number_format($this->{$money}, 2) : 'No Aplica';
+        return $this->{$money} ? '$' . number_format($this->{$money}, 2) : 'No Aplica';
     }
 }

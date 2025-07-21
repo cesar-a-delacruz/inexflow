@@ -18,7 +18,7 @@ class TransactionController extends BaseController
   protected $itemModel;
   protected $contactModel;
 
-  public function __construct() 
+  public function __construct()
   {
     $this->model = new TransactionModel();
     $this->formValidator = new TransactionValidator();
@@ -27,46 +27,47 @@ class TransactionController extends BaseController
     $this->itemModel = new ItemModel();
     $this->contactModel = new ContactModel();
   }
-  
+
   // vistas
   public function index()
   {
-    if (!session()->get('business_id')) return redirect()->to('business/new');
+    $businessId = session()->get('business_id');
+
+    if (!$businessId) return redirect()->to('business/new');
     $redirect = check_user('businessman');
     if ($redirect !== null) return redirect()->to($redirect);
     else session()->set('current_page', 'transactions');
 
     $data = [
       'title' => 'Transacciones',
-      'transactions' => $this->model->findAllWithContact(session()->get('business_id'))
+      'transactions' => $this->model->findAllWithContact($businessId)
     ];
     return view('Transaction/index', $data);
   }
 
   public function new()
   {
-    if (!session()->get('business_id')) return redirect()->to('business/new');
+    $businessId = session()->get('business_id');
+
+    if (!$businessId) return redirect()->to('business/new');
     $redirect = check_user('businessman');
     if ($redirect !== null) return redirect()->to($redirect);
     else session()->set('current_page', 'transactions/new');
-    
-    $items = $this->itemModel->findAllWithCategory(session()->get('business_id'));
-    $items = (function($array) {
-      $income = [];
-      $expense = [];
-      
-      foreach ($array as $item) {
-        if ($item->category_type === 'income') array_push($income, $item);
-        else array_push($expense, $item);
-      }
 
-      return (object) ['income' => $income, 'expense' => $expense];
-    })($items);
-    $contacts = $this->contactModel->findAllByBusiness(session()->get('business_id'));
-    $contacts = (function($array) {
+    $items = $this->itemModel->findAllWithCategory($businessId);
+    $income = [];
+    $expense = [];
+    foreach ($items as $item) {
+      if ($item->category_type === 'income') $income[] = $item;
+      else $expense[] = $item;
+    }
+    $items = (object) ['income' => $income, 'expense' => $expense];
+
+    $contacts = $this->contactModel->findAllByBusiness($businessId);
+    $contacts = (function ($array) {
       $customer = [];
       $provider = [];
-      
+
       foreach ($array as $contact) {
         if ($contact->type === 'customer') array_push($customer, $contact);
         else array_push($provider, $contact);
@@ -74,25 +75,27 @@ class TransactionController extends BaseController
 
       return (object) ['customer' => $customer, 'provider' => $provider];
     })($contacts);
-    
+
     $data = [
       'title' => 'Nueva Transacción',
-      'items' => $items,  
-      'contacts' => $contacts  
+      'items' => $items,
+      'contacts' => $contacts
     ];
     return view('Transaction/new', $data);
   }
 
   public function show($id = null)
   {
-    if (!session()->get('business_id')) return redirect()->to('business/new');
+    $businessId = session()->get('business_id');
+    if (!$businessId) return redirect()->to('business/new');
     $redirect = check_user('businessman');
     if ($redirect !== null) return redirect()->to($redirect);
     else session()->set('current_page', "transactions/$id");
 
-    $transaction = $this->model->find(uuid_to_bytes($id));
-    $records = $this->recordModel->findAllByTransaction(uuid_to_bytes($id));
-    $contact = $transaction->contact_id ? $this->contactModel->find(uuid_to_bytes($transaction->contact_id)) : 'Anónimo';
+    $businessIdBytes = uuid_to_bytes($businessId);
+    $transaction = $this->model->where('business_id', $businessIdBytes)->find(uuid_to_bytes($id));
+    $records = $this->recordModel->findAllByTransaction($id, $businessId);
+    $contact = $transaction->contact_id ? $this->contactModel->where('business_id', $businessIdBytes)->find(uuid_to_bytes($transaction->contact_id)) : 'Anónimo';
 
     $data = [
       'title' => 'Información de Transacción',
@@ -106,35 +109,128 @@ class TransactionController extends BaseController
   // acciones
   public function create()
   {
-    if (!$this->validate($this->formValidator->create) ||
-      !$this->validate($this->recordValidator->create)) {
+    if (
+      !$this->validate($this->formValidator->create) ||
+      !$this->validate($this->recordValidator->create)
+    ) {
       return redirect()->back()->withInput();
     }
 
-    $post = $this->request->getPost();
-    
-    $post['id'] = Uuid::uuid4();
-    $post['business_id'] = uuid_to_bytes(session()->get('business_id'));
-    $post['contact_id'] = ($post['contact_id']) ? uuid_to_bytes($post['contact_id']) : null;
-    $post['number'] = strval(Time::now()->timestamp);
-    $post['due_date'] = date('Y-m-d', new Time($post['due_date'])->timestamp);
-    
-    $records = [];
-    foreach ($post['records'] as $record) {
-      $record['transaction_id'] = $post['id'];
-      if (!isset($record['amount'])) $record['amount'] = null;
-      array_push($records, new Record($record));
-    }
+    $businessId = session()->get('business_id');
+    $businessIdBytes = uuid_to_bytes($businessId);
 
-    $this->model->insert(new Transaction($post));
-    $this->recordModel->insertBatch($records);
+    $post = $this->request->getPost();
+
+    $transaction = [
+      'id' => Uuid::uuid4(),
+      'business_id' => $businessId,
+      'contact_id' => ($post['contact_id']) ? uuid_to_bytes($post['contact_id']) : null,
+      'number' => strval(Time::now()->timestamp),
+      'due_date' => date('Y-m-d', new Time($post['due_date'])->timestamp),
+      'total' => 0,
+      'payment_method' => $post['payment_method']
+    ];
+
+    $productsToEdit = [];
+    $recordList = [];
+
+    foreach ($post['records'] as $index => $record) {
+
+      $itemId = $record['item_id'] ?? null;
+
+      if (!$itemId) {
+        return $this->sendError("Error en el registro #" . ($index + 1) . ": No se especificó el producto o servicio.");
+      }
+
+      $item = $this->itemModel->where('business_id', $businessIdBytes)->find(uuid_to_bytes($itemId));
+
+      if (!$item) {
+        return $this->sendError("Error en el registro #" . ($index + 1) . ": Producto o servicio no encontrado.");
+      }
+
+      $recordData = [
+        'transaction_id' => $transaction['id'],
+        'business_id' => $businessId,
+        'item_id' => $item->id,
+        'description' => $item->name,
+        'category' => $record['category'],
+        'type' => $item->type,
+      ];
+
+      $sellingPrice = (int) ($item->selling_price ?? $item->cost);
+
+      if (!$sellingPrice) {
+        return $this->sendError("Error en el registro #" . ($index + 1) . ": Producto no tiene precio.");
+      }
+
+      if ($item->type !== 'product') {
+        $recordData['amount'] = null;
+        $recordData['unit_price'] = null;
+        $recordData['subtotal'] = $sellingPrice;
+        $transaction['total'] += $sellingPrice;
+        $recordList[] = new Record($recordData);
+        continue;
+      }
+
+      if (!isset($record['amount']) || empty($record['amount'])) {
+        return $this->sendError("No se especificó la cantidad para {$item->name}.");
+      }
+
+      $amount = (int) ($record['amount'] ?? 0);
+      $currentStock = (int) ($item->stock ?? 0);
+
+      if ($amount <= 0) {
+        return $this->sendError("Cantidad inválida para '{$item->name}'");
+      }
+
+      if ($currentStock < $amount) {
+        return $this->sendError("Stock insuficiente para '{$item->name}'. Disponible: {$currentStock}, Solicitado: {$amount}.");
+      }
+
+      $subTotal = $sellingPrice * $amount;
+
+      $recordData['amount'] = $amount;
+      $recordData['unit_price'] = $sellingPrice;
+      $recordData['subtotal'] = $subTotal;
+
+      $productsToEdit[] = [
+        'id' => uuid_to_bytes($item->id),
+        'stock' => $currentStock - $amount,
+      ];
+
+      $transaction['total'] += $subTotal;
+      $recordList[] = new Record($recordData);
+    }
+    // $post['id'] = Uuid::uuid4();
+    // $post['business_id'] = uuid_to_bytes($businessId);
+    // $post['contact_id'] = ($post['contact_id']) ? uuid_to_bytes($post['contact_id']) : null;
+    // $post['number'] = strval(Time::now()->timestamp);
+    // $post['due_date'] = date('Y-m-d', new Time($post['due_date'])->timestamp);
+
+    // $records = [];
+    // foreach ($post['records'] as $record) {
+    //   $record['transaction_id'] = $post['id'];
+    //   $record['business_id'] = $post['business_id'];
+    //   if (!isset($record['amount'])) $record['amount'] = null;
+    //   $entity = new Record($record);
+    //   $records = $entity;
+    // }
+
+    $this->model->insert(new Transaction($transaction));
+    $this->recordModel->insertBatch($recordList);
+
+    foreach ($productsToEdit as $item) {
+      $this->itemModel->update(($item['id']), ['stock' => $item['stock']]);
+    }
+    // $this->itemModel->updateBatch($stockValidation, 'id');
+
     return redirect()->to('transactions/new')->with('success', 'Transacción registrada exitosamente.');
   }
 
   public function update($id = null)
   {
     if (!$this->validate($this->formValidator->update)) {
-      return redirect()->back()->withInput(); 
+      return redirect()->back()->withInput();
     }
 
     $post = $this->request->getPost();
@@ -146,5 +242,13 @@ class TransactionController extends BaseController
 
     $this->model->update(uuid_to_bytes($id), new Transaction($row));
     return redirect()->to('transactions')->with('success', 'Transacción actualizada exitosamente.');;
+  }
+
+  protected function sendError(string $message)
+  {
+    $validation = \Config\Services::validation();
+    $validation->setError('stock', $message);
+
+    return redirect()->back()->withInput();
   }
 }

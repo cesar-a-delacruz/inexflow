@@ -18,6 +18,7 @@ class TransactionModel extends Model
         'business_id',
         'contact_id',
         'number',
+        'total',
         'due_date',
         'payment_status',
         'payment_method',
@@ -31,11 +32,13 @@ class TransactionModel extends Model
 
     /** Busca todos las transacciones con su contacto asociado por su negocio
      * @return array<Transaction>
-    */
-    public function findAllWithContact(string $business_id): array 
+     */
+    public function findAllWithContact(string $business_id): array
     {
-        return $this->select('transactions.*, contacts.name as contact_name, contacts.type as contact_type')
-        ->where('transactions.business_id', uuid_to_bytes($business_id))->
-        join('contacts', 'contacts.id = transactions.contact_id', 'left')->findAll();
+        return $this
+            ->select('transactions.*, c.name as contact_name, c.type as contact_type')
+            ->where('transactions.business_id', uuid_to_bytes($business_id))
+            ->join('contacts c', 'c.business_id = transactions.business_id AND c.id = transactions.contact_id', 'left')
+            ->findAll();
     }
 }

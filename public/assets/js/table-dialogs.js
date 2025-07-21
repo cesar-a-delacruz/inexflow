@@ -1,14 +1,14 @@
 // abrir cualquier dialogo
 function openDialog(element, event, dataset) {
     event.preventDefault()
-    
+
     const headings = document.querySelectorAll('dialog h5');
     const type = document.querySelector('input[name="type"]:checked');
     headings.forEach(heading => {
         heading.innerHTML = type ? 'Elige un registro (Haz click en una fila)' : 'Selecciona el Tipo de Transacción primero';
     });
 
-    document.querySelector(`dialog.${dataset}`).showModal(); 
+    document.querySelector(`dialog.${dataset}`).showModal();
 }
 // mostrar tablas de todos los dialogos segun el tipo de transacción
 const typeRadios = document.querySelectorAll('input[name="type"]');
@@ -17,7 +17,7 @@ typeRadios.forEach(radio => {
     radio.addEventListener('change', () => {
         tables.forEach(table => {
             table.style.display = radio.value === table.classList[0]
-            ? 'table' : 'none';
+                ? 'table' : 'none';
         })
         typeRadios.forEach(radio => radio.disabled = true);
     })
@@ -30,7 +30,7 @@ contactsTables.forEach(table => {
         row.addEventListener('click', () => {
             const contactInput = document.querySelector('form input.contact');
             const contactIdInput = document.querySelector('form input[name="contact_id"]');
-            
+
             const cells = {
                 name: row.children[1].innerHTML,
                 address: row.children[4].innerHTML
@@ -50,6 +50,8 @@ itemsTables.forEach(table => {
     for (const row of tbody) {
         // al hacer click en la fila la tabla items de se crea la fila de registros
         row.addEventListener('click', () => {
+            const itemId = row.dataset.id;
+
             const recordIndex = formTableTbody.children.length;
             const amount = row.children[4].innerHTML;
             const transactionType = document.querySelector('input[name="type"]:checked').value;
@@ -85,7 +87,7 @@ itemsTables.forEach(table => {
                 inputs.amount.addEventListener('change', () => {
                     const recordRow = inputs.amount.parentElement.parentElement;
                     const moneyCell = document.querySelector(`dialog table.${transactionType} tbody ` +
-                        `tr[data-index="${recordRow.dataset.index}"] td.money`); 
+                        `tr[data-index="${recordRow.dataset.index}"] td.money`);
                     const money = parseFloat(moneyCell.innerHTML.replace('$', '')).toFixed(2);
 
                     inputs.subtotal.value = (parseInt(inputs.amount.value) * money).toFixed(2);
@@ -102,7 +104,7 @@ itemsTables.forEach(table => {
                 category: row.children[1],
                 description: row.children[2],
             }
-            
+
             // colocar elementos en la nueva fila en la tabla de registros
             const recordRow = document.createElement('tr');
             recordRow.dataset.index = row.dataset.index;
@@ -136,14 +138,21 @@ itemsTables.forEach(table => {
                 </svg>`;
             removeButton.addEventListener('click', () => {
                 const recordRow = removeButton.parentElement.parentElement;
-                const hiddenRow = document.querySelector(`dialog table.${transactionType} tbody `+
-                    `tr[data-index="${recordRow.dataset.index}"]`); 
+                const hiddenRow = document.querySelector(`dialog table.${transactionType} tbody ` +
+                    `tr[data-index="${recordRow.dataset.index}"]`);
                 hiddenRow.style.display = 'table-row';
                 recordRow.remove();
                 calculateTotal();
             });
             removeCell.append(removeButton);
             recordRow.append(removeCell);
+
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = `records[${recordIndex}][item_id]`;
+            input.value = itemId;
+            recordRow.append(input);
+
             formTableTbody.append(recordRow);
             row.style.display = 'none';
         })
