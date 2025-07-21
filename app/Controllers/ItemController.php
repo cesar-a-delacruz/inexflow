@@ -33,6 +33,8 @@ class ItemController extends BaseController
       'title' => 'Items',
       'items' => $this->model->findAllWithCategory(session()->get('business_id')),
     ];
+    helper('number');
+
     return view('Item/index', $data);
   }
 
@@ -42,13 +44,13 @@ class ItemController extends BaseController
     $redirect = check_user('businessman');
     if ($redirect !== null) return redirect()->to($redirect);
     else session()->set('current_page', 'items/new');
-    
+
     $data = [
       'title' => 'Nuevo Item',
       'categories' => $this->categoryModel->findAllByBusiness(session()->get('business_id')),
     ];
     return view('Item/new', $data);
-  } 
+  }
 
   public function show($id = null)
   {
@@ -83,7 +85,7 @@ class ItemController extends BaseController
   public function update($id = null)
   {
     if (!$this->validate($this->formValidator->update)) {
-      return redirect()->back()->withInput(); 
+      return redirect()->back()->withInput();
     }
 
     $post = $this->request->getPost();
