@@ -18,6 +18,7 @@ class TransactionController extends BaseController
   protected $itemModel;
   protected $contactModel;
 
+
   public function __construct()
   {
     $this->model = new TransactionModel();
@@ -42,6 +43,8 @@ class TransactionController extends BaseController
       'title' => 'Transacciones',
       'transactions' => $this->model->findAllWithContact($businessId)
     ];
+    helper('number');
+
     return view('Transaction/index', $data);
   }
 
@@ -76,11 +79,14 @@ class TransactionController extends BaseController
       return (object) ['customer' => $customer, 'provider' => $provider];
     })($contacts);
 
+
     $data = [
       'title' => 'Nueva Transacción',
       'items' => $items,
       'contacts' => $contacts
     ];
+
+
     return view('Transaction/new', $data);
   }
 
