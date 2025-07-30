@@ -15,7 +15,7 @@ class Item extends Entity
         'name' => 'string',
         'type' => 'string',
         'cost' => 'float',
-        'selling_price' => 'integer',
+        'selling_price' => 'float',
         'stock' => 'integer',
         'min_stock' => 'integer',
         'measure_unit' => 'string',

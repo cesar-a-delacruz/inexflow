@@ -61,6 +61,7 @@ class CreateItemsTable extends Migration
                 'type'       => 'VARCHAR',
                 'constraint' => 20,
                 'null'       => true,
+                'default'    => 'unidad'
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -78,8 +79,8 @@ class CreateItemsTable extends Migration
 
         $this->forge->addKey('id', true);
         $this->forge->addForeignKey('business_id', 'businesses', 'id', 'CASCADE', 'RESTRICT');
-        $this->forge->addForeignKey('category_id', 'categories','id', 'CASCADE', 'RESTRICT', 'fk_product_category');
-        
+        $this->forge->addForeignKey('category_id', 'categories', 'id', 'CASCADE', 'RESTRICT', 'fk_product_category');
+
         $this->forge->createTable('items');
     }
 

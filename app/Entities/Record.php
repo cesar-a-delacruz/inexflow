@@ -17,7 +17,7 @@ class Record extends Entity
         'type' => 'string',
         'unit_price' => '?integer',
         'item_id' => 'uuid',
-        'subtotal' => 'integer',
+        'subtotal' => 'float',
         'transaction_id' => 'uuid',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
