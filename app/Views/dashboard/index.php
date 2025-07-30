@@ -1,58 +1,62 @@
 <?= $this->extend('layouts/dashboard') ?>
 <?= $this->section('content') ?>
-<div class="container text-center">
-    <div class="row">
+<div class="container">
+    <div class="row mt-2">
+        <div class="col-md-auto">
+            <h4><?= $sales['period_description'] ?> <?= !empty($dateValues[$sales['group_by']]) ? 'Agrupados por ' . $dateValues[$sales['group_by']] : '' ?></h4>
+        </div>
+        <div class="col-md-auto">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Modificar Parametros
+            </button>
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-sm">
+                    <form class="modal-content" action="#" method="GET">
+                        <div class="modal-header">
+                            <h5 class="modal-title fs-5" id="exampleModalLabel">Parametros de Graficas</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-floating mb-3">
+                                <select class="form-select" id="group_by" name="group_by" aria-label="Agrupar por">
+                                    <?php foreach ($dateValues as $dateKey => $dateValue): ?>
+                                        <option <?= $sales['group_by'] === $dateKey ? "selected" : "" ?> value=<?= esc($dateKey) ?>><?= esc($dateValue) ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+
+
+                                <label for="group_by">Agrupar por</label>
+
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="date" class="form-control" id="start_date" value="<?= isset($filters['start_date']) ? esc($filters['start_date']) : '' ?>" name="start_date">
+                                <label for="start_date">Fecha inicio</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="date" class="form-control" id="end_date" value="<?= isset($filters['end_date']) ? esc($filters['end_date']) : '' ?>" name="end_date">
+                                <label for="end_date">Fecha fin</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="number" min='10' max='50' value="<?= isset($filters['product_limit']) ? esc($filters['product_limit']) : '' ?>" name="product_limit" class="form-control" id="product_limit">
+                                <label for="product_limit">Limite de Productos</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row pt-3">
         <div class="col">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Análisis Completo de Transacciones</h5>
-                    <h6 class="card-subtitle"><?= $sales['period_description'] ?> <?= !empty($dateValues[$sales['group_by']]) ? 'Agrupado por ' . $dateValues[$sales['group_by']] : '' ?></h6>
                     <canvas id="sales-total-canvas"></canvas>
                     <canvas id="sales-count-canvas"></canvas>
-                </div>
-                <div class="card-footer text-body-secondary">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        Modificar Parametros
-                    </button>
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-sm">
-                            <form class="modal-content" action="#" method="GET">
-                                <div class="modal-header">
-                                    <h5 class="modal-title fs-5" id="exampleModalLabel">Filtrar Transacciones</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select" id="group_by" name="group_by" aria-label="Agrupar por">
-                                            <?php foreach ($dateValues as $dateKey => $dateValue): ?>
-                                                <option <?= $sales['group_by'] === $dateKey ? "selected" : "" ?> value=<?= esc($dateKey) ?>><?= esc($dateValue) ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-
-
-                                        <label for="group_by">Agrupar por</label>
-
-                                    </div>
-                                    <div class="form-floating mb-3">
-                                        <input type="date" class="form-control" id="start_date" value="<?= isset($filters['start_date']) ? esc($filters['start_date']) : '' ?>" name="start_date">
-                                        <label for="start_date">Fecha inicio</label>
-                                    </div>
-                                    <div class="form-floating mb-3">
-                                        <input type="date" class="form-control" id="end_date" value="<?= isset($filters['end_date']) ? esc($filters['end_date']) : '' ?>" name="end_date">
-                                        <label for="end_date">Fecha fin</label>
-                                    </div>
-                                    <div class="form-floating mb-3">
-                                        <input type="number" min='10' max='50' value="<?= isset($filters['product_limit']) ? esc($filters['product_limit']) : '' ?>" name="product_limit" class="form-control" id="product_limit">
-                                        <label for="product_limit">Limite de Productos</label>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                    <button type="submit" class="btn btn-primary">Guardar</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

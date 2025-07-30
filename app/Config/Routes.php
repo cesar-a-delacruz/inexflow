@@ -112,4 +112,5 @@ $routes->group('api', ['filter' => 'cors:api'], static function (RouteCollection
     $routes->get('paymentStatus', 'Api\ReportController::paymentStatus');
     $routes->get('paymentMethod', 'Api\ReportController::paymentMethod');
     $routes->get('topItems', 'Api\ReportController::topItems');
+    $routes->get('dashboardMetrics', 'Api\ReportController::dashboardMetrics');
 });

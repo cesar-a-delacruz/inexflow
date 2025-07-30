@@ -481,7 +481,6 @@ class ReportModel extends Model
             $start = Time::parse($filters['start_date'], 'America/Panama', 'es_ES')->toLocalizedString('d MMMM yyyy');
             if (!empty($filters['end_date'])) {
                 $end = Time::parse($filters['end_date'], 'America/Panama', 'es_ES')->toLocalizedString('d MMMM yyyy');
-
                 return "Del {$start} al {$end}";
             }
             return "A partir de {$filters['start_date']}";
