@@ -30,8 +30,9 @@ class ExampleModel extends Model
     // ===========================================
     // MÉTODOS PARA REPORTES FINANCIEROS
     // ===========================================
-
     /**
+     * Estados de resultado. flujo de caja. resumen financiero:ingresos,egresos, neto.
+     * 
      * Obtiene el Estado de Resultados para un período específico
      * 
      * @param string|null $businessId ID del negocio
@@ -49,7 +50,7 @@ class ExampleModel extends Model
             SUM(records.amount) as total_amount,
             COUNT(records.id) as record_count
         ')
-            ->join('categories', 'categories.business_id = records.business_id AND categories.category_number = records.category_number')
+            ->join('categories', 'categories.business_id = records.business_id AND categories.name = records.category')
             ->groupBy('categories.type, categories.name');
 
         // Aplicar filtros
@@ -111,14 +112,14 @@ class ExampleModel extends Model
         $dateFormat = $this->getDateFormat($groupBy);
 
         $builder->select("
-            DATE_FORMAT(records.record_date, '$dateFormat') as period,
+            DATE_FORMAT(records.created_at, '$dateFormat') as period,
             categories.type,
             SUM(records.amount) as total_amount,
             COUNT(records.id) as record_count
         ")
-            ->join('categories', 'categories.business_id = records.business_id AND categories.category_number = records.category_number')
+            ->join('categories', 'categories.business_id = records.business_id AND categories.name = records.category')
             ->groupBy('period, categories.type')
-            ->orderBy('records.record_date', 'ASC');
+            ->orderBy('records.created_at', 'ASC');
 
         // Aplicar filtros
         $this->applyFilters($builder, $businessId, $filters);
@@ -190,7 +191,7 @@ class ExampleModel extends Model
             MIN(records.amount) as min_amount,
             MAX(records.amount) as max_amount
         ')
-            ->join('categories', 'categories.business_id = records.business_id AND categories.category_number = records.category_number')
+            ->join('categories', 'categories.business_id = records.business_id AND categories.name = records.category')
             ->groupBy('categories.type, categories.name')
             ->orderBy('total_amount', 'DESC');
 
@@ -245,12 +246,12 @@ class ExampleModel extends Model
 
         $builder->select('
             categories.type,
-            DATE_FORMAT(records.record_date, "%Y-%m") as month,
+            DATE_FORMAT(records.created_at, "%Y-%m") as month,
             SUM(records.amount) as total_amount,
             COUNT(records.id) as record_count,
-            COUNT(DISTINCT DATE(records.record_date)) as active_days
+            COUNT(DISTINCT DATE(records.created_at)) as active_days
         ')
-            ->join('categories', 'categories.business_id = records.business_id AND categories.category_number = records.category_number')
+            ->join('categories', 'categories.business_id = records.business_id AND categories.name = records.category')
             ->groupBy('categories.type, month')
             ->orderBy('month', 'ASC');
 
@@ -327,7 +328,7 @@ class ExampleModel extends Model
             COUNT(records.id) as record_count,
             AVG(records.amount) as average_amount
         ')
-            ->join('categories', 'categories.category_number = records.category_number')
+            ->join('categories', 'categories.name = records.category')
             ->groupBy('records.payment_method, categories.type')
             ->orderBy('total_amount', 'DESC');
 

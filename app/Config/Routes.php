@@ -73,3 +73,43 @@ $routes->post('transactions', 'TransactionController::create');
 $routes->put('transactions/(:segment)', 'TransactionController::update/$1');
 
 $routes->get('/example', 'ExampleController::index');
+$routes->get('/dashboard', 'DashboardController::index');
+
+// $routes->group('', ['filter' => 'cors'], function ($routes) {
+//     $routes->get('api/report', 'Api\ReportController::index');
+//     $routes->options('api/incomeStatement', 'Api\ReportController::preflight');
+//     $routes->get('api/incomeStatement', 'Api\ReportController::incomeStatement');
+// });
+// $routes->group('', ['filter' => 'cors'], static function (RouteCollection $routes): void {
+//     $routes->get('api/report', 'Api\ReportController::index');
+
+//     $routes->options('api/incomeStatement', static function () {
+//         $response = response();
+//         $response->setStatusCode(204);
+//         $response->setHeader('Allow:', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
+
+//         return $response;
+//     });
+
+//     $routes->get('api/incomeStatement', 'Api\ReportController::incomeStatement');
+// });
+$routes->group('api', ['filter' => 'cors:api'], static function (RouteCollection $routes): void {
+    $routes->get('report', 'Api\ReportController::index');
+
+    $routes->options('report', static function () {
+        $response = response();
+        $response->setStatusCode(204);
+        $response->setHeader('Allow:', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
+        return $response;
+    });
+    $routes->options('incomeStatement', static function () {
+        $response = response();
+        $response->setStatusCode(204);
+        $response->setHeader('Allow:', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
+        return $response;
+    });
+    $routes->get('incomeStatement', 'Api\ReportController::incomeStatement');
+    $routes->get('paymentStatus', 'Api\ReportController::paymentStatus');
+    $routes->get('paymentMethod', 'Api\ReportController::paymentMethod');
+    $routes->get('topItems', 'Api\ReportController::topItems');
+});
