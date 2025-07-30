@@ -3,22 +3,9 @@
 namespace App\Entities;
 
 use CodeIgniter\Entity\Entity;
-use Ramsey\Uuid\Uuid;
 
 class User extends Entity
 {
-    protected $datamap = [];
-
-    protected $attributes = [
-        'role'      => 'businessman',
-        'is_active' => 1,
-        'id' => null,
-        'name' =>  null,
-        'email' =>  null,
-        'password' => null,
-        'business_id' => null,
-    ];
-
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     protected $casts = [
@@ -38,43 +25,33 @@ class User extends Entity
         'uuid' => Cast\UuidCast::class
     ];
 
+    /** Guarda la contraseña encriptada del usuario */
     public function setPassword(string $password)
     {
         $this->attributes['password_hash'] = password_hash($password, PASSWORD_DEFAULT);
         return $this;
     }
 
+    /** Obtiene la contraseña encriptada del usuario si tiene valor */
     public function getPasswordHash(): ?string
     {
         return $this->attributes['password_hash'] ?? null;
     }
 
+    /** Verifica si una contraseña brindada coincide con la contraseña encriptada del usuario */
     public function verifyPassword(string $password): bool
     {
         return password_verify($password, $this->getPasswordHash());
     }
 
-    public function isAdmin(): bool
-    {
-        return $this->role === 'admin';
-    }
-
-    public function isBusinessman(): bool
-    {
-        return $this->role === 'businessman';
-    }
-
+    /** Verifica si el usuario está activo */
     public function isActive(): bool
     {
         return $this->is_active === true;
     }
 
-    public function isDeleted(): bool
-    {
-        return $this->deleted_at !== null;
-    }
-
-    public function getRoleDisplayName(): string
+    /** Muestra el rol del usuario en español */
+    public function displayRole(): string
     {
         return match ($this->role) {
             'admin' => 'Administrador',
@@ -82,21 +59,12 @@ class User extends Entity
         };
     }
 
-    public function getIsActiveDisplayName(): string
+    /** Muestra el estado de actividad del usuario en español */
+    public function displayIsActive(): string
     {
         return match ($this->is_active) {
             true => 'Activo',
             false => 'Inactivo'
         };
-    }
-
-    public function getIdAsString(): ?string
-    {
-        return $this->id ? $this->id->toString() : null;
-    }
-
-    public function getBusinessIdAsString(): ?string
-    {
-        return $this->business_id ? $this->business_id->toString() : null;
     }
 }

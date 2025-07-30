@@ -29,17 +29,6 @@ class CreateBusinessesTable extends Migration
                 'constraint' => 16,
                 'null'       => true,
             ],
-            'status' => [
-                'type'       => 'ENUM',
-                'constraint' => ['active', 'inactive'],
-                'default'    => 'active',
-                'null'       => false,
-            ],
-            'registered_by' => [
-                'type'       => 'BINARY',
-                'constraint' => 16,
-                'null'       => false,
-            ],
             'created_at' => [
                 'type'    => 'DATETIME',
                 'null'    => false,
@@ -55,8 +44,6 @@ class CreateBusinessesTable extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->addKey('status', false, false, 'idx_status');
-        $this->forge->addForeignKey('registered_by', 'users', 'id', 'CASCADE', 'RESTRICT');
         $this->forge->addForeignKey('owner_id', 'users', 'id', 'CASCADE', 'RESTRICT');
 
         $this->forge->createTable('businesses');

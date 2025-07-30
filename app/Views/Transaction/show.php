@@ -7,60 +7,101 @@
             <h4 class="mb-0"><?= $title ?></h4>
         </div>
         <div class="card-body">
-            <?php if (session()->getFlashdata('success')): ?>
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <?= session()->getFlashdata('success') ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-                </div>
-            <?php endif; ?>
             <?php if (!empty(validation_errors())): ?>
                 <div class="alert alert-danger"><?= validation_list_errors() ?></div>
             <?php endif; ?>
 
-            <form action="/transaction/<?= $transaction->id ?>" method="POST" novalidate>
+            <form action="/transactions/<?= $transaction->id ?>" method="POST" novalidate>
                 <input type="hidden" name="_method" value="PUT">
-
                 <div class="mb-3">
-                    <label for="description" class="form-label">Descripcion</label>
-                    <input type="text" name="description" class="form-control" value="<?= $transaction->description ?>">
+                    <label for="due_date" class="form-label">Fecha de vencimiento</label>
+                    <input type="date" name="due_date" class="form-control" value="<?= substr($transaction->due_date, 0, 10) ?>"
+                    <?= $transaction->payment_status === 'paid' ? 'disabled' : '' ?>>
                 </div>
                 <div class="mb-3">
-                    <label for="category_number" class="form-label">Categoría</label>
-                    <select name="category_number" class="form-select">
-                        <?php foreach ($categories as $category): ?>
-                            <option value="<?= $category->category_number ?>"
-                            <?= $category->category_number === $transaction->category_number ? 'selected' : null ?>>
-                                <?= $category->name ?>
-                            </option>
-                        <?php endforeach; ?>
+                    <label for="contact" class="form-label">Contacto</label>
+                    <input type="text" class="contact form-control" 
+                    value="<?= gettype($contact) !== gettype('') ? $contact->name.' | '.$contact->address : $contact ?>" disabled>
+                </div>
+                <div class="mb-3">
+                    <label for="payment_status" class="form-label">Estado</label>
+                    <select name="payment_status" class="form-select" <?= $transaction->payment_status === 'paid' ? 'disabled' : '' ?>>
+                        <option value="">-- Seleccione el estado --</option>
+                        <option value="paid">Pagada</option>
+                        <option value="pending">Pendiente</option>
+                        <option value="overdue">Atrasada</option>
+                        <option value="cancelled">Cancelada</option>
                     </select>
-                </div>
-                <div class="mb-3">
-                    <label for="amount" class="form-label">Monto</label>
-                    <input type="number" name="amount" class="form-control" value="<?= number_format($transaction->amount, 2) ?>">
                 </div>
                 <div class="mb-3">
                     <label for="payment_method" class="form-label">Método de Pago</label>
-                    <select name="payment_method" class="form-select">
-                        <?php foreach ($transaction->getMethods() as $key => $value): ?>
-                            <option value="<?= $key ?>" <?= $key === $transaction->payment_method ? 'selected' : null ?>>
-                                <?= $value ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="mb-3">  
-                    <div class="form-floating">
-                        <textarea class="form-control" name="notes"><?= $transaction->notes ?></textarea>
-                        <label for="notes">Notas</label>
+                    <div class="form-check">
+                        <input type="radio" name="payment_method" class="form-check-imput" id="payment_method1" value="cash">
+                        <label for="payment_method1" class="form-check-label">Efectivo</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" name="payment_method" class="form-check-imput" id="payment_method3" value="card">
+                        <label for="payment_method3" class="form-check-label">Tarjeta de Débito/Crédito</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" name="payment_method" class="form-check-imput" id="payment_method2" value="transfer">
+                        <label for="payment_method2" class="form-check-label">Transferencia Bancaria</label>
                     </div>
                 </div>
+                <div class="mb-3">
+                    <label for="records" class="form-label">Registros</label>
+                    <table class="table table-striped table-hover table-bordered caption-top">
+                        <thead class="table-dark">
+                            <th>Categoría</th>
+                            <th>Descripción</th>
+                            <th>Cantidad</th>
+                            <th>Subtotal</th>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($records as $record):?>
+                                <tr>
+                                    <td><?= $record->category ?></td>
+                                    <td><?= $record->description ?></td>
+                                    <td><?= $record->displayAmount() ?></td>
+                                    <td class="subtotal"><?= $record->displaySubtotal() ?></td>
+                                </tr>
+                            <?php endforeach;?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mb-3">
+                    <label for="total" class="form-label">Total</label>
+                    <input type="number" name="total" class="form-control" readonly>
+                </div>
                 <div class="grid text-center">
-                    <button type="submit" class="btn btn-success">Guardar Cambios</button>
-                    <a href="/transactions" class="btn btn-secondary">Cancelar</a>
+                    <?php if ($transaction->payment_status !== 'paid'): ?>
+                        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                    <?php endif; ?>
+                    <a href="/transactions" class="btn btn-secondary">Regresar</a>
                 </div>
             </form>
         </div>
     </div>
 </div>
+<script>
+    // selecionar radios y option del select
+    const statusOptions = document.querySelectorAll('select[name="payment_status"] option');
+    statusOptions.forEach(option => {
+        option.selected = option.value === '<?= $transaction->payment_status ?>' ? true : false;
+    });
+    const methodRadios = document.querySelectorAll('input[name="payment_method"]');
+    methodRadios.forEach(radio => {
+        radio.checked = radio.value === '<?= $transaction->payment_method ?>' ? true : false;
+        radio.disabled = <?= $transaction->payment_status === 'paid' ? 'true' : 'false' ?>;
+    });
+    
+    // calcular valor del total
+    const totalInput = document.querySelector('input[name="total"]');
+    const subtotals = document.querySelectorAll('form table tbody td.subtotal');
+    let total = 0;
+    subtotals.forEach(subtotal => {
+        total = total + parseFloat(subtotal.innerHTML.replace('$', '') || 0)
+    })
+    totalInput.value = total.toFixed(2);
+</script>
 <?= $this->endSection()?>

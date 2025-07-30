@@ -28,7 +28,6 @@ class CreateUsersTable extends Migration
                 'type'       => 'CHAR',
                 'constraint' => 60,
                 'null'       => false,
-                'comment'    => 'bcrypt hash'
             ],
             'role' => [
                 'type'       => 'ENUM',
@@ -40,7 +39,6 @@ class CreateUsersTable extends Migration
                 'type'    => 'BOOLEAN',
                 'default' => true,
                 'null'    => false,
-                'comment' => 'Para desactivar sin eliminar'
             ],
             'created_at' => [
                 'type'    => 'DATETIME',
@@ -57,8 +55,7 @@ class CreateUsersTable extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->addKey('name', false, false, 'idx_status');
-        $this->forge->addKey('email', false, true, 'idx_owner_email');
+        
         $this->forge->createTable('users');
     }
 

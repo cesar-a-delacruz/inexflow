@@ -6,56 +6,62 @@ use CodeIgniter\Entity\Entity;
 
 class Transaction extends Entity
 {
-    protected $attributes = [
-        'id' => null,
-        'business_id'        => null,
-        'category_number'    => null,
-        'amount'             => null,
-        'description'        => null,
-        'transaction_date'   => null,
-        'payment_method'     => 'cash',
-        'notes'              => null,
-        'created_at'         => null,
-        'updated_at'         => null,
-        'deleted_at'         => null,
-        'category_name'      => null,
-    ];
-
-    protected $dates = ['deleted_at', 'created_at', 'updated_at'];
+    protected $dates = ['due_date', 'created_at', 'updated_at', 'deleted_at'];
 
     protected $casts = [
-        'id'                 => 'integer',
-        'business_id'        => 'uuid',
-        'category_number'    => 'integer',
-        'amount'             => 'float',
-        'description'        => 'string',
-        'transaction_date'   => 'string',
-        'payment_method'     => 'string',
-        'notes'              => '?string',
-        'created_at'         => 'datetime',
-        'updated_at'         => 'datetime',
-        'deleted_at'         => '?datetime',
-        'category_name'      => 'string',
+        'id' => 'uuid',
+        'business_id' => 'uuid',
+        'contact_id' => 'uuid',
+        'number' => 'string',
+        'total' => 'float',
+        'due_date' => '?datetime',
+        'payment_status' => 'string',
+        'payment_method' => 'string',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => '?datetime',
     ];
 
     protected $castHandlers = [
         'uuid' => Cast\UuidCast::class
     ];
 
-    public function getMethodDisplayName(): string
+    /** Muestra el estado de pago de una transacción en español */
+    public function displayPaymentStatus(): string
+    {
+        return match ($this->payment_status) {
+            'paid' => 'Pagada',
+            'pending' => 'Pendiente',
+            'overdue' => 'Atrasada',
+            'cancelled' => 'Cancelada',
+            '' => ''
+        };
+    }
+
+    /** Muestra el método de pago de una transacción en español */
+    public function displayPaymentMethod(): string
     {
         return match ($this->payment_method) {
             'cash' => 'Efectivo',
             'card' => 'Tarjeta de Débito/Crédito',
             'transfer' => 'Transferencia Bancaria',
+            '' => ''
         };
     }
-    public function getMethods(): array
+
+    /** Muestra el tipo de contacto de una transacción en español (cuando se hace join con contacto) */
+    public function displayContactType(): string
     {
-        return [
-            'cash' => 'Efectivo',
-            'card' => 'Tarjeta de Débito/Crédito',
-            'transfer' => 'Transferencia Bancaria',
-        ];
+        return match ($this->contact_type) {
+            'customer' => 'Cliente',
+            'provider' => 'Proveedor',
+            null => 'No Aplica'
+        };
+    }
+
+    /** Muestra el nombre del contacto de una transacción (cuando se hace join con contacto) */
+    public function displayContactName(): string
+    {
+        return $this->contact_name ? $this->contact_name : 'Anónimo';
     }
 }

@@ -3,104 +3,260 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Entities\Transaction;
-use App\Models\CategoryModel;
-use App\Models\TransactionsModel;
-use App\Validation\Validators\TransactionValidator;
+use App\Entities\{Transaction, Record};
+use App\Models\{TransactionModel, RecordModel, ItemModel, ContactModel};
+use App\Validation\{TransactionValidator, RecordValidator};
 use CodeIgniter\I18n\Time;
+use Ramsey\Uuid\Uuid;
 
 class TransactionController extends BaseController
 {
-  protected TransactionsModel $model;
-  protected CategoryModel $category_model;
-  protected TransactionValidator $form_validator;
-  public function __construct() {
-    $this->model = new TransactionsModel();
-    $this->category_model = new CategoryModel();
-    $this->form_validator = new TransactionValidator();
+  protected $model;
+  protected $formValidator;
+  protected $recordModel;
+  protected $recordValidator;
+  protected $itemModel;
+  protected $contactModel;
 
-    helper('form');
-    helper('session');
+
+  public function __construct()
+  {
+    $this->model = new TransactionModel();
+    $this->formValidator = new TransactionValidator();
+    $this->recordModel = new RecordModel();
+    $this->recordValidator = new RecordValidator();
+    $this->itemModel = new ItemModel();
+    $this->contactModel = new ContactModel();
   }
-  
+
+  // vistas
   public function index()
   {
-    $current_page = session()->get('current_page');
-    if (is_admin() && $current_page) return redirect()->to($current_page);
+    $businessId = session()->get('business_id');
 
-    if (!user_logged()) return redirect()->to('/');
+    if (!$businessId) return redirect()->to('business/new');
+    $redirect = check_user('businessman');
+    if ($redirect !== null) return redirect()->to($redirect);
     else session()->set('current_page', 'transactions');
 
-    $data['title'] = 'Transacciones';
-    $data['transactions'] = $this->model->findAllWithCategory();
+    $data = [
+      'title' => 'Transacciones',
+      'transactions' => $this->model->findAllWithContact($businessId)
+    ];
+    helper('number');
+
     return view('Transaction/index', $data);
   }
+
   public function new()
   {
-    $current_page = session()->get('current_page');
-    if (is_admin() && $current_page) return redirect()->to($current_page);
+    $businessId = session()->get('business_id');
 
-    if (!user_logged()) return redirect()->to('/');
+    if (!$businessId) return redirect()->to('business/new');
+    $redirect = check_user('businessman');
+    if ($redirect !== null) return redirect()->to($redirect);
     else session()->set('current_page', 'transactions/new');
-    
-    $categories = $this->category_model->getByBusiness(uuid_to_bytes(session()->get('business_id')));
+
+    $items = $this->itemModel->findAllWithCategory($businessId);
+    $income = [];
+    $expense = [];
+    foreach ($items as $item) {
+      if ($item->category_type === 'income') $income[] = $item;
+      else $expense[] = $item;
+    }
+    $items = (object) ['income' => $income, 'expense' => $expense];
+
+    $contacts = $this->contactModel->findAllByBusiness($businessId);
+    $contacts = (function ($array) {
+      $customer = [];
+      $provider = [];
+
+      foreach ($array as $contact) {
+        if ($contact->type === 'customer') array_push($customer, $contact);
+        else array_push($provider, $contact);
+      }
+
+      return (object) ['customer' => $customer, 'provider' => $provider];
+    })($contacts);
+
+
     $data = [
-        'title' => 'Nueva Transacción',
-        'categories' => $categories  
+      'title' => 'Nueva Transacción',
+      'items' => $items,
+      'contacts' => $contacts
     ];
+
+
     return view('Transaction/new', $data);
   }
+
   public function show($id = null)
   {
-    $current_page = session()->get('current_page');
-    if (is_admin() && $current_page) return redirect()->to($current_page);
+    $businessId = session()->get('business_id');
+    if (!$businessId) return redirect()->to('business/new');
+    $redirect = check_user('businessman');
+    if ($redirect !== null) return redirect()->to($redirect);
+    else session()->set('current_page', "transactions/$id");
 
-    if (!user_logged()) return redirect()->to('/');
-    else session()->set('current_page', 'transactions/new');
-
-    $transaction = $this->model->find($id);
-    $categories = $this->category_model->getByBusiness(uuid_to_bytes(session()->get('business_id')));
+    $businessIdBytes = uuid_to_bytes($businessId);
+    $transaction = $this->model->where('business_id', $businessIdBytes)->find(uuid_to_bytes($id));
+    $records = $this->recordModel->findAllByTransaction($id, $businessId);
+    $contact = $transaction->contact_id ? $this->contactModel->where('business_id', $businessIdBytes)->find(uuid_to_bytes($transaction->contact_id)) : 'Anónimo';
 
     $data = [
-        'title' => 'Información de Transacción',
-        'transaction' => $transaction,
-        'categories' => $categories
+      'title' => 'Información de Transacción',
+      'transaction' => $transaction,
+      'records' => $records,
+      'contact' => $contact,
     ];
     return view('Transaction/show', $data);
   }
 
+  // acciones
   public function create()
   {
-    $transaction = $this->request->getPost(
-      ['description','category_number', 'amount', 'payment_method', 'notes']
-    );
-    if (!$this->validate($this->form_validator->newRules())) {
-        return redirect()->back()->withInput();
+    if (
+      !$this->validate($this->formValidator->create) ||
+      !$this->validate($this->recordValidator->create)
+    ) {
+      return redirect()->back()->withInput();
     }
 
-    $transaction['business_id'] = uuid_to_bytes(session()->get('business_id'));
-    $transaction['transaction_date'] = date('Y-m-d', Time::now()->timestamp);
+    $businessId = session()->get('business_id');
+    $businessIdBytes = uuid_to_bytes($businessId);
 
-    $this->model->createTransaction(new Transaction($transaction));
-    return redirect()->to('transactions/new')->with('success', 'Transacción exitosamente.');
+    $post = $this->request->getPost();
+
+    $transaction = [
+      'id' => Uuid::uuid4(),
+      'business_id' => $businessId,
+      'contact_id' => ($post['contact_id']) ? uuid_to_bytes($post['contact_id']) : null,
+      'number' => strval(Time::now()->timestamp),
+      'due_date' => date('Y-m-d', new Time($post['due_date'])->timestamp),
+      'total' => 0,
+      'payment_method' => $post['payment_method'],
+      'payment_status' => $post['payment_status'],
+    ];
+
+    $productsToEdit = [];
+    $recordList = [];
+
+    foreach ($post['records'] as $index => $record) {
+
+      $itemId = $record['item_id'] ?? null;
+
+      if (!$itemId) {
+        return $this->sendError("Error en el registro #" . ($index + 1) . ": No se especificó el producto o servicio.");
+      }
+
+      $item = $this->itemModel->where('business_id', $businessIdBytes)->find(uuid_to_bytes($itemId));
+
+      if (!$item) {
+        return $this->sendError("Error en el registro #" . ($index + 1) . ": Producto o servicio no encontrado.");
+      }
+
+      $recordData = [
+        'transaction_id' => $transaction['id'],
+        'business_id' => $businessId,
+        'item_id' => $item->id,
+        'description' => $item->name,
+        'category' => $record['category'],
+        'type' => $item->type,
+      ];
+
+      $sellingPrice = (int) ($item->selling_price ?? $item->cost);
+
+      if (!$sellingPrice) {
+        return $this->sendError("Error en el registro #" . ($index + 1) . ": Producto no tiene precio.");
+      }
+
+      if ($item->type !== 'product') {
+        $recordData['amount'] = null;
+        $recordData['unit_price'] = null;
+        $recordData['subtotal'] = $sellingPrice;
+        $transaction['total'] += $sellingPrice;
+        $recordList[] = new Record($recordData);
+        continue;
+      }
+
+      if (!isset($record['amount']) || empty($record['amount'])) {
+        return $this->sendError("No se especificó la cantidad para {$item->name}.");
+      }
+
+      $amount = (int) ($record['amount'] ?? 0);
+      $currentStock = (int) ($item->stock ?? 0);
+
+      if ($amount <= 0) {
+        return $this->sendError("Cantidad inválida para '{$item->name}'");
+      }
+
+      if ($currentStock < $amount) {
+        return $this->sendError("Stock insuficiente para '{$item->name}'. Disponible: {$currentStock}, Solicitado: {$amount}.");
+      }
+
+      $subTotal = $sellingPrice * $amount;
+
+      $recordData['amount'] = $amount;
+      $recordData['unit_price'] = $sellingPrice;
+      $recordData['subtotal'] = $subTotal;
+
+      $productsToEdit[] = [
+        'id' => uuid_to_bytes($item->id),
+        'stock' => $currentStock - $amount,
+      ];
+
+      $transaction['total'] += $subTotal;
+      $recordList[] = new Record($recordData);
+    }
+
+    // $post['id'] = Uuid::uuid4();
+    // $post['business_id'] = uuid_to_bytes($businessId);
+    // $post['contact_id'] = ($post['contact_id']) ? uuid_to_bytes($post['contact_id']) : null;
+    // $post['number'] = strval(Time::now()->timestamp);
+    // $post['due_date'] = date('Y-m-d', new Time($post['due_date'])->timestamp);
+
+    // $records = [];
+    // foreach ($post['records'] as $record) {
+    //   $record['transaction_id'] = $post['id'];
+    //   $record['business_id'] = $post['business_id'];
+    //   if (!isset($record['amount'])) $record['amount'] = null;
+    //   $entity = new Record($record);
+    //   $records = $entity;
+    // }
+
+    $this->model->insert(new Transaction($transaction));
+    $this->recordModel->insertBatch($recordList);
+
+    foreach ($productsToEdit as $item) {
+      $this->itemModel->update(($item['id']), ['stock' => $item['stock']]);
+    }
+    // $this->itemModel->updateBatch($stockValidation, 'id');
+
+    return redirect()->to('transactions/new')->with('success', 'Transacción registrada exitosamente.');
   }
+
   public function update($id = null)
   {
-    $post = $this->request->getPost(
-      ['description','category_number', 'amount', 'payment_method', 'notes']
-    );
+    if (!$this->validate($this->formValidator->update)) {
+      return redirect()->back()->withInput();
+    }
+
+    $post = $this->request->getPost();
     $row = [];
     foreach ($post as $key => $value) {
-      if ($value) $row[$key] = $value;
+      if ($value && $key !== '_method') $row[$key] = $value;
     }
     if (empty($row)) return redirect()->to('transactions');
 
-    $transaction = new Transaction($row);
-    if (!$this->validate($this->form_validator->showRules())) {
-      return redirect()->back()->withInput(); 
-    }
+    $this->model->update(uuid_to_bytes($id), new Transaction($row));
+    return redirect()->to('transactions')->with('success', 'Transacción actualizada exitosamente.');;
+  }
 
-    $this->model->update($id, $transaction);
-    return redirect()->to('transactions');
+  protected function sendError(string $message)
+  {
+    $validation = \Config\Services::validation();
+    $validation->setError('stock', $message);
+
+    return redirect()->back()->withInput();
   }
 }

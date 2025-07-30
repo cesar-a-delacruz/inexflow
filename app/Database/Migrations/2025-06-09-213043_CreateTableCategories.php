@@ -9,16 +9,17 @@ class CreateTableCategories extends Migration
     public function up()
     {
         $this->forge->addField([
-            'business_id' => [
-                'type'       => 'BINARY',
-                'constraint'       => 16,
-                'null'       => false,
-            ],
-            'category_number' => [
-                'type'           => 'SMALLINT',
-                'constraint'     => 5,
+            'id' => [
+                'type'           => 'INT',
+                'constraint'     => 10,
                 'unsigned'       => true,
                 'null'           => false,
+                'auto_increment' => true
+            ],
+            'business_id' => [
+                'type'       => 'BINARY',
+                'constraint' => 16,
+                'null'       => false,
             ],
             'name' => [
                 'type'       => 'VARCHAR',
@@ -29,11 +30,6 @@ class CreateTableCategories extends Migration
                 'type'       => 'ENUM',
                 'constraint' => ['income', 'expense'],
                 'null'       => false,
-            ],
-            'is_active' => [
-                'type'    => 'BOOLEAN',
-                'default' => true,
-                'null'    => false,
             ],
             'created_at' => [
                 'type'    => 'DATETIME',
@@ -49,16 +45,8 @@ class CreateTableCategories extends Migration
             ],
         ]);
 
-        // Primary key compuesta
-        $this->forge->addKey(['business_id', 'category_number'], true);
-
-        // Unique key para evitar duplicar categorías por negocio
+        $this->forge->addKey('id', true);
         $this->forge->addUniqueKey(['business_id', 'name'], 'uk_business_category_name');
-
-        // Índice para búsqueda por tipo más rápida
-        $this->forge->addKey(['business_id', 'type'], false, false, 'idx_business_type');
-
-        // Foreign key
         $this->forge->addForeignKey('business_id', 'businesses', 'id', 'CASCADE', 'RESTRICT');
 
         $this->forge->createTable('categories');
