@@ -38,8 +38,12 @@
                                         <label for="start_date">Fecha inicio</label>
                                     </div>
                                     <div class="form-floating mb-3">
-                                        <input type="date" class="form-control" id="end_date" value="<?= isset($filters['end_date']) ? esc($filters['end_date']) : '' ?>" name=" end_date">
+                                        <input type="date" class="form-control" id="end_date" value="<?= isset($filters['end_date']) ? esc($filters['end_date']) : '' ?>" name="end_date">
                                         <label for="end_date">Fecha fin</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input type="number" min='10' max='50' value="<?= isset($filters['product_limit']) ? esc($filters['product_limit']) : '' ?>" name="product_limit" class="form-control" id="product_limit">
+                                        <label for="product_limit">Limite de Productos</label>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -53,106 +57,37 @@
             </div>
         </div>
         <div class="col col-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Análisis Completo de los Metodos de Pago</h5>
-                    <h6 class="card-subtitle"><?= $sales['period_description'] ?> <?= !empty($dateValues[$sales['group_by']]) ? 'Agrupado por ' . $dateValues[$sales['group_by']] : '' ?></h6>
-                    <canvas id="payment-method-canvas"></canvas>
+            <div class="row">
+                <div class="card w-full">
+                    <div class="card-body">
+                        <h5 class="card-title">Metodos de Pago</h5>
+                        <canvas id="payment-method-canvas"></canvas>
+                    </div>
                 </div>
-                <div class="card-footer text-body-secondary">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        Modificar Parametros
-                    </button>
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-sm">
-                            <form class="modal-content" action="#" method="GET">
-                                <div class="modal-header">
-                                    <h5 class="modal-title fs-5" id="exampleModalLabel">Filtrar Transacciones</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select" id="group_by" name="group_by" aria-label="Agrupar por">
-                                            <?php foreach ($dateValues as $dateKey => $dateValue): ?>
-                                                <option <?= $sales['group_by'] === $dateKey ? "selected" : "" ?> value=<?= esc($dateKey) ?>><?= esc($dateValue) ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-
-
-                                        <label for="group_by">Agrupar por</label>
-
-                                    </div>
-                                    <div class="form-floating mb-3">
-                                        <input type="date" class="form-control" id="start_date" value="<?= isset($filters['start_date']) ? esc($filters['start_date']) : '' ?>" name="start_date">
-                                        <label for="start_date">Fecha inicio</label>
-                                    </div>
-                                    <div class="form-floating mb-3">
-                                        <input type="date" class="form-control" id="end_date" value="<?= isset($filters['end_date']) ? esc($filters['end_date']) : '' ?>" name=" end_date">
-                                        <label for="end_date">Fecha fin</label>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                    <button type="submit" class="btn btn-primary">Guardar</button>
-                                </div>
-                            </form>
+            </div>
+            <div class="row pt-3">
+                <div class="col">
+                    <div class="card w-full">
+                        <div class="card-body">
+                            <h5 class="card-title">Estados de pago</h5>
+                            <canvas id="payment-status-canvas"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
-    <div class="row">
+    <div class="row pt-3">
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Análisis Completo de los Metodos de Pago</h5>
-                    <h6 class="card-subtitle"><?= $sales['period_description'] ?> <?= !empty($dateValues[$sales['group_by']]) ? 'Agrupado por ' . $dateValues[$sales['group_by']] : '' ?></h6>
-                    <canvas id="payment-status-canvas"></canvas>
-                </div>
-                <div class="card-footer text-body-secondary">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        Modificar Parametros
-                    </button>
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-sm">
-                            <form class="modal-content" action="#" method="GET">
-                                <div class="modal-header">
-                                    <h5 class="modal-title fs-5" id="exampleModalLabel">Filtrar Transacciones</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select" id="group_by" name="group_by" aria-label="Agrupar por">
-                                            <?php foreach ($dateValues as $dateKey => $dateValue): ?>
-                                                <option <?= $sales['group_by'] === $dateKey ? "selected" : "" ?> value=<?= esc($dateKey) ?>><?= esc($dateValue) ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-
-
-                                        <label for="group_by">Agrupar por</label>
-
-                                    </div>
-                                    <div class="form-floating mb-3">
-                                        <input type="date" class="form-control" id="start_date" value="<?= isset($filters['start_date']) ? esc($filters['start_date']) : '' ?>" name="start_date">
-                                        <label for="start_date">Fecha inicio</label>
-                                    </div>
-                                    <div class="form-floating mb-3">
-                                        <input type="date" class="form-control" id="end_date" value="<?= isset($filters['end_date']) ? esc($filters['end_date']) : '' ?>" name=" end_date">
-                                        <label for="end_date">Fecha fin</label>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                    <button type="submit" class="btn btn-primary">Guardar</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                    <h5 class="card-title">Productos/Servicios más vendidos</h5>
+                    <h6 class="card-subtitle">Limitado a <?= $filters['product_limit'] ?> elementos.</h6>
+                    <canvas id="top-items-canvas"></canvas>
                 </div>
             </div>
         </div>
-        <div class="col"></div>
         <div class="col"></div>
     </div>
 </div>
@@ -394,7 +329,7 @@
         data: {
             labels: paymentStatusData.map(item => item.status_label),
             datasets: [{
-                label: 'Estados de Pago',
+                label: 'Estados de pago',
                 data: paymentStatusData.map(item => parseFloat(item.total_amount)),
                 backgroundColor: [
                     'rgba(34, 197, 94, 0.8)', // Verde - Pagado
@@ -495,6 +430,79 @@
             onHover: (event, activeElements) => {
                 event.native.target.style.cursor = activeElements.length > 0 ? 'pointer' : 'default';
             }
+        }
+    });
+
+    /*----------------------*/
+    const ctxTopItems = document.getElementById('top-items-canvas');
+    let topItemsData = <?php echo json_encode($topItems['data']); ?>;
+    topItemsData = topItemsData.sort((a, b) => (a.total_revenue - b.total_revenue)).reverse();
+    const topItemsColors = topItemsData.map(item => item.item_type === 'product' ? 'rgba(34, 197, 94, 0.8)' : 'rgba(54, 162, 235, 0.7)');
+
+    new Chart(ctxTopItems, {
+        type: 'bar',
+        data: {
+            labels: topItemsData.map(item => item.item_name),
+            datasets: [{
+                label: 'productos/servicios',
+                data: topItemsData.map(item => parseFloat(item.total_revenue)),
+                backgroundColor: topItemsColors,
+            }]
+        },
+        options: {
+            maintainAspectRatio: true,
+            plugins: {
+                tooltip: {
+                    backgroundColor: 'rgba(17, 24, 39, 0.95)',
+                    titleColor: '#ffffff',
+                    bodyColor: '#ffffff',
+                    borderColor: '#22c55e',
+                    borderWidth: 2,
+                    cornerRadius: 12,
+                    padding: 16,
+                    displayColors: true,
+                    titleFont: {
+                        size: 14,
+                        weight: '600'
+                    },
+                    bodyFont: {
+                        size: 13
+                    },
+                    callbacks: {
+                        title: function(context) {
+                            return context[0].label;
+                        },
+                        label: function(context) {
+                            const dataIndex = context.dataIndex;
+                            const item = topItemsData[dataIndex];
+
+                            return [
+                                `${item.item_type==='product'?'Producto': 'Service'}`,
+                                `Monto: $${parseFloat(item.total_revenue).toLocaleString('es-ES', {minimumFractionDigits: 2})}`,
+                            ];
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value.toFixed(2);
+                        }
+                    }
+                }
+            },
+            animation: {
+                animateRotate: true,
+                animateScale: true,
+                duration: 2000,
+                easing: 'easeOutQuart'
+            },
+            onHover: (event, activeElements) => {
+                event.native.target.style.cursor = activeElements.length > 0 ? 'pointer' : 'default';
+            },
         }
     });
 </script>
