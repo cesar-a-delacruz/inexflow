@@ -134,7 +134,8 @@ class TransactionController extends BaseController
       'number' => strval(Time::now()->timestamp),
       'due_date' => date('Y-m-d', new Time($post['due_date'])->timestamp),
       'total' => 0,
-      'payment_method' => $post['payment_method']
+      'payment_method' => $post['payment_method'],
+      'payment_status' => $post['payment_status'],
     ];
 
     $productsToEdit = [];
@@ -207,6 +208,7 @@ class TransactionController extends BaseController
       $transaction['total'] += $subTotal;
       $recordList[] = new Record($recordData);
     }
+
     // $post['id'] = Uuid::uuid4();
     // $post['business_id'] = uuid_to_bytes($businessId);
     // $post['contact_id'] = ($post['contact_id']) ? uuid_to_bytes($post['contact_id']) : null;

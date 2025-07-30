@@ -41,7 +41,7 @@
         </div>
         <div class="mb-3">
           <label for="payment_status" class="form-label">Estado</label>
-          <select name="payment_status" class="form-select">
+          <select name="payment_status" class="form-select" require>
             <option value="">-- Seleccione el estado --</option>
             <option value="paid">Pagada</option>
             <option value="pending">Pendiente</option>
