@@ -13,7 +13,6 @@
     integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous" defer></script>
-  <script src="/assets/js/view-transition.js"></script>
   <!-- data table -->
   <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.bootstrap5.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.css">
@@ -22,14 +21,11 @@
   <!-- css y javascript personalizado -->
   <link rel="stylesheet" href="/assets/css/style.css">
 
-  <link rel="preload" href="/assets/img/nav-bar-bg.avif" as="image">
 
+  <link rel="preload" href="/assets/img/nav-bar-bg-1.avif" as="image">
   <script src="/assets/js/data-table.js" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Anta&display=swap" rel="stylesheet">
-
-  <link rel="preload" href="https://cdn.jsdelivr.net/npm/chart.js" as="js">
-  <link rel="prerender" href="/dashboard">
-
+  <script src="/assets/js/view-transition.js"></script>
 </head>
 
 
