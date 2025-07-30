@@ -13,6 +13,7 @@
     integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous" defer></script>
+  <script src="/assets/js/view-transition.js"></script>
   <!-- data table -->
   <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.bootstrap5.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.css">
@@ -20,65 +21,25 @@
   <script src="https://cdn.datatables.net/2.3.2/js/dataTables.js" defer></script>
   <!-- css y javascript personalizado -->
   <link rel="stylesheet" href="/assets/css/style.css">
+
+  <link rel="preload" href="/assets/img/nav-bar-bg.avif" as="image">
+
   <script src="/assets/js/data-table.js" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Anta&display=swap" rel="stylesheet">
+
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/chart.js" as="js">
+  <link rel="prerender" href="/dashboard">
+
 </head>
 
-<style>
-  .hero-title {
-    font-family: "Anta", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    font-size: 2rem;
-  }
-
-  nav.navbar {
-    position: relative;
-
-    & div.bg {
-      position: absolute;
-      inset: 0px;
-      z-index: -1;
-      height: 100%;
-      width: 100%;
-      background-color: #fff;
-      background: url('/assets/img/nav-bar-bg.avif');
-      background-repeat: no-repeat;
-      background-position: center;
-    }
-  }
-
-  #sidebar {
-    background-color: #f7fcffff !important;
-  }
-
-  /* main {
-    position: relative;
-
-    & div.bg {
-      position: absolute;
-      inset: 0px;
-      z-index: -10;
-      height: 100%;
-      width: 100%;
-      background-color: #fff;
-      background: linear-gradient(to right, #8080800a 1px, transparent 1px), linear-gradient(to bottom, #8080800a 1px, transparent 1px);
-      background-size: 14px 24px;
-    }
-  } */
-</style>
 
 <body class="vh-100 mw-vw-100">
+
   <nav class="navbar navbar-light bg-light p-2 px-4 h-10 w-100">
     <div class="bg"></div>
     <div class="d-flex col-lg-2 mb-2 mb-lg-0 flex-wrap flex-md-nowrap justify-content-between">
       <a class="navbar-brand hero-title" href="/">INEXflow C1</a>
     </div>
-    <!-- <div class="col-lg-4">
-      <input class="form-control form-control-dark" type="text" placeholder="Buscar" aria-label="Search">
-    </div> -->
-    <!-- <div class="col-lg-4 d-flex align-items-center justify-content-md-end mt-3 mt-md-0 me-lg-4"> -->
-
     <a type="button" class="btn btn-primary" style="align-content: center; display: flex; gap:6px;" href="/logout">
       <span>Cerrar Sesión</span>
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><!-- Icon from Feather Icon by Megumi Hano - https://github.com/feathericon/feathericon/blob/master/LICENSE -->
@@ -191,6 +152,7 @@
       </main>
     </div>
   </div>
+
 </body>
 
 </html>
