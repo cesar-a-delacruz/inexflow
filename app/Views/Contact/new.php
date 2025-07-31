@@ -74,7 +74,7 @@
                 </div>
                 <div class="form-check mb-3">
                     <input type="radio" class="form-check-input" id="validationFormCheck3" value="provider" name="type" required>
-                    <label class="form-check-label" for="validationFormCheck3">Preedor</label>
+                    <label class="form-check-label" for="validationFormCheck3">Preveedor</label>
                     <?php if ($typeValid): ?>
                         <div class="invalid-feedback">
                             <?= validation_show_error('type') ?>

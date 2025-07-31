@@ -17,6 +17,9 @@
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
         </div>
       <?php endif; ?>
+      <?php if (!empty(validation_errors())): ?>
+        <div class="alert alert-danger"><?= validation_list_errors() ?></div>
+      <?php endif; ?>
 
       <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
         <symbol viewBox=" 0 0 24 24" id="fe-check">
