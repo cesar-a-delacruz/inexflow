@@ -17,6 +17,9 @@
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
         </div>
       <?php endif; ?>
+      <?php if (!empty(validation_errors())): ?>
+        <div class="alert alert-danger"><?= validation_list_errors() ?></div>
+      <?php endif; ?>
 
       <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
         <symbol viewBox=" 0 0 24 24" id="fe-check">
@@ -29,20 +32,14 @@
       </svg>
       <form action="/transactions" method="POST" class="needs-validation" novalidate>
 
-        <div class="form-floating mb-3">
-          <?php $dueDateError = validation_show_error('due_date') ?>
-          <input
-            type="date"
-            name="due_date"
-            id="due_date"
-            require
-            class="form-control <?= $dueDateError ? 'is-invalid' : ''; ?>"
-            value="<?= old('due_date', date('Y-m-d')); ?>">
-          <label for="due_date">Fecha de vencimiento</label>
-          <?php if ($dueDateError): ?>
-            <div class="invalid-feedback"><?= $dueDateError ?></div>
-          <?php endif; ?>
-        </div>
+        <?= view_cell('FormInputCell', [
+          'name' => 'due_date',
+          'label' => 'Fecha de vencimiento',
+          'type' => 'date',
+          'default' => date('Y-m-d'),
+          'required' => true,
+        ]) ?>
+
 
         <div>
           <?php $typeError = validation_show_error('type') ?>
@@ -99,33 +96,29 @@
           </div>
         </div>
 
-        <?php $paymentStatusError = validation_show_error('payment_status') ?>
-        <div class="form-floating mb-3">
-          <select class="form-select <?= $paymentStatusError ? 'is-invalid' : '' ?>" name='payment_status' id="payment_status" aria-label="Estado del Pago">
-            <option <?= set_select('payment_status', 'paid', true) ?> value="paid">Pagada</option>
-            <option <?= set_select('payment_status', 'pending') ?> value="pending">Pendiente</option>
-            <option <?= set_select('payment_status', 'overdue') ?> value="overdue">Atrasada</option>
-            <option <?= set_select('payment_status', 'cancelled') ?> value="cancelled">Cancelada</option>
-          </select>
-          <label for="payment_status">Estado del Pago</label>
-          <?php if ($paymentStatusError): ?>
-            <div class="invalid-feedback"><?= $paymentStatusError ?></div>
-          <?php endif; ?>
-        </div>
+        <?= view_cell('FormSelectCell', [
+          'name' => 'payment_status',
+          'label' => 'Estado del Pago',
+          'options' => [
+            'paid' => 'Pagada',
+            'pending' => 'Pendiente',
+            'overdue' => 'Atrasada',
+            'cancelled' => 'Cancelada',
+          ],
+          'default' => 'paid'
+        ]) ?>
 
-        <div class="form-floating mb-3">
-          <?php $paymentMethodError = validation_show_error('payment_method') ?>
 
-          <select class="form-select <?= $paymentMethodError ? 'is-invalid' : '' ?>" name='payment_method' id="payment_method" aria-label="Método de Pago">
-            <option <?= set_select('payment_method', 'cash', true) ?> value="cash">Efectivo</option>
-            <option <?= set_select('payment_method', 'card') ?> value="card">Tarjeta de Débito/Crédito</option>
-            <option <?= set_select('payment_method', 'transfer') ?> value="transfer">Transferencia Bancaria</option>
-          </select>
-          <label for="payment_method">Método de Pago</label>
-          <?php if ($paymentMethodError): ?>
-            <div class="invalid-feedback"><?= $paymentMethodError ?></div>
-          <?php endif; ?>
-        </div>
+        <?= view_cell('FormSelectCell', [
+          'name' => 'payment_method',
+          'label' => 'Método de Pago',
+          'options' => [
+            'cash' => 'Efectivo',
+            'card' => 'Tarjeta de Débito/Crédito',
+            'transfer' => 'Transferencia Bancaria',
+          ],
+          'default' => 'cash'
+        ]) ?>
 
         <div class="mb-3">
           <label for="records" class="form-label">Registros</label>
