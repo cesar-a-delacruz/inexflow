@@ -221,7 +221,7 @@ class TransactionController extends BaseController
         'type' => $item->type,
       ];
 
-      $sellingPrice = (int) ($item->selling_price ?? $item->cost);
+      $sellingPrice = (float) ($item->selling_price ?? $item->cost);
 
       if (!$sellingPrice) {
         return $this->sendError("Un producto no tiene precio.");
