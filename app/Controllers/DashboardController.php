@@ -19,6 +19,9 @@ class DashboardController extends BaseController
 
         if (!$businessId) throw redirect("/");
         $groupBy = $this->request->getGet('group_by') ?? '';
+        $productLimit = $this->request->getGet('product_limit') ?? 10;
+
+        if ($productLimit > 50 || $productLimit < 10) $productLimit = 10;
 
         $filters = [];
 
@@ -27,6 +30,7 @@ class DashboardController extends BaseController
 
         if (isset($startDate)) $filters['start_date'] = $startDate;
         if (isset($endDate)) $filters['end_date'] = $endDate;
+        if (isset($productLimit)) $filters['product_limit'] = $productLimit;
 
         $data = [
             'title' => 'Dashboard',
@@ -35,7 +39,7 @@ class DashboardController extends BaseController
             'filters' => $filters,
             'paymentMethodData' => $this->model->getPaymentMethodChart($businessId, $filters),
             'paymentStatusData' => $this->model->getPaymentStatusChart($businessId, $filters),
-
+            'topItems' => $this->model->getTopItemsChart($businessId, $filters, $productLimit),
         ];
 
         array_push($data, $filters);

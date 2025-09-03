@@ -1,8 +1,8 @@
-<?= $this->extend('layouts/dashboard')?>
+<?= $this->extend('layouts/dashboard') ?>
 
-<?= $this->section('content')?>
- <div class="container mt-5 " >
-    <div class="card shadow-sm border-0 mx-auto" style="width: 600px;">
+<?= $this->section('content') ?>
+<div class="container mt-5 ">
+    <div class="card shadow-sm border-0 mx-auto" style="width: 800px;">
         <div class="card-header bg-primary text-white">
             <h4 class="mb-0"><?= $title ?></h4>
         </div>
@@ -13,82 +13,157 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
                 </div>
             <?php endif; ?>
-            <?php if (!empty(validation_errors())): ?>
-                <div class="alert alert-danger"><?= validation_list_errors() ?></div>
-            <?php endif; ?>
 
-            <form action="/items" method="POST" novalidate>
-                <div class="mb-3">
-                    <label for="name" class="form-label">Nombre</label>
-                    <input type="text" name="name" class="form-control">
+            <form action="/items" method="POST" class="needs-validation" novalidate>
+                <div class="row">
+                    <div class="col">
+                        <?php $nameValid = !!validation_show_error('name') ?>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control <?= $nameValid ? 'is-invalid' : null ?>" require
+                                value="<?= !$nameValid ? set_value('name') : null ?>"
+                                id="name" name="name" placeholder="Aguacate">
+                            <label for="name">Nombre</label>
+                            <?php if ($nameValid): ?>
+                                <div class="invalid-feedback">
+                                    <?= validation_show_error('name') ?>
+                                </div>
+                            <?php endif ?>
+                        </div>
+                        <?php $typeValid = !!validation_show_error('type') ?>
+                        <div class="form-floating mb-3">
+                            <select class="form-select <?= $typeValid ? 'is-invalid' : null ?>" id="type" name="type" onchange="activateStock(this, event)" aria-label="Tipo de elemento">
+                                <option selected value="product">Producto</option>
+                                <option value="service">Servicio</option>
+                            </select>
+                            <label for="type">Tipo de Elemento</label>
+                            <?php if ($typeValid): ?>
+                                <div class="invalid-feedback">
+                                    <?= validation_show_error('type') ?>
+                                </div>
+                            <?php endif ?>
+                        </div>
+                        <?php $categoryIdValid = !!validation_show_error('category_id') ?>
+                        <div class="form-floating mb-3">
+                            <select class="form-select <?= $categoryIdValid ? 'is-invalid' : null ?>" id="category_id" name="category_id" aria-label="Categoria">
+                                <?php foreach ($categories as $category): ?>
+                                    <option value="<?= $category->id ?>">
+                                        <?= $category->displayType() . " | " . $category->name ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <label for="category_id">Categoria</label>
+                            <?php if ($categoryIdValid): ?>
+                                <div class="invalid-feedback">
+                                    <?= validation_show_error('category_id') ?>
+                                </div>
+                            <?php endif ?>
+                        </div>
+                        <?php $costValid = !!validation_show_error('cost') ?>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control <?= $costValid ? 'is-invalid' : null ?>" require
+                                value="<?= !$costValid ? set_value('cost') : null ?>"
+                                id="cost" name="cost" step="0.01" min="0" placeholder="0.50">
+                            <label for="cost">Costo</label>
+                            <?php if ($costValid): ?>
+                                <div class="invalid-feedback">
+                                    <?= validation_show_error('cost') ?>
+                                </div>
+                            <?php endif ?>
+                        </div>
+
+                    </div>
+                    <div class="col">
+                        <?php $sellingPriceValid = !!validation_show_error('selling_price') ?>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control <?= $sellingPriceValid ? 'is-invalid' : null ?>" require
+                                value="<?= !$sellingPriceValid ? set_value('selling_price') : null ?>"
+                                id="selling_price" name="selling_price" step="0.01" min="0" placeholder="0.75">
+                            <label for="selling_price">Precio de Venta</label>
+                            <?php if ($sellingPriceValid): ?>
+                                <div class="invalid-feedback">
+                                    <?= validation_show_error('selling_price') ?>
+                                </div>
+                            <?php endif ?>
+                        </div>
+                        <?php $stockValid = !!validation_show_error('stock') ?>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control <?= $stockValid ? 'is-invalid' : null ?>" require
+                                value="<?= !$stockValid ? set_value('stock') : 1 ?>"
+                                id="stock" name="stock" step="1" min="1" placeholder="20">
+                            <label for="stock">Cantidad</label>
+                            <?php if ($stockValid): ?>
+                                <div class="invalid-feedback">
+                                    <?= validation_show_error('stock') ?>
+                                </div>
+                            <?php endif ?>
+                        </div>
+
+                        <?php $minStockValid = !!validation_show_error('min_stock') ?>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control <?= $minStockValid ? 'is-invalid' : null ?>" require
+                                value="<?= !$minStockValid ? set_value('min_stock') : 1 ?>"
+                                id="min_stock" name="min_stock" step="1" min="1" placeholder="20">
+                            <label for="min_stock">Cantidad Mínima (para alertar)</label>
+                            <?php if ($minStockValid): ?>
+                                <div class="invalid-feedback">
+                                    <?= validation_show_error('min_stock') ?>
+                                </div>
+                            <?php endif ?>
+                        </div>
+                        <?php $measureUnitValid = !!validation_show_error('measure_unit') ?>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control <?= $measureUnitValid ? 'is-invalid' : null ?>" require
+                                value="<?= !$measureUnitValid ? set_value('measure_unit') : null ?>"
+                                id="measure_unit" list='measure_unit_list' name="measure_unit" step="1" min="1" placeholder="lb">
+                            <label for="measure_unit">Unidad de Medida</label>
+                            <?php if ($measureUnitValid): ?>
+                                <div class="invalid-feedback">
+                                    <?= validation_show_error('measure_unit') ?>
+                                </div>
+                            <?php endif ?>
+                            <datalist id="measure_unit_list">
+                                <option value="unidad">
+                                <option value="lb">
+                                <option value="kg">
+                                <option value="lt">
+                                <option value="mt">
+                            </datalist>
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="type" class="form-label">Tipo</label>
-                    <select name="type" class="form-select" onchange="activateStock(this, event)">
-                        <option value="">-- Seleccione el tipo --</option>
-                        <option value="product">Producto</option>
-                        <option value="service">Servicio</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="category_id" class="form-label">Categoría</label>
-                    <select name="category_id" class="form-select" onchange="activatePrice(this, event)">
-                        <option value="">-- Seleccione una categoría --</option>
-                        <?php foreach ($categories as $category): ?>
-                            <option value="<?= $category->id ?>">
-                                <?= $category->displayType()." | ".$category->name ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="cost" class="form-label">Costo</label>
-                    <input type="number" name="cost" class="form-control" step="0.01" min="0" placeholder="0.50">
-                </div>
-                <div class="mb-3">
-                    <label for="selling_price" class="form-label">Precio de Venta</label>
-                    <input type="number" name="selling_price" class="form-control" step="0.01" min="0" placeholder="0.75">
-                </div>
-                <div class="mb-3">
-                    <label for="stock" class="form-label">Cantidad</label>
-                    <input type="number" name="stock" class="form-control" step="1" min="1" value="1">
-                </div>
-                <div class="mb-3">
-                    <label for="min_stock" class="form-label">Cantidad Mínima (para alertar)</label>
-                    <input type="number" name="min_stock" class="form-control" step="1" min="1" value="1">
-                </div>
-                <div class="mb-3">
-                    <label for="measure_unit" class="form-label">Unidad de Medida</label>
-                    <input type="text" name="measure_unit" class="form-control" placeholder="unidad, kg, lb, etc" value="unidad">
-                </div>
+
+
                 <div class="d-grid">
-                    <button type="submit" class="btn btn-success">Registrar</button>
+                    <button type="submit" class="btn btn-success mx-auto" style="width: 35%;">Registrar</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 <script>
-function activateStock (element, event) {
     const inputStock = document.querySelector("input[name='stock']");
     const inputMinStock = document.querySelector("input[name='min_stock']");
     const inputMeasureUnit = document.querySelector("input[name='measure_unit']");
     const inputs = [inputStock, inputMinStock, inputMeasureUnit];
 
-    for (const input of inputs) {
-        input.disabled = event.target.value === "product" ? false : true;
-        input.value = event.target.value === "product" ?
-        input.name !== 'measure_unit' ? 1 : 'unidad' : null;
-    }
-    
-}
-function activatePrice (element, event) {
-    const selectedOption = event.target.selectedOptions[0].text;
-    const itemType = selectedOption.substring(0, selectedOption.lastIndexOf("|")).trim();
-    const inputSellingPrice = document.querySelector("input[name='selling_price']");
+    function activateStock(element, event) {
+        isProduct = event.target.value === "product";
+        for (const input of inputs) {
+            if (!input) continue;
+            input.disabled = !isProduct;
+            input.value = null;
+            if (input.name === 'measure_unit') input.value = 'unidad';
+        }
 
-    inputSellingPrice.disabled = itemType === "Ingreso" ? false : true;
-    inputSellingPrice.placeholder = itemType === "Ingreso" ? 0.75 : "";
-}
+    }
+
+    function activatePrice(element, event) {
+        const selectedOption = event.target.selectedOptions[0].text;
+        const itemType = selectedOption.substring(0, selectedOption.lastIndexOf("|")).trim();
+        const inputSellingPrice = document.querySelector("input[name='selling_price' ]");
+
+        inputSellingPrice.disabled = itemType === "Ingreso" ? false : true;
+        inputSellingPrice.placeholder = itemType === "Ingreso" ? 0.75 : "";
+    }
 </script>
-<?= $this->endSection()?>
+<?= $this->endSection() ?>

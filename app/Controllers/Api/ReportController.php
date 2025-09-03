@@ -62,4 +62,12 @@ class ReportController extends ResourceController
 
         return $this->respond($this->model->getTopItemsChart($businessId));
     }
+    public function dashboardMetrics()
+    {
+        $businessId = session()->get('business_id');
+
+        if (!$businessId) return $this->respond("error", 400);
+
+        return $this->respond($this->model->getDashboardMetrics($businessId));
+    }
 }

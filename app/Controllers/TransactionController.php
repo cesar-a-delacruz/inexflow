@@ -56,6 +56,7 @@ class TransactionController extends BaseController
     $redirect = check_user('businessman');
     if ($redirect !== null) return redirect()->to($redirect);
     else session()->set('current_page', 'transactions/new');
+    helper('number');
 
     $items = $this->itemModel->findAllWithCategory($businessId);
     $income = [];
@@ -63,6 +64,35 @@ class TransactionController extends BaseController
     foreach ($items as $item) {
       if ($item->category_type === 'income') $income[] = $item;
       else $expense[] = $item;
+    }
+
+    $jsIncomes = [];
+    if (!empty($income)) {
+      foreach ($income as $i => $inc) {
+        $jsIncomes[] = [
+          'index' => $i,
+          'id' => $inc->id->toString(),
+          'name' => $inc->name,
+          'category' => $inc->category_name,
+          'type' => $inc->displayType(),
+          'stock' => $inc->displayProperty('stock'),
+          'money' => $inc->selling_price ?? $inc->cost,
+        ];
+      }
+    }
+    $jsExpense = [];
+    if (!empty($expense)) {
+      foreach ($expense as $i => $inc) {
+        $jsExpense[] = [
+          'index' => $i,
+          'id' => $inc->id->toString(),
+          'name' => $inc->name,
+          'category' => $inc->category_name,
+          'type' => $inc->displayType(),
+          'stock' => $inc->displayProperty('stock'),
+          'money' => $inc->selling_price ?? $inc->cost,
+        ];
+      }
     }
     $items = (object) ['income' => $income, 'expense' => $expense];
 
@@ -79,11 +109,38 @@ class TransactionController extends BaseController
       return (object) ['customer' => $customer, 'provider' => $provider];
     })($contacts);
 
-
+    $jsCustomer = [];
+    if (!empty($contacts->customer)) {
+      foreach ($contacts->customer as $i => $inc) {
+        $jsCustomer[] = [
+          'index' => $i,
+          'id' => $inc->id->toString(),
+          'name' => $inc->name,
+          'email' => $inc->email,
+          'phone' => $inc->phone,
+          'address' => $inc->address,
+        ];
+      }
+    }
+    $jsProvider = [];
+    if (!empty($contacts->provider)) {
+      foreach ($contacts->provider as $i => $inc) {
+        $jsProvider[] = [
+          'index' => $i,
+          'id' => $inc->id->toString(),
+          'name' => $inc->name,
+          'email' => $inc->email,
+          'phone' => $inc->phone,
+          'address' => $inc->address,
+        ];
+      }
+    }
     $data = [
       'title' => 'Nueva Transacción',
-      'items' => $items,
-      'contacts' => $contacts
+      'jsExpenses' => $jsExpense,
+      'jsIncomes' => $jsIncomes,
+      'jsProviders' => $jsProvider,
+      'jsCustomers' => $jsCustomer
     ];
 
 
@@ -146,13 +203,13 @@ class TransactionController extends BaseController
       $itemId = $record['item_id'] ?? null;
 
       if (!$itemId) {
-        return $this->sendError("Error en el registro #" . ($index + 1) . ": No se especificó el producto o servicio.");
+        return $this->sendError("No se especificó el producto o servicio.");
       }
 
       $item = $this->itemModel->where('business_id', $businessIdBytes)->find(uuid_to_bytes($itemId));
 
       if (!$item) {
-        return $this->sendError("Error en el registro #" . ($index + 1) . ": Producto o servicio no encontrado.");
+        return $this->sendError("Un producto o servicio no fue encontrado.");
       }
 
       $recordData = [
@@ -167,7 +224,7 @@ class TransactionController extends BaseController
       $sellingPrice = (int) ($item->selling_price ?? $item->cost);
 
       if (!$sellingPrice) {
-        return $this->sendError("Error en el registro #" . ($index + 1) . ": Producto no tiene precio.");
+        return $this->sendError("Un producto no tiene precio.");
       }
 
       if ($item->type !== 'product') {

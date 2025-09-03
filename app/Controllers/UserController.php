@@ -14,12 +14,13 @@ class UserController extends BaseController
     protected $businessModel;
     protected $formValidator;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->model = new UserModel();
         $this->businessModel = new BusinessModel();
         $this->formValidator = new UserValidator();
     }
-    
+
     // vistas
     public function index()
     {
@@ -29,11 +30,13 @@ class UserController extends BaseController
 
         $data = [
             'title' => 'Usuarios',
-            'users' => array_values(array_filter($this->model->findAll(), function ($user) { return $user->id != session()->get('id'); }))
+            'users' => array_values(array_filter($this->model->findAll(), function ($user) {
+                return $user->id != session()->get('id');
+            }))
         ];
         return view('User/index', $data);
     }
-    
+
     public function new()
     {
         $redirect = check_user('admin');
@@ -49,7 +52,7 @@ class UserController extends BaseController
         $redirect = check_user('businessman');
         if ($redirect !== null) return redirect()->to($redirect);
         else session()->set('current_page', 'user');
-        
+
         $data = [
             'title' => 'Información Personal',
             'user' => $this->model->find(uuid_to_bytes(session()->get('id')))
@@ -128,7 +131,7 @@ class UserController extends BaseController
         if (!$this->validate($this->formValidator->update)) {
             return redirect()->back()->withInput();
         }
-        
+
         $post = $this->request->getPost();
         if ($post['name']) session()->set('name', $post['name']);
         if ($post['email']) session()->set('email', $post['email']);
@@ -159,7 +162,7 @@ class UserController extends BaseController
         }
     }
 
-    public function activate($id = null) 
+    public function activate($id = null)
     {
         $this->model->toggleActive($id);
         return redirect()->to('users');
@@ -175,9 +178,9 @@ class UserController extends BaseController
         $user = $this->model->findByEmail($post['email']);
         $init_page = match ($user->role) {
             'admin' => 'users',
-            'businessman' => $user->business_id ? 'business' : 'user'
+            'businessman' => $user->business_id ? 'dashboard' : 'user'
         };
-        
+
         session()->set([
             'id' => $user->id,
             'name' => $user->name,
@@ -186,7 +189,7 @@ class UserController extends BaseController
             'business_id' => $user->business_id ? $user->business_id : null,
             'current_page' => $init_page
         ]);
-        return redirect()->to($init_page);   
+        return redirect()->to($init_page);
     }
 
     public function logout()

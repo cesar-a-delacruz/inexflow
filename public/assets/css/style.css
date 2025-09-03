@@ -36,34 +36,69 @@
 .sidebar .nav-link.active {
   color: #0d6efd;
 }
-.dropdown-item:hover{
-background-color: #6c757d;
-color:#fff;
+
+.dropdown-item:hover {
+  background-color: #6c757d;
+  color: #fff;
 
 }
 
 .nav-link {
-display: flex;
-align-items: center;
-padding: 10px 15px;
-width: 100%;
-/* border-radius: 8px; */
-text-decoration: none;
-color: #333;
-transition: background 0.3s, color 0.3s;
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  width: 100%;
+  /* border-radius: 8px; */
+  text-decoration: none;
+  color: #333;
+  transition: background 0.3s, color 0.3s;
 }
 
 .nav-link:hover {
-background-color: #6c757d; /* fondo suave al pasar el mouse */
-color: #fff; /* opcional: color más fuerte al hacer hover */
-filter: brightness(130%);
-width: 100%;
+  background-color: #6c757d;
+  /* fondo suave al pasar el mouse */
+  color: #fff;
+  /* opcional: color más fuerte al hacer hover */
+  filter: brightness(130%);
+  width: 100%;
 }
 
 .nav-link svg {
-margin-right: 8px;
+  margin-right: 8px;
 }
 
 .ml-2 {
-margin-left: 0; /* o puedes eliminar esta clase si ya usas margin-right en el ícono */
+  margin-left: 0;
+  /* o puedes eliminar esta clase si ya usas margin-right en el ícono */
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+.hero-title {
+  font-family: "Anta", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 2rem;
+}
+
+nav.navbar {
+  position: relative;
+
+  & div.bg {
+    position: absolute;
+    inset: 0px;
+    z-index: -1;
+    height: 100%;
+    width: 100%;
+    background-color: #fff;
+    background: url('/assets/img/nav-bar-bg-1.avif');
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+}
+
+#sidebar {
+  background-color: #f7fcffff !important;
 }

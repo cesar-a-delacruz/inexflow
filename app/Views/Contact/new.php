@@ -13,38 +13,75 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
                 </div>
             <?php endif; ?>
-            <?php if (!empty(validation_errors())): ?>
-                <div class="alert alert-danger"><?= validation_list_errors() ?></div>
-            <?php endif; ?>
 
-            <form action="/contacts" method="POST" novalidate>
-                 <div class="mb-3">
-                    <label for="name" class="form-label">Nombre:</label>
-                    <input type="text" id="name" name="name"  class="form-control">
+            <form action="/contacts" method="POST" class="needs-validation" novalidate>
+                <?php $nameValid = !!validation_show_error('name') ?>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control <?= $nameValid ? 'is-invalid' : null ?>" require
+                        value="<?= !$nameValid ? set_value('name') : null ?>"
+                        id="name" name="name" placeholder="Gastos Operativos">
+                    <label for="name">Nombre</label>
+                    <?php if ($nameValid): ?>
+                        <div class="invalid-feedback">
+                            <?= validation_show_error('name') ?>
+                        </div>
+                    <?php endif ?>
                 </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email:</label>
-                    <input type="text" id="email" name="email"  class="form-control">
-                </div>
-                <div class="mb-3">
-                    <label for="phone" class="form-label">Teléfono:</label>
-                    <input type="tel" id="phone" name="phone" class="form-control">
-                </div>
-                <div class="mb-3">
-                    <label for="address" class="form-label">Dirección:</label>
-                    <input type="text" id="address" name="address" class="form-control">
-                </div>
-                <div class="mb-3">
-                    <label for="type" class="form-label">Tipo</label>
-                    <div class="mb-3 form-check">
-                        <input type="radio" name="type"  class="form-check-input" value="customer">
-                        <label class="form-check-label">Cliente</label>
+                <?php $emailValid = !!validation_show_error('email') ?>
+                <div class="form-floating mb-3 ">
+                    <input type="email" class="form-control <?= $emailValid ? 'is-invalid' : null ?>"
+                        value="<?= !$nameValid ? set_value('name') : null ?>"
+                        placeholder="example@email.com" id="email" name="email">
+                    <label for="email">Correo Electronico</label>
+                    <?php if ($emailValid): ?>
+                        <div class="invalid-feedback">
+                            <?= validation_show_error('email') ?>
+                        </div>
+                    <?php endif ?>
+                    <div class="valid-feedback">
+                        Looks good!
                     </div>
-                    <div class="mb-3 form-check">
-                        <input type="radio" name="type" class="form-check-input" value="provider">
-                        <label class="form-check-label">Proveedor</label>
-                    </div>
                 </div>
+                <?php $phoneValid = !!validation_show_error('phone') ?>
+                <div class="form-floating mb-3 ">
+                    <input type="tel" class="form-control <?= $phoneValid ? 'is-invalid' : null ?>"
+                        value="<?= !$phoneValid ? set_value('phone') : null ?>"
+                        placeholder="6714-5858" id="phone" name="phone">
+                    <label for="phone">Número de Teléfono</label>
+                    <?php if ($phoneValid): ?>
+                        <div class="invalid-feedback">
+                            <?= validation_show_error('phone') ?>
+                        </div>
+                    <?php endif ?>
+                </div>
+                <?php $addressValid = !!validation_show_error('address') ?>
+                <div class="form-floating mb-3 ">
+                    <input type="text" class="form-control <?= $addressValid ? 'is-invalid' : null ?>"
+                        value="<?= !$addressValid ? set_value('address') : null ?>"
+                        placeholder="Finca 4, casa verde" id="address" name="address">
+                    <label for="address">Dirrección</label>
+                    <?php if ($addressValid): ?>
+                        <div class="invalid-feedback">
+                            <?= validation_show_error('address') ?>
+                        </div>
+                    <?php endif ?>
+                </div>
+
+                <?php $typeValid = !!validation_show_error('type') ?>
+                <div class="form-check">
+                    <input type="radio" checked class="form-check-input" id="validationFormCheck2" value="customer" name="type" required>
+                    <label class="form-check-label" for="validationFormCheck2">Cliente</label>
+                </div>
+                <div class="form-check mb-3">
+                    <input type="radio" class="form-check-input" id="validationFormCheck3" value="provider" name="type" required>
+                    <label class="form-check-label" for="validationFormCheck3">Preedor</label>
+                    <?php if ($typeValid): ?>
+                        <div class="invalid-feedback">
+                            <?= validation_show_error('type') ?>
+                        </div>
+                    <?php endif ?>
+                </div>
+
                 <div class="d-grid">
                     <button type="submit" class="btn btn-success">Registrar</button>
                 </div>

@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Validation;
 
 /**
  * Son reglas de validación y mensajes de error utilizados en los formularios de App\Views\Contact
  */
-class ContactValidator {
+class ContactValidator
+{
     public $create = [
         'name' => [
             'rules' => 'required',
@@ -25,9 +27,10 @@ class ContactValidator {
             ],
         ],
         'type' => [
-            'rules' => 'required',
+            'rules' => 'required|in_list[customer,provider]',
             'errors' => [
                 'required' => 'El tipo es requerido',
+                'in_list' => 'El Tipo solo puede ser proveedor o cliente'
             ],
         ],
     ];
