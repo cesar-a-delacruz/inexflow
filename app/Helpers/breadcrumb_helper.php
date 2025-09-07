@@ -10,24 +10,35 @@ if (!function_exists('render_breadcrumb')) {
         // Obtener segmentos desde el servicio URI
         $segments = service('uri')->getSegments();
 
-        $html = '<nav aria-label="breadcrumb" class="bg-light p-lg-3 d-flex align-items-center"><ol class="breadcrumb mb-0">
+        $html = '<search><nav aria-label="breadcrumb" class="text-dark rounded-1 p-lg-3 d-flex align-items-center"><ol class="breadcrumb mb-0">
         <li class="breadcrumb-item"></li>';
 
         $url = '';
         $last_index = count($segments) - 1;
 
+        $normalice = [
+            'item' => 'Elemento',
+            'items' => 'Elementos',
+            'new' => 'Nuevo',
+            'contacts' => 'Contactos',
+            'transactions' => 'Transacciones',
+            'business' => 'Negocio',
+            'dashboard' => 'Dashboard',
+            'user' => 'Usuario'
+        ];
+
         foreach ($segments as $index => $segment) {
             $url .= '/' . $segment;
-            $name = ucfirst(str_replace(['-', '_'], ' ', $segment));
+            $name = ($normalice[$segment] ?? esc($segment));
 
             if ($index == $last_index) {
-                $html .= '<li class="breadcrumb-item active" aria-current="page">' . esc($name) . '</li>';
+                $html .= '<li class="breadcrumb-item active" aria-current="page">' . $name . '</li>';
             } else {
-                $html .= '<li class="breadcrumb-item"><a href="' . base_url($url) . '">' . esc($name) . '</a></li>';
+                $html .= '<li class="breadcrumb-item"><a href="' . base_url($url) . '">' . $name . '</a></li>';
             }
         }
 
-        $html .= '</ol></nav>';
+        $html .= '</ol></nav></search>';
 
         return $html;
     }
