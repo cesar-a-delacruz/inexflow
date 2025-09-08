@@ -11,13 +11,13 @@ class Item extends Entity
     protected $casts = [
         'id' => 'uuid',
         'business_id' => 'uuid',
-        'category_id' => 'integer',
+        'category_id' => 'int',
         'name' => 'string',
-        'type' => 'string',
+        'type' => 'enum[App\Enums\ItemType]',
         'cost' => 'float',
-        'selling_price' => 'float',
-        'stock' => 'integer',
-        'min_stock' => 'integer',
+        'selling_price' => '?float',
+        'stock' => 'int',
+        'min_stock' => 'int',
         'measure_unit' => 'string',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
@@ -25,26 +25,9 @@ class Item extends Entity
     ];
 
     protected $castHandlers = [
-        'uuid' => Cast\UuidCast::class
+        'uuid' => Cast\UuidCast::class,
+        'enum' => Cast\EnumCast::class,
     ];
-
-    /** Muestra el tipo de item en español */
-    public function displayType(): string
-    {
-        return match ($this->type) {
-            'service' => 'Servicio',
-            'product' => 'Producto  ',
-        };
-    }
-
-    /** Muestra el tipo de categoría en español (cuando se hace join con categoría) */
-    public function displayCategoryType(): string
-    {
-        return match ($this->category_type) {
-            'income' => 'Ingreso',
-            'expense' => 'Gasto',
-        };
-    }
 
     /** Muestra propiedades si tienen valor  */
     public function displayProperty(string $property): string

@@ -12,14 +12,16 @@ class Category extends Entity
         'id' => 'integer',
         'business_id' => 'uuid',
         'name' => 'string',
-        'type' => 'string',
+        'type' => 'enum[App\Enums\CategoryType]',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => '?datetime',
     ];
 
     protected $castHandlers = [
-        'uuid' => Cast\UuidCast::class
+        'uuid' => Cast\UuidCast::class,
+        'enum' => Cast\EnumCast::class,
+
     ];
 
     /** Muestra el tipo de categoría en español */

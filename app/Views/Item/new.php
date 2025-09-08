@@ -1,7 +1,11 @@
 <?= $this->extend('layouts/dashboard') ?>
 
 <?= $this->section('content') ?>
-<?php if (session()->getFlashdata('success')): ?>
+<?php
+
+use App\Enums\ItemType;
+
+if (session()->getFlashdata('success')): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <?= session()->getFlashdata('success') ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
@@ -20,17 +24,14 @@
             <?= view_cell('FormSelectCell', [
                 'name' => 'type',
                 'label' => 'Tipo de Elemento',
-                'options' => [
-                    'product' => 'Producto',
-                    'service' => 'Servicio',
-                ],
+                'options' => ItemType::options(),
                 'default' => 'product',
                 'onchange' => "activateStock(this, event)"
             ]) ?>
             <?php
             $categoriesOp = [];
             foreach ($categories as $category) {
-                $categoriesOp[$category->id] = $category->displayType() . " | " . $category->name;
+                $categoriesOp[$category->id] = $category->type->label() . " | " . $category->name;
             }
             ?>
             <?= view_cell('FormSelectCell', [
