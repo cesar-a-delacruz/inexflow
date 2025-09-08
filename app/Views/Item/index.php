@@ -5,7 +5,12 @@
   <a href="/items/new" class="btn btn-primary">Registrar Item</a>
   <a href="/categories" class="btn btn-success">Ver Categorías</a>
 </div>
-<?php if (session()->getFlashdata('success')): ?>
+<?php
+
+use App\Enums\CategoryType;
+use App\Enums\ItemType;
+
+if (session()->getFlashdata('success')): ?>
   <div class="alert alert-success alert-dismissible fade show" role="alert">
     <?= session()->getFlashdata('success') ?>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
@@ -36,13 +41,13 @@
         <?php foreach ($items as $i => $item): ?>
           <tr>
             <td><?= $i + 1 ?></td>
-            <td><?= $item->displayCategoryType() . ' | ' . $item->category_name ?></td>
+            <td><?= CategoryType::labelFromValue($item->category_type) . ' | ' . $item->category_name ?></td>
             <td><?= $item->name ?></td>
-            <td><?= $item->displayType() ?></td>
+            <td><?= $item->type->label() ?></td>
             <td><?= $item->displayCost() ?></td>
             <td><?= $item->displaySellingPrice() ?></td>
             <td>
-              <?php if ($item->type === 'product'): ?>
+              <?php if ($item->type === ItemType::Product): ?>
                 <?= $item->displayProperty('stock') ?> <sub><?= $item->displayProperty('measure_unit') ?></sub>
               <?php else: ?>
                 --

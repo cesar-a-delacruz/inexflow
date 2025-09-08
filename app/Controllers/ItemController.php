@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\CRUDController;
 use App\Entities\Item;
+use App\Enums\ItemType;
 use App\Models\{ItemModel, CategoryModel};
 use App\Validation\ItemValidator;
 use Ramsey\Uuid\Uuid;
@@ -18,16 +19,20 @@ class ItemController extends CRUDController
     parent::__construct('items');
   }
 
-
-  // vistas
   public function index()
   {
     $this->model = new ItemModel();
 
+    $items = $this->model->findAllWithCategory($this->businessId);
+
     $data = [
       'title' => 'Elementos',
-      'items' => $this->model->findAllWithCategory($this->businessId),
+      'items' => $items,
     ];
+
+    foreach ($items as $item) {
+      $data[$item->type->value . 's'][] = $item;
+    }
 
     helper('number');
 
@@ -47,7 +52,6 @@ class ItemController extends CRUDController
       }, $this->model->select('measure_unit')->where('business_id', uuid_to_bytes($this->businessId))->groupBy('measure_unit')->findAll(10)),
       'categories' => $this->categoryModel->findAllByBusiness($this->businessId),
     ];
-
 
     return view('Item/new', $data);
   }
@@ -80,6 +84,7 @@ class ItemController extends CRUDController
     $post = $this->request->getPost();
     $post['id'] = Uuid::uuid4();
     $post['business_id'] = uuid_to_bytes($this->businessId);
+    $post['selling_price'] = null;
 
     $this->model->insert(new Item($post));
 
