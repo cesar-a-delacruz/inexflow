@@ -57,7 +57,7 @@ class TransactionController extends CRUDController
         'name' => $item->name,
         'category' => $item->category_name,
         'measure_unit' => $item->measure_unit,
-        'type' => $item->displayType(),
+        'type' => $item->type->label(),
         'stock' => $item->displayProperty('stock'),
         'money' => $item->selling_price ?? $item->cost,
       ];

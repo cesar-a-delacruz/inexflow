@@ -40,8 +40,8 @@
   <div class="container-fluid">
     <div class="row">
 
-      <aside class="col-12 col-sm-4 col-md-3 col-lg-2 p-3 ps-4 d-flex flex-column gap-4 bg-white text-dark">
-        <header>
+      <aside class="page-aside col-12 col-sm-4 col-md-3 col-lg-2 p-3 ps-4 d-flex flex-column gap-4 bg-white text-dark">
+        <header class="page-header">
           <h1 class="h3">INEXflow</h1>
         </header>
 
