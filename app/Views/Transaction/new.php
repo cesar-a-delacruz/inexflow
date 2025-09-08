@@ -1,181 +1,181 @@
 <?= $this->extend('layouts/dashboard') ?>
 
 <?= $this->section('content') ?>
-<div class="container mt-5 ">
-  <div class="card shadow-sm border-0 mx-auto" style="width: 600px;">
-    <div class="card-header bg-primary text-white">
-      <h4 class="mb-0"><?= $title ?></h4>
+<?php if (session()->getFlashdata('success')): ?>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <svg class="bi flex-shrink-0 me-2" height='16px'
+      width="16px" role="img" aria-label="Success:">
+      <use href="/assest/svg/miscellaniaSprite.svg#check-circle-fill" />
+    </svg>
+    <?= session()->getFlashdata('success') ?>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+  </div>
+<?php endif; ?>
+<?php if (!empty(validation_errors())): ?>
+  <div class="alert alert-danger"><?= validation_list_errors() ?></div>
+<?php endif; ?>
+
+<form action="/transactions" method="POST" class="needs-validation" novalidate>
+  <div class="row">
+    <div class="col-12 col-md-6">
+      <?= view_cell('FormInputCell', [
+        'name' => 'due_date',
+        'label' => 'Fecha de vencimiento',
+        'type' => 'date',
+        'default' => date('Y-m-d'),
+        'required' => true,
+      ]) ?>
+
+      <?= view_cell('FormSelectCell', [
+        'name' => 'payment_status',
+        'label' => 'Estado del Pago',
+        'options' => [
+          'paid' => 'Pagada',
+          'pending' => 'Pendiente',
+          'overdue' => 'Atrasada',
+          'cancelled' => 'Cancelada',
+        ],
+        'default' => 'paid'
+      ]) ?>
+
+
+      <?= view_cell('FormSelectCell', [
+        'name' => 'payment_method',
+        'label' => 'Método de Pago',
+        'options' => [
+          'cash' => 'Efectivo',
+          'card' => 'Tarjeta de Débito/Crédito',
+          'transfer' => 'Transferencia Bancaria',
+        ],
+        'default' => 'cash'
+      ]) ?>
+
     </div>
-    <div class="card-body">
-      <?php if (session()->getFlashdata('success')): ?>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-          <svg class="bi flex-shrink-0 me-2" height='16px'
-            width="16px" role="img" aria-label="Success:">
-            <use href="/assest/svg/miscellaniaSprite.svg#check-circle-fill" />
-          </svg>
-          <?= session()->getFlashdata('success') ?>
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-        </div>
-      <?php endif; ?>
-      <?php if (!empty(validation_errors())): ?>
-        <div class="alert alert-danger"><?= validation_list_errors() ?></div>
-      <?php endif; ?>
-
-      <form action="/transactions" method="POST" class="needs-validation" novalidate>
-        <?= view_cell('FormInputCell', [
-          'name' => 'due_date',
-          'label' => 'Fecha de vencimiento',
-          'type' => 'date',
-          'default' => date('Y-m-d'),
-          'required' => true,
-        ]) ?>
-
-        <div>
-          <?php $typeError = validation_show_error('type') ?>
-          <label for="typeIncome" class="form-label">Tipo de Transacción</label>
-          <div class="mb-3">
-            <div class="form-check form-check-inline">
-              <input type="radio" <?= set_radio('type', 'income', true) ?> class="form-check-input <?= $typeError ? 'is-invalid' : '' ?>"
-                id="typeIncome" value="income" name="type" required>
-              <label class="form-check-label" for="typeIncome">Ingreso</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input type="radio" <?= set_radio('type', 'expense') ?> class="form-check-input <?= $typeError ? 'is-invalid' : '' ?>"
-                id="typeExpose" value="expense" name="type" required>
-              <label class="form-check-label" for="typeExpose">Gasto</label>
-              <?php if ($typeError): ?>
-                <div class="invalid-feedback"><?= $typeError ?></div>
-              <?php endif; ?>
-            </div>
-          </div>
-        </div>
-
-        <input type="hidden" name="contact_id" id='contact_id' class="form-control">
-        <div class="input-group mb-3">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="contact_name" name="contact_name" readonly
-              aria-label="Contacto" aria-describedby="button-contact">
-            <label for="contact_name">Contacto</label>
-          </div>
-          <button class="btn btn-primary" type="button" id="button-contact" onclick="showContactModal()">Buscar contacto</button>
-        </div>
-
-        <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h1 class="modal-title fs-5" id="contactModalLabel">Lista de contactos</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <table class="table text-center">
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Nombre</th>
-                      <th scope="col">Correo</th>
-                      <th scope="col">Acción</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <?= view_cell('FormSelectCell', [
-          'name' => 'payment_status',
-          'label' => 'Estado del Pago',
-          'options' => [
-            'paid' => 'Pagada',
-            'pending' => 'Pendiente',
-            'overdue' => 'Atrasada',
-            'cancelled' => 'Cancelada',
-          ],
-          'default' => 'paid'
-        ]) ?>
-
-
-        <?= view_cell('FormSelectCell', [
-          'name' => 'payment_method',
-          'label' => 'Método de Pago',
-          'options' => [
-            'cash' => 'Efectivo',
-            'card' => 'Tarjeta de Débito/Crédito',
-            'transfer' => 'Transferencia Bancaria',
-          ],
-          'default' => 'cash'
-        ]) ?>
-
+    <div class="col-12 col-md-6">
+      <div>
+        <?php $typeError = validation_show_error('type') ?>
+        <label for="typeIncome" class="form-label">Tipo de Transacción</label>
         <div class="mb-3">
-          <label for="records" class="form-label">Registros</label>
-          <table class="table text-center table-striped" id="table-records">
-            <thead>
-              <tr class="table-secondary">
-                <th scope="col">Nombre</th>
-                <th scope="col">Categoria</th>
-                <th scope="col">Cantidad</th>
-                <th scope="col">Subtotal</th>
-                <th scope="col">Acción</th>
-              </tr>
-            </thead>
-            <tbody>
-            </tbody>
-          </table>
-          <button type="button" class="btn btn-primary" onclick="showItemModal()">
-            Añadir Elemento
-          </button>
-          <div class="mt-3">
-            <?php $recordsError = validation_show_error('records') ?>
-            <?php if ($recordsError): ?>
-              <div class="alert alert-danger" role="alert">
-                <?= $recordsError ?></div>
+          <div class="form-check form-check-inline">
+            <input type="radio" <?= set_radio('type', 'income', true) ?> class="form-check-input <?= $typeError ? 'is-invalid' : '' ?>"
+              id="typeIncome" value="income" name="type" required>
+            <label class="form-check-label" for="typeIncome">Ingreso</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input type="radio" <?= set_radio('type', 'expense') ?> class="form-check-input <?= $typeError ? 'is-invalid' : '' ?>"
+              id="typeExpose" value="expense" name="type" required>
+            <label class="form-check-label" for="typeExpose">Gasto</label>
+            <?php if ($typeError): ?>
+              <div class="invalid-feedback"><?= $typeError ?></div>
             <?php endif; ?>
           </div>
-          <div class="modal fade" id="itemModal" tabindex="-1" aria-labelledby="itemModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="itemModalLabel">Lista de Elementos</h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <table class="table text-center table-striped">
-                    <thead>
-                      <tr class="table-secondary">
-                        <th scope="col">#</th>
-                        <th scope="col">Nombre</th>
-                        <th scope="col">Tipo</th>
-                        <th scope="col">En inventario</th>
-                        <th scope="col">Precio</th>
-                        <th scope="col">Acción</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+        </div>
+      </div>
+
+      <input type="hidden" name="contact_id" id='contact_id' class="form-control">
+      <div class="input-group mb-3">
+        <div class="form-floating">
+          <input type="text" class="form-control" id="contact_name" name="contact_name" readonly
+            aria-label="Contacto" aria-describedby="button-contact">
+          <label for="contact_name">Contacto</label>
+        </div>
+        <button class="btn btn-primary" type="button" id="button-contact" onclick="showContactModal()">Buscar contacto</button>
+      </div>
+
+      <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="contactModalLabel">Lista de contactos</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table text-center">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Correo</th>
+                    <th scope="col">Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
-
-        <div class="input-group mb-3">
-          <span class="input-group-text">B/. </span>
-          <div class="form-floating">
-            <input type="text" class="form-control" value='0.00' readonly id="total" placeholder="Username">
-            <label for="total">Total</label>
-          </div>
-        </div>
-        <div class="d-grid">
-          <button type="submit" class="btn btn-success">Registrar</button>
-        </div>
-      </form>
+      </div>
     </div>
   </div>
-</div>
+
+
+
+
+  <div class="mb-3">
+    <label for="records" class="form-label">Registros</label>
+    <table class="table text-center table-striped" id="table-records">
+      <thead>
+        <tr class="table-secondary">
+          <th scope="col">Nombre</th>
+          <th scope="col">Categoria</th>
+          <th scope="col">Cantidad</th>
+          <th scope="col">Subtotal</th>
+          <th scope="col">Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+    <button type="button" class="btn btn-primary" onclick="showItemModal()">
+      Añadir Elemento
+    </button>
+    <div class="mt-3">
+      <?php $recordsError = validation_show_error('records') ?>
+      <?php if ($recordsError): ?>
+        <div class="alert alert-danger" role="alert">
+          <?= $recordsError ?></div>
+      <?php endif; ?>
+    </div>
+    <div class="modal fade" id="itemModal" tabindex="-1" aria-labelledby="itemModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="itemModalLabel">Lista de Elementos</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <table class="table text-center table-striped">
+              <thead>
+                <tr class="table-secondary">
+                  <th scope="col">#</th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Tipo</th>
+                  <th scope="col">En inventario</th>
+                  <th scope="col">Precio</th>
+                  <th scope="col">Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="input-group mb-3">
+    <span class="input-group-text">B/. </span>
+    <div class="form-floating">
+      <input type="text" class="form-control" value='0.00' readonly id="total" placeholder="Username">
+      <label for="total">Total</label>
+    </div>
+  </div>
+  <div class="d-grid">
+    <button type="submit" class="btn btn-success">Registrar</button>
+  </div>
+</form>
 
 <script>
   const formatter = new Intl.NumberFormat('es-PA', {
@@ -187,29 +187,29 @@
 
 
   /**
-   * @type {{'index' : string, id:string, category:string, name:string, type:string, stock:string, money:string}[]}
+   * @type {{'index' : string, id:string, category:string,measure_unit:string, name:string, type:string, stock:string, money:string}[]}
    */
   const incomes = <?= json_encode($jsIncomes, JSON_UNESCAPED_UNICODE) ?>;
   /**
-   * @type {Map<string,{'index' : string, id:string, category:string, name:string, type:string, stock:string, money:string}>}
+   * @type {Map<string,{'index' : string, id:string, category:string, measure_unit:string, name:string, type:string, stock:string, money:string}>}
    */
   const incomesMap = new Map();
 
   incomes.forEach(e => incomesMap.set(e.id, e));
   /**
-   * @type {{'index' : string, id:string, category:string, name:string, type:string, stock:string, money:string}[]}
+   * @type {{'index' : string, id:string, category:string,measure_unit:string, name:string, type:string, stock:string, money:string}[]}
    */
   const expenses = <?= json_encode($jsExpenses, JSON_UNESCAPED_UNICODE) ?>;
 
   /**
-   * @type {Map<string,{'index' : string, id:string, category:string, name:string, type:string, stock:string, money:string}>}
+   * @type {Map<string,{'index' : string, id:string, category:string,measure_unit:string, name:string, type:string, stock:string, money:string}>}
    */
   const expensesMap = new Map();
 
   expenses.forEach(e => expensesMap.set(e.id, e));
 
   /**
-   * @type {Map<string,{id:string, category:string, name:string, type:string,stock:number, amount:number, money:number}>}
+   * @type {Map<string,{id:string, category:string, name:string,measure_unit:string, type:string,stock:number, amount:number, money:number}>}
    */
   const recordsMap = new Map();
 
@@ -253,7 +253,8 @@
         amount,
         money,
         name,
-        stock
+        stock,
+        measure_unit
       } = item;
       const nameCell = row.insertCell();
       nameCell.innerHTML = `
@@ -280,7 +281,7 @@
 
       const amountCell = row.insertCell();
       amountCell.setAttribute('scope', 'col');
-      amountCell.appendChild(apprendInputGroup(amountInput));
+      amountCell.appendChild(apprendInputGroup(amountInput, measure_unit));
 
       const subTotalInput = document.createElement('input');
       subTotalInput.type = 'number';
@@ -348,13 +349,17 @@
     itemsMap.forEach(({
       id,
       category,
+      measure_unit,
       ...fields
     }) => {
       const row = $itemTBody.insertRow();
       const values = Object.values(fields);
       values.forEach((value, i) => {
         const cell = row.insertCell();
-        cell.textContent = i === values.length - 1 ? formatter.format(value) : value;
+        if (i !== 3)
+          cell.textContent = i === values.length - 1 ? formatter.format(value) : value;
+        else
+          cell.innerHTML = `<p>${value} <sub>${measure_unit}</sub></p>`
         cell.setAttribute('scope', 'col');
         // cell.classList.add('')
       });
@@ -405,7 +410,8 @@
         type: item.type,
         stock: parseFloat(item.stock),
         money: parseFloat(item.money),
-        amount: 1
+        amount: 1,
+        measure_unit: item.measure_unit
       })
 
       renderTableRecords()
