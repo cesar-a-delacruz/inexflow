@@ -77,13 +77,7 @@
             <?= view_cell('FormInputCell', [
                 'name' => 'measure_unit',
                 'label' => 'Unidad de Medida',
-                'list' => [
-                    'unidad',
-                    'lb',
-                    'kg',
-                    'lt',
-                    'mt'
-                ],
+                'list' => $units,
             ]) ?>
 
         </div>

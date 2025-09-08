@@ -37,9 +37,14 @@ class ItemController extends CRUDController
   public function new()
   {
     $this->categoryModel = new CategoryModel();
+    $this->model = new ItemModel();
+
 
     $data = [
       'title' => 'Nuevo Elemento',
+      'units' => array_map(function ($e) {
+        return $e->measure_unit;
+      }, $this->model->select('measure_unit')->where('business_id', uuid_to_bytes($this->businessId))->groupBy('measure_unit')->findAll(10)),
       'categories' => $this->categoryModel->findAllByBusiness($this->businessId),
     ];
 
