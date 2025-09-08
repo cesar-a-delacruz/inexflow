@@ -182,13 +182,14 @@ class UserController extends BaseController
         };
 
         session()->set([
-            'id' => $user->id,
+            'id' => $user->id->toString(),
             'name' => $user->name,
             'email' => $user->email,
             'role' => $user->role,
-            'business_id' => $user->business_id ? $user->business_id : null,
+            'business_id' => $user->business_id->toString(),
             'current_page' => $init_page
         ]);
+
         return redirect()->to($init_page);
     }
 

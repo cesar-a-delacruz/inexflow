@@ -1,91 +1,124 @@
 <?= $this->extend('layouts/dashboard') ?>
 
 <?= $this->section('content') ?>
-<div class="container-fluid">
-  <h1 class="mb-4"><?= $title ?></h1>
-  <div class="button-container mb-3">
-    <a href="/items/new" class="btn btn-primary">Registrar Item</a>
-    <a href="/categories" class="btn btn-success">Ver Categorías</a>
+<div class="button-container">
+  <a href="/items/new" class="btn btn-primary">Registrar Item</a>
+  <a href="/categories" class="btn btn-success">Ver Categorías</a>
+</div>
+<?php if (session()->getFlashdata('success')): ?>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <?= session()->getFlashdata('success') ?>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
   </div>
-
-  <?php if (session()->getFlashdata('success')): ?>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <?= session()->getFlashdata('success') ?>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-    </div>
-  <?php endif; ?>
-  <?php if (session()->getFlashdata('error')): ?>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-      <?= session()->getFlashdata('error') ?>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-    </div>
-  <?php endif; ?>
-
-  <div class="table-responsive">
-    <table id="showtable" class="table table-striped table-hover table-bordered">
-      <thead class="table-dark">
-        <tr>
-          <th></th>
-          <th>Categoría</th>
-          <th>Nombre</th>
-          <th>Tipo</th>
-          <th>Costo</th>
-          <th>Precio de Venta</th>
-          <th>Cantidad</th>
-          <th>Unidad de Medida</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php if (!empty($items)): ?>
-          <?php for ($i = 0; $i < count($items); $i++): ?>
-            <tr>
-              <td><?= $i + 1 ?></td>
-              <td><?= $items[$i]->displayCategoryType() . ' | ' . $items[$i]->category_name ?></td>
-              <td><?= $items[$i]->displayProperty('name') ?></td>
-              <td><?= $items[$i]->displayType() ?></td>
-              <td><?= number_to_currency($items[$i]->cost, 'PAB', 'es_PA', 2); ?></td>
-              <td><?= $items[$i]->displayMoney('selling_price') ?></td>
-              <td><?= $items[$i]->displayProperty('stock') ?></td>
-              <td><?= $items[$i]->displayProperty('measure_unit') ?></td>
-              <td>
-                <div class="btn-group">
-                  <button class="btn btn-success btn-sm" onclick="location.assign('/items/<?= uuid_to_string($items[$i]->id) ?>')">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit">
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                    </svg>
-                  </button>
-                  <button class="btn btn-danger" onclick="openDialog('/items/', '<?= uuid_to_string($items[$i]->id) ?>')">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2">
-                      <polyline points="3 6 5 6 21 6"></polyline>
-                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                      <line x1="10" y1="11" x2="10" y2="17"></line>
-                      <line x1="14" y1="11" x2="14" y2="17"></line>
-                    </svg>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          <?php endfor; ?>
-        <?php else: ?>
+<?php endif; ?>
+<?php if (session()->getFlashdata('error')): ?>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <?= session()->getFlashdata('error') ?>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+  </div>
+<?php endif; ?>
+<div class="table-responsive">
+  <table id="showtable" class="table table-striped table-hover table-bordered">
+    <thead class="table-secondary">
+      <tr>
+        <th></th>
+        <th>Categoría</th>
+        <th>Nombre</th>
+        <th>Tipo</th>
+        <th>Costo</th>
+        <th>Precio de Venta</th>
+        <th>Cantidad</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php if (!empty($items)): ?>
+        <?php foreach ($items as $i => $item): ?>
           <tr>
-            <td colspan="9" class="text-center">No hay productos o servicios registrados.</td>
+            <td><?= $i + 1 ?></td>
+            <td><?= $item->displayCategoryType() . ' | ' . $item->category_name ?></td>
+            <td><?= $item->name ?></td>
+            <td><?= $item->displayType() ?></td>
+            <td><?= $item->displayCost() ?></td>
+            <td><?= $item->displaySellingPrice() ?></td>
+            <td>
+              <?php if ($item->type === 'product'): ?>
+                <?= $item->displayProperty('stock') ?> <sub><?= $item->displayProperty('measure_unit') ?></sub>
+              <?php else: ?>
+                --
+              <?php endif; ?>
+            </td>
+            <td>
+              <div class="btn-group">
+                <a class="btn btn-outline-primary" type="button" title="Editra Elemento" href="/items/<?= $item->id->toString() ?>">
+                  <svg class="bi flex-shrink-0" role="img" aria-label="Editra Elemento" width="24" height="24">
+                    <use href="/assets/svg/miscellaniaSprite.svg#fe-edit" />
+                  </svg>
+                </a>
+                <button type="button" class="btn btn-danger" title="Eliminar Elemento" data-bs-toggle="modal"
+                  data-bs-target="#exampleModal" data-bs-item-id="<?= $item->id->toString() ?>" data-bs-item-name="<?= $item->name ?>">
+                  <svg class="bi flex-shrink-0" role="img" aria-label="Eliminar Elemento" width="24" height="24">
+                    <use href="/assets/svg/miscellaniaSprite.svg#fe-trash" />
+                  </svg>
+                </button>
+              </div>
+            </td>
           </tr>
-        <?php endif; ?>
-      </tbody>
-    </table>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <tr>
+          <td colspan="9" class="text-center">No hay productos o servicios registrados.</td>
+        </tr>
+      <?php endif; ?>
+    </tbody>
+  </table>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar Elemento</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-message h6"></p>
+        <p class="text-danger">Al eliminar un elemento toda informacio relacionada a esta sera eliminada permanentemnte</p>
+        <form action="" id="form-delete-element" method="POST">
+          <input type="hidden" name="_method" value="DELETE">
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" form="form-delete-element" class="btn btn-danger d-flex align-items-center gap-2">
+          Eliminar
+          <svg class="bi flex-shrink-0" role="img" aria-label="Eliminar Elemento" width="20" height="20">
+            <use xlink:href="#fe-trash" />
+          </svg>
+        </button>
+      </div>
+    </div>
   </div>
 </div>
-<dialog class="delete">
-  <h5>¿Estas seguro de que deseas eliminar este item?</h5>
-  <form action="" method="POST">
-    <input type="hidden" name="_method" value="DELETE">
-    <button type="submit" class="btn btn-danger btn-sm">Sí</button>
-    <button class="btn btn-secondary btn-sm" onclick="closeDialog(this, event)">No</button>
-  </form>
-</dialog>
-<script src="/assets/js/delete-dialog.js"></script>
+<script>
+  const exampleModal = document.getElementById('exampleModal')
+  if (exampleModal) {
+    /**@type HTMLFormElment */
+    const modalDeleteForm = exampleModal.querySelector(".modal-body form")
+    exampleModal.addEventListener('show.bs.modal', event => {
+      const button = event.relatedTarget
+      const itemId = button.getAttribute('data-bs-item-id')
+      const itemName = button.getAttribute('data-bs-item-name')
+      // If necessary, you could initiate an Ajax request here
+      // and then do the updating in a callback.
+
+      const modalTitle = exampleModal.querySelector('.modal-title')
+      const modalMessage = exampleModal.querySelector('.modal-body .modal-message')
+
+      modalMessage.textContent = `¿Estas seguro de que deseas eliminar ${itemName}?`
+      modalDeleteForm.action = `/items/${itemId}`
+    })
+    exampleModal.addEventListener('hide.bs.modal', event => {
+      modalDeleteForm.action = "";
+    })
+  }
+</script>
 <?= $this->endSection() ?>
