@@ -49,12 +49,17 @@ class Item extends Entity
     /** Muestra propiedades si tienen valor  */
     public function displayProperty(string $property): string
     {
-        return $this->{$property} ? $this->{$property} : 'No Aplica';
+        return $this->{$property} ?? '--';
     }
 
     /** Muestra propiedades (monetarias) si tienen valor */
-    public function displayMoney(string $money): string
+    public function displayCost(): string
     {
-        return $this->{$money} ? '$' . number_format($this->{$money}, 2) : 'No Aplica';
+        return number_to_currency($this->cost, 'PAB', 'es_PA', 2);
+    }
+    /** Muestra propiedades (monetarias) si tienen valor */
+    public function displaySellingPrice(): string
+    {
+        return !!$this->selling_price ? number_to_currency($this->selling_price, 'PAB', 'es_PA', 2) : '--';
     }
 }

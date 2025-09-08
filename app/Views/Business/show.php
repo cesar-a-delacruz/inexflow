@@ -1,7 +1,6 @@
 <?= $this->extend('layouts/dashboard') ?>
 
 <?= $this->section('content') ?>
-<h1><?= $title ?></h1>
 <div class="row">
     <div class="col-6">
         <form action="/business" method="POST" class="needs-validation" novalidate>
