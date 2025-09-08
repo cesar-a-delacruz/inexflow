@@ -30,8 +30,6 @@ class ItemController extends CRUDController
     ];
 
     helper('number');
-    helper('form');
-
 
     return view('Item/index', $data);
   }
@@ -41,11 +39,10 @@ class ItemController extends CRUDController
     $this->categoryModel = new CategoryModel();
 
     $data = [
-      'title' => 'Nuevo Item',
+      'title' => 'Nuevo Elemento',
       'categories' => $this->categoryModel->findAllByBusiness($this->businessId),
     ];
 
-    helper('form');
 
     return view('Item/new', $data);
   }
@@ -56,10 +53,11 @@ class ItemController extends CRUDController
     $this->categoryModel = new CategoryModel();
 
     $data = [
-      'title' => 'Editar Item',
+      'title' => 'Editar Elemento',
       'item' => $this->model->find(uuid_to_bytes($id)),
       'categories' => $this->categoryModel->findAllByBusiness($this->businessId),
     ];
+
     return view('Item/show', $data);
   }
 
@@ -80,7 +78,7 @@ class ItemController extends CRUDController
 
     $this->model->insert(new Item($post));
 
-    return redirect()->to('items/new')->with('success', 'Item creado exitosamente.');
+    return redirect()->to('items/new')->with('success', 'Elemento creado exitosamente.');
   }
 
   public function update($id = null)

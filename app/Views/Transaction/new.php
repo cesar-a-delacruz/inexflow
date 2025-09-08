@@ -345,13 +345,12 @@
     $itemTBody.innerHTML = ''; // Vacía el cuerpo de la tabla
     const items = isIncome ? incomes : expenses;
     $h1ItemModal.textContent = isIncome ? 'Lista de Elementos' : 'Lista de Elementos';
-    itemsMap.forEach((item) => {
+    itemsMap.forEach(({
+      id,
+      category,
+      ...fields
+    }) => {
       const row = $itemTBody.insertRow();
-      const {
-        id,
-        category,
-        ...fields
-      } = item;
       const values = Object.values(fields);
       values.forEach((value, i) => {
         const cell = row.insertCell();
@@ -513,7 +512,7 @@
       actionCell.innerHTML = `
                         <button class="btn ${selected?'btn-primary':'btn-outline-primary'}" type="button" data-bs-dismiss="modal" aria-label="Close" onclick="contactHandlerClick('${id}','${contact.name}')">
                           <svg class="bi flex-shrink-0" role="img" aria-label="Seleccionar contacto" width="24" height="24">
-                            <use xlink:href="#fe-check"/>
+                            <use href="/assets/svg/miscellaniaSprite.svg#fe-check"/>
                           </svg>
                         </button>
                       `;
@@ -545,6 +544,4 @@
     // $contactNameInput.setAttribute('readonly', true);
   }
 </script>
-<!-- <script src="/assets/js/table-dialogs.js"></script> -->
-<!-- <script src="/assets/js/transaction-table-modal.js"></script> -->
 <?= $this->endSection() ?>

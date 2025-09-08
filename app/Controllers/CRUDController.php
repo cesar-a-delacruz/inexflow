@@ -3,15 +3,13 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use CodeIgniter\HTTP\CLIRequest;
-use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
 abstract class CRUDController extends BaseController
 {
-    protected $businessId;
+    protected string $businessId;
     protected $model;
     protected string $controllerPath;
 
@@ -39,7 +37,7 @@ abstract class CRUDController extends BaseController
 
         // los admisn no deben de estra en esta seccion, luego se hace el de ellos.
         if ($this->session->get('role') !== 'businessman') {
-            return redirect()->to($this->session->get('current_page'));
+            return redirect()->to('/');
         }
 
         //esta se debe ejecutar en cada metodo para tener el pacth correcto, ej: /items/new o transacions/show
@@ -47,6 +45,4 @@ abstract class CRUDController extends BaseController
 
         // más cosas 
     }
-
-    public function index() {}
 }

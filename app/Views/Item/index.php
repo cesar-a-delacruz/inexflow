@@ -17,7 +17,6 @@
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
   </div>
 <?php endif; ?>
-<!-- <?= view_cell('SvgElementsCell', ['edit' => true, 'trash' => true]) ?> -->
 <div class="table-responsive">
   <table id="showtable" class="table table-striped table-hover table-bordered">
     <thead class="table-secondary">
@@ -29,31 +28,35 @@
         <th>Costo</th>
         <th>Precio de Venta</th>
         <th>Cantidad</th>
-        <th>Unidad de Medida</th>
         <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
       <?php if (!empty($items)): ?>
-        <?php for ($i = 0; $i < count($items); $i++): ?>
+        <?php foreach ($items as $i => $item): ?>
           <tr>
             <td><?= $i + 1 ?></td>
-            <td><?= $items[$i]->displayCategoryType() . ' | ' . $items[$i]->category_name ?></td>
-            <td><?= $items[$i]->displayProperty('name') ?></td>
-            <td><?= $items[$i]->displayType() ?></td>
-            <td><?= number_to_currency($items[$i]->cost, 'PAB', 'es_PA', 2); ?></td>
-            <td><?= $items[$i]->displayMoney('selling_price') ?></td>
-            <td><?= $items[$i]->displayProperty('stock') ?></td>
-            <td><?= $items[$i]->displayProperty('measure_unit') ?></td>
+            <td><?= $item->displayCategoryType() . ' | ' . $item->category_name ?></td>
+            <td><?= $item->name ?></td>
+            <td><?= $item->displayType() ?></td>
+            <td><?= $item->displayCost() ?></td>
+            <td><?= $item->displaySellingPrice() ?></td>
+            <td>
+              <?php if ($item->type === 'product'): ?>
+                <?= $item->displayProperty('stock') ?> <sub><?= $item->displayProperty('measure_unit') ?></sub>
+              <?php else: ?>
+                --
+              <?php endif; ?>
+            </td>
             <td>
               <div class="btn-group">
-                <a class="btn btn-outline-primary" type="button" title="Editra Elemento" href="/items/<?= uuid_to_string($items[$i]->id) ?>">
+                <a class="btn btn-outline-primary" type="button" title="Editra Elemento" href="/items/<?= $item->id->toString() ?>">
                   <svg class="bi flex-shrink-0" role="img" aria-label="Editra Elemento" width="24" height="24">
                     <use href="/assets/svg/miscellaniaSprite.svg#fe-edit" />
                   </svg>
                 </a>
                 <button type="button" class="btn btn-danger" title="Eliminar Elemento" data-bs-toggle="modal"
-                  data-bs-target="#exampleModal" data-bs-item-id="<?= uuid_to_string($items[$i]->id) ?>" data-bs-item-name="<?= $items[$i]->displayProperty('name') ?>">
+                  data-bs-target="#exampleModal" data-bs-item-id="<?= $item->id->toString() ?>" data-bs-item-name="<?= $item->name ?>">
                   <svg class="bi flex-shrink-0" role="img" aria-label="Eliminar Elemento" width="24" height="24">
                     <use href="/assets/svg/miscellaniaSprite.svg#fe-trash" />
                   </svg>
@@ -61,7 +64,7 @@
               </div>
             </td>
           </tr>
-        <?php endfor; ?>
+        <?php endforeach; ?>
       <?php else: ?>
         <tr>
           <td colspan="9" class="text-center">No hay productos o servicios registrados.</td>

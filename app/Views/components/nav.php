@@ -11,7 +11,7 @@
         ],
     ];
     if (session()->get('role') === 'admin') {
-        $links += [
+        $links = [
             'href' => '/users',
             'svg' => 'fe-users',
             'label' => 'Usuarios',

@@ -9,9 +9,8 @@ use App\Validation\{TransactionValidator, RecordValidator};
 use CodeIgniter\I18n\Time;
 use Ramsey\Uuid\Uuid;
 
-class TransactionController extends BaseController
+class TransactionController extends CRUDController
 {
-  protected $model;
   protected $formValidator;
   protected $recordModel;
   protected $recordValidator;
@@ -21,6 +20,7 @@ class TransactionController extends BaseController
 
   public function __construct()
   {
+    $this->controllerPath = 'transitions';
     $this->model = new TransactionModel();
     $this->formValidator = new TransactionValidator();
     $this->recordModel = new RecordModel();
@@ -32,17 +32,12 @@ class TransactionController extends BaseController
   // vistas
   public function index()
   {
-    $businessId = session()->get('business_id');
-
-    if (!$businessId) return redirect()->to('business/new');
-    $redirect = check_user('businessman');
-    if ($redirect !== null) return redirect()->to($redirect);
-    else session()->set('current_page', 'transactions');
 
     $data = [
       'title' => 'Transacciones',
-      'transactions' => $this->model->findAllWithContact($businessId)
+      'transactions' => $this->model->findAllWithContact($this->businessId)
     ];
+
     helper('number');
 
     return view('Transaction/index', $data);
@@ -50,91 +45,90 @@ class TransactionController extends BaseController
 
   public function new()
   {
-    $businessId = session()->get('business_id');
+    $items = $this->itemModel->findAllWithCategory($this->businessId);
 
-    if (!$businessId) return redirect()->to('business/new');
-    $redirect = check_user('businessman');
-    if ($redirect !== null) return redirect()->to($redirect);
-    else session()->set('current_page', 'transactions/new');
-    helper('number');
-
-    $items = $this->itemModel->findAllWithCategory($businessId);
     $income = [];
     $expense = [];
+
     foreach ($items as $item) {
       if ($item->category_type === 'income') $income[] = $item;
       else $expense[] = $item;
     }
 
-    $jsIncomes = [];
-    if (!empty($income)) {
-      foreach ($income as $i => $inc) {
-        $jsIncomes[] = [
-          'index' => $i,
-          'id' => $inc->id->toString(),
-          'name' => $inc->name,
-          'category' => $inc->category_name,
-          'type' => $inc->displayType(),
-          'stock' => $inc->displayProperty('stock'),
-          'money' => $inc->selling_price ?? $inc->cost,
-        ];
-      }
-    }
-    $jsExpense = [];
-    if (!empty($expense)) {
-      foreach ($expense as $i => $inc) {
-        $jsExpense[] = [
-          'index' => $i,
-          'id' => $inc->id->toString(),
-          'name' => $inc->name,
-          'category' => $inc->category_name,
-          'type' => $inc->displayType(),
-          'stock' => $inc->displayProperty('stock'),
-          'money' => $inc->selling_price ?? $inc->cost,
-        ];
-      }
-    }
-    $items = (object) ['income' => $income, 'expense' => $expense];
+    // $jsIncomes = [];
+    // if (!empty($income)) {
+    //   foreach ($income as $i => $inc) {
+    //     $jsIncomes[] = [
+    //       'index' => $i,
+    //       'id' => $inc->id->toString(),
+    //       'name' => $inc->name,
+    //       'category' => $inc->category_name,
+    //       'type' => $inc->displayType(),
+    //       'stock' => $inc->displayProperty('stock'),
+    //       'money' => $inc->selling_price ?? $inc->cost,
+    //     ];
+    //   }
+    // }
+    // $jsExpense = [];
+    // if (!empty($expense)) {
+    //   foreach ($expense as $i => $inc) {
+    //     $jsExpense[] = [
+    //       'index' => $i,
+    //       'id' => $inc->id->toString(),
+    //       'name' => $inc->name,
+    //       'category' => $inc->category_name,
+    //       'type' => $inc->displayType(),
+    //       'stock' => $inc->displayProperty('stock'),
+    //       'money' => $inc->selling_price ?? $inc->cost,
+    //     ];
+    //   }
+    // }
+    $jsIncomes = array_map(function ($inc, $i) {
+      return [
+        'index' => $i,
+        'id' => $inc->id->toString(),
+        'name' => $inc->name,
+        'category' => $inc->category_name,
+        'type' => $inc->displayType(),
+        'stock' => $inc->displayProperty('stock'),
+        'money' => $inc->selling_price ?? $inc->cost,
+      ];
+    }, $income, array_keys($income));
 
-    $contacts = $this->contactModel->findAllByBusiness($businessId);
-    $contacts = (function ($array) {
-      $customer = [];
-      $provider = [];
+    $jsExpense = array_map(function ($inc, $i) {
+      return [
+        'index' => $i,
+        'id' => $inc->id->toString(),
+        'name' => $inc->name,
+        'category' => $inc->category_name,
+        'type' => $inc->displayType(),
+        'stock' => $inc->displayProperty('stock'),
+        'money' => $inc->selling_price ?? $inc->cost,
+      ];
+    }, $expense, array_keys($expense));
 
-      foreach ($array as $contact) {
-        if ($contact->type === 'customer') array_push($customer, $contact);
-        else array_push($provider, $contact);
-      }
 
-      return (object) ['customer' => $customer, 'provider' => $provider];
-    })($contacts);
+    $contacts = $this->contactModel->findAllByBusiness($this->businessId);
 
     $jsCustomer = [];
-    if (!empty($contacts->customer)) {
-      foreach ($contacts->customer as $i => $inc) {
-        $jsCustomer[] = [
-          'index' => $i,
-          'id' => $inc->id->toString(),
-          'name' => $inc->name,
-          'email' => $inc->email,
-          'phone' => $inc->phone,
-          'address' => $inc->address,
-        ];
-      }
-    }
     $jsProvider = [];
-    if (!empty($contacts->provider)) {
-      foreach ($contacts->provider as $i => $inc) {
-        $jsProvider[] = [
-          'index' => $i,
-          'id' => $inc->id->toString(),
-          'name' => $inc->name,
-          'email' => $inc->email,
-          'phone' => $inc->phone,
-          'address' => $inc->address,
-        ];
+
+    foreach ($contacts as $i => $contact) {
+      $data = [
+        'index' => $i,
+        'id' => $contact->id->toString(),
+        'name' => $contact->name,
+        'email' => $contact->email,
+        'phone' => $contact->phone,
+        'address' => $contact->address,
+      ];
+      if ($contact->type === 'customer') {
+        $jsCustomer[] = $data;
+      } else {
+        $jsProvider[] = $data;
       }
     }
+
     $data = [
       'title' => 'Nueva Transacción',
       'jsExpenses' => $jsExpense,
