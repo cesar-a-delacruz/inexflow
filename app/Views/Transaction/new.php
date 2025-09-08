@@ -11,7 +11,7 @@
         <div class="alert alert-success alert-dismissible fade show" role="alert">
           <svg class="bi flex-shrink-0 me-2" height='16px'
             width="16px" role="img" aria-label="Success:">
-            <use xlink:href="#check-circle-fill" />
+            <use href="/assest/svg/miscellaniaSprite.svg#check-circle-fill" />
           </svg>
           <?= session()->getFlashdata('success') ?>
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
@@ -21,17 +21,7 @@
         <div class="alert alert-danger"><?= validation_list_errors() ?></div>
       <?php endif; ?>
 
-      <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
-        <symbol viewBox=" 0 0 24 24" id="fe-check">
-          <!-- Icon from Feather Icon by Megumi Hano - https://github.com/feathericon/feathericon/blob/master/LICENSE -->
-          <path fill="currentColor" fill-rule="evenodd" d="m6 10l-2 2l6 6L20 8l-2-2l-8 8z"></path>
-        </symbol>
-        <symbol viewBox="0 0 24 24" id="fe-close"><!-- Icon from Feather Icon by Megumi Hano - https://github.com/feathericon/feathericon/blob/master/LICENSE -->
-          <path fill="currentColor" fill-rule="evenodd" d="M10.657 12.071L5 6.414L6.414 5l5.657 5.657L17.728 5l1.414 1.414l-5.657 5.657l5.657 5.657l-1.414 1.414l-5.657-5.657l-5.657 5.657L5 17.728z"></path>
-        </symbol>
-      </svg>
       <form action="/transactions" method="POST" class="needs-validation" novalidate>
-
         <?= view_cell('FormInputCell', [
           'name' => 'due_date',
           'label' => 'Fecha de vencimiento',
@@ -39,7 +29,6 @@
           'default' => date('Y-m-d'),
           'required' => true,
         ]) ?>
-
 
         <div>
           <?php $typeError = validation_show_error('type') ?>
@@ -122,9 +111,9 @@
 
         <div class="mb-3">
           <label for="records" class="form-label">Registros</label>
-          <table class="table text-center" id="table-records">
+          <table class="table text-center table-striped" id="table-records">
             <thead>
-              <tr>
+              <tr class="table-secondary">
                 <th scope="col">Nombre</th>
                 <th scope="col">Categoria</th>
                 <th scope="col">Cantidad</th>
@@ -153,9 +142,9 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                  <table class="table text-center">
+                  <table class="table text-center table-striped">
                     <thead>
-                      <tr>
+                      <tr class="table-secondary">
                         <th scope="col">#</th>
                         <th scope="col">Nombre</th>
                         <th scope="col">Tipo</th>
@@ -268,7 +257,7 @@
       } = item;
       const nameCell = row.insertCell();
       nameCell.innerHTML = `
-      <span>name</span>
+      <span>${name}</span>
       <input type="hidden" value="${category}" name="records[${id}][category]"/>
       <input type="hidden" value="${id}" name="records[${id}][item_id]"/>
       `;
@@ -317,7 +306,7 @@
       actionCell.innerHTML = `
                         <button class="btn btn-outline-danger" type="button" onclick="removeItemToRecords('${id}')">
                           <svg class="bi flex-shrink-0" role="img" aria-label="Seleccionar contacto" width="24" height="24">
-                            <use xlink:href="#fe-close"/>
+                            <use href="/assets/svg/miscellaniaSprite.svg#fe-close"/>
                           </svg>
                         </button>
                       `;
@@ -375,7 +364,7 @@
       actionCell.innerHTML = `
                         <button class="btn btn-outline-${inRecords?'danger':'primary'}" type="button" onclick="${inRecords?'removeItemToRecords':'addItemToRecords'}('${id}')">
                           <svg class="bi flex-shrink-0" role="img" aria-label="Seleccionar contacto" width="24" height="24">
-                            <use xlink:href="#${inRecords?'fe-close':'fe-check'}"/>
+                            <use href="/assets/svg/miscellaniaSprite.svg#${inRecords?'fe-close':'fe-check'}"/>
                           </svg>
                         </button>
                       `;

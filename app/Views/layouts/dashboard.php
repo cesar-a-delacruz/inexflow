@@ -32,6 +32,10 @@
     * {
       scrollbar-width: thin;
     }
+
+    @view-transition {
+      navigation: auto;
+    }
   </style>
   <div class="container-fluid">
     <div class="row">

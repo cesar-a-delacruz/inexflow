@@ -186,9 +186,10 @@ class UserController extends BaseController
             'name' => $user->name,
             'email' => $user->email,
             'role' => $user->role,
-            'business_id' => $user->business_id ? $user->business_id : null,
+            'business_id' => $user->business_id,
             'current_page' => $init_page
         ]);
+
         return redirect()->to($init_page);
     }
 

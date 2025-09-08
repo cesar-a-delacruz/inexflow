@@ -36,7 +36,7 @@
                         <?php
                         $categoriesOp = [];
                         foreach ($categories as $category) {
-                            $categoriesOp[$category->name] = $category->displayType() . " | " . $category->name;
+                            $categoriesOp[$category->id] = $category->displayType() . " | " . $category->name;
                         }
                         ?>
                         <?= view_cell('FormSelectCell', [

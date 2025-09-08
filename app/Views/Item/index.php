@@ -17,7 +17,7 @@
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
   </div>
 <?php endif; ?>
-<?= view_cell('SvgElementsCell', ['edit' => true, 'trash' => true]) ?>
+<!-- <?= view_cell('SvgElementsCell', ['edit' => true, 'trash' => true]) ?> -->
 <div class="table-responsive">
   <table id="showtable" class="table table-striped table-hover table-bordered">
     <thead class="table-secondary">
@@ -49,13 +49,13 @@
               <div class="btn-group">
                 <a class="btn btn-outline-primary" type="button" title="Editra Elemento" href="/items/<?= uuid_to_string($items[$i]->id) ?>">
                   <svg class="bi flex-shrink-0" role="img" aria-label="Editra Elemento" width="24" height="24">
-                    <use href="#fe-edit" />
+                    <use href="/assets/svg/miscellaniaSprite.svg#fe-edit" />
                   </svg>
                 </a>
                 <button type="button" class="btn btn-danger" title="Eliminar Elemento" data-bs-toggle="modal"
                   data-bs-target="#exampleModal" data-bs-item-id="<?= uuid_to_string($items[$i]->id) ?>" data-bs-item-name="<?= $items[$i]->displayProperty('name') ?>">
                   <svg class="bi flex-shrink-0" role="img" aria-label="Eliminar Elemento" width="24" height="24">
-                    <use href="#fe-trash" />
+                    <use href="/assets/svg/miscellaniaSprite.svg#fe-trash" />
                   </svg>
                 </button>
               </div>
