@@ -14,7 +14,7 @@ class BusinessesSeeder extends Seeder
         $model = new BusinessModel();
         $model->insert(new Business([
             'id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
-            'name' => 'business a',
+            'name' => '',
             'phone' => '66667777',
             'owner_id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '2'),
         ]));

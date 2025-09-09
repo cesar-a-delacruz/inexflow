@@ -5,7 +5,7 @@ namespace App\Enums;
 use App\Enums\Observable\Displayable;
 use App\Enums\Observable\DisplayableTrait;
 
-enum CategoryType: string implements Displayable
+enum ServiceType: string implements Displayable
 {
     use DisplayableTrait;
 
@@ -18,5 +18,9 @@ enum CategoryType: string implements Displayable
             'expense' => 'Gasto',
             'income' => 'Ingreso',
         };
+    }
+    public static function getDefault(): string
+    {
+        return self::Expense->value;
     }
 }

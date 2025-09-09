@@ -5,23 +5,23 @@ namespace App\Enums;
 use App\Enums\Observable\Displayable;
 use App\Enums\Observable\DisplayableTrait;
 
-enum ItemType: string implements Displayable
+enum UserRole: string implements Displayable
 {
     use DisplayableTrait;
 
-    case Product = 'product';
-    case Supplies = 'supplies';
+    case Admin = 'admin';
+    case Businessman = 'businessman';
 
     public static function labelFromValue(string $value): string
     {
         return match ($value) {
-            'product' => 'Producto',
-            'supplies' => 'Suplemento',
+            'admin' => 'Admin',
+            'businessman' => 'Empresario',
         };
     }
 
     public static function getDefault(): string
     {
-        return self::Product->value;
+        return self::Businessman->value;
     }
 }

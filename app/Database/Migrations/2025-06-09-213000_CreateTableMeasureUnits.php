@@ -2,9 +2,9 @@
 
 namespace App\Database\Migrations;
 
-use App\Database\EntityMigration;
+use CodeIgniter\Database\Migration;
 
-class CreateTableCategories extends EntityMigration
+class CreateTableMeasureUnits extends Migration
 {
     public function up()
     {
@@ -12,24 +12,19 @@ class CreateTableCategories extends EntityMigration
             'id' => [
                 'type'           => 'SERIAL',
             ],
-            'name' => [
+            'value' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 255,
                 'null'       => false,
             ],
         ]);
 
-        parent::tenetFields();
-        parent::auditableFields();
-
         $this->forge->addKey('id', true);
-        $this->forge->addUniqueKey(['business_id', 'name']);
-
-        $this->forge->createTable('categories');
+        $this->forge->createTable('measure_units');
     }
 
     public function down()
     {
-        $this->forge->dropTable('categories');
+        $this->forge->dropTable('measure_units');
     }
 }
