@@ -45,7 +45,7 @@ class Transaction extends Entity
             'cash' => 'Efectivo',
             'card' => 'Tarjeta de Débito/Crédito',
             'transfer' => 'Transferencia Bancaria',
-            '' => ''
+            '' => '--'
         };
     }
 
@@ -55,13 +55,13 @@ class Transaction extends Entity
         return match ($this->contact_type) {
             'customer' => 'Cliente',
             'provider' => 'Proveedor',
-            null => 'No Aplica'
+            null => '--'
         };
     }
 
     /** Muestra el nombre del contacto de una transacción (cuando se hace join con contacto) */
     public function displayContactName(): string
     {
-        return $this->contact_name ? $this->contact_name : 'Anónimo';
+        return $this->contact_name ? $this->contact_name : '--';
     }
 }

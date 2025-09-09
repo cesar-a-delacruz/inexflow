@@ -2,9 +2,10 @@
 
 namespace App\Database\Migrations;
 
-use CodeIgniter\Database\Migration;
+use App\Database\AuditableMigrate;
+use App\Database\EntityMigration;
 
-class CreateBusinessesTable extends Migration
+class CreateBusinessesTable extends EntityMigration
 {
     public function up()
     {
@@ -23,28 +24,12 @@ class CreateBusinessesTable extends Migration
                 'type'       => 'VARCHAR',
                 'constraint' => 255,
                 'null'       => false,
-            ],
-            'owner_id' => [
-                'type'       => 'BINARY',
-                'constraint' => 16,
-                'null'       => true,
-            ],
-            'created_at' => [
-                'type'    => 'DATETIME',
-                'null'    => false,
-            ],
-            'updated_at' => [
-                'type'    => 'DATETIME',
-                'null'    => false,
-            ],
-            'deleted_at' => [
-                'type' => 'DATETIME',
-                'null' => true,
-            ],
+            ]
         ]);
 
+        parent::auditableFields();
+
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('owner_id', 'users', 'id', 'CASCADE', 'RESTRICT');
 
         $this->forge->createTable('businesses');
     }

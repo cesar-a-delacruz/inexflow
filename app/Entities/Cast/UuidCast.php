@@ -3,9 +3,6 @@
 namespace App\Entities\Cast;
 
 use CodeIgniter\Entity\Cast\BaseCast;
-use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\UuidInterface;
-use InvalidArgumentException;
 
 class UuidCast extends BaseCast
 {

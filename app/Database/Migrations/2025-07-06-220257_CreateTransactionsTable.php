@@ -2,17 +2,15 @@
 
 namespace App\Database\Migrations;
 
-use CodeIgniter\Database\Migration;
+use App\Database\EntityMigration;
 
-class CreateTransactionsTable extends Migration
+class CreateTransactionsTable extends EntityMigration
 {
     public function up()
     {
         $this->forge->addField([
             'id' => [
-                'type'       => 'BINARY',
-                'constraint' => 16,
-                'null'       => false,
+                'type'       => 'SERIAL',
             ],
             'number' => [
                 'type'       => 'VARCHAR',
@@ -20,14 +18,9 @@ class CreateTransactionsTable extends Migration
                 'null'       => false,
                 'comment'    => 'Correlativo por negocio'
             ],
-            'business_id' => [
-                'type'       => 'BINARY',
-                'constraint' => 16,
-                'null'       => false,
-            ],
             'contact_id' => [
-                'type'       => 'BINARY',
-                'constraint' => 16,
+                'type'       => 'BIGINT',
+                'unsigned' => true,
                 'null'       => true,
                 'comment'    => 'NULL para venta sin cliente'
             ],
@@ -37,35 +30,25 @@ class CreateTransactionsTable extends Migration
                 'default'    => 'paid',
                 'null'       => false,
             ],
-            'payment_method' => [
-                'type'       => 'ENUM',
-                'constraint' => ['cash', 'card', 'transfer'],
-                'null'       => true,
+            'description' => [
+                'type' => 'VARCHAR',
+                'constraint' => 255,
+                'null' => true,
             ],
             'due_date' => [
                 'type' => 'DATE',
                 'null' => true,
                 'comment' => 'Fecha de vencimiento para crédito'
             ],
-            'created_at' => [
-                'type' => 'DATETIME',
-                'null' => false,
-            ],
-            'updated_at' => [
-                'type' => 'DATETIME',
-                'null' => false,
-            ],
-            'deleted_at' => [
-                'type' => 'DATETIME',
-                'null' => true,
-            ],
         ]);
 
+        parent::tenetFields();
+        parent::auditableFields();
+
         $this->forge->addKey('id', true);
-        $this->forge->addUniqueKey(['business_id', 'number'], 'uk_business_transaction_number');
-        $this->forge->addForeignKey('business_id', 'businesses', 'id', 'CASCADE', 'RESTRICT');
-        $this->forge->addForeignKey('contact_id', 'contacts', 'id', 'CASCADE', 'RESTRICT');
-        
+        $this->forge->addUniqueKey(['business_id', 'number']);
+        $this->forge->addForeignKey('contact_id', 'contacts', 'id');
+
         $this->forge->createTable('transactions');
     }
 
