@@ -2,33 +2,26 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
+use App\Models\AuditableModel;
 use App\Entities\Transaction;
 
-class TransactionModel extends Model
+class TransactionModel extends AuditableModel
 {
     protected $table = 'transactions';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = false;
     protected $returnType = Transaction::class;
-    protected $useSoftDeletes = true;
 
     protected $allowedFields = [
         'id',
         'business_id',
-        'contact_id',
         'number',
-        'total',
-        'due_date',
+        'contact_id',
         'payment_status',
-        'payment_method',
+        'description',
+        'due_date',
+        'total',
     ];
-
-    protected $useTimestamps = true;
-    protected $dateFormat = 'datetime';
-    protected $createdField = 'created_at';
-    protected $updatedField = 'updated_at';
-    protected $deletedField = 'deleted_at';
 
     /** Busca todos las transacciones con su contacto asociado por su negocio
      * @return array<Transaction>

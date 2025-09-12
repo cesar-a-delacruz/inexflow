@@ -3,15 +3,14 @@
 namespace App\Models;
 
 use App\Entities\Contact;
-use CodeIgniter\Model;
+use App\Models\AuditableModel;
 
-class ContactModel extends Model
+class ContactModel extends AuditableModel
 {
     protected $table = 'contacts';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = false;
     protected $returnType = Contact::class;
-    protected $useSoftDeletes = true;
 
     protected $allowedFields = [
         'id',
@@ -23,11 +22,6 @@ class ContactModel extends Model
         'type'
     ];
 
-    protected $useTimestamps = true;
-    protected $dateFormat = 'datetime';
-    protected $createdField = 'created_at';
-    protected $updatedField = 'updated_at';
-    protected $deletedField = 'deleted_at';
 
     /** Busca todos los contactos por su negocio
      * @return array<Contact>

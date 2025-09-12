@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use App\Database\EntityMigration;
 
-class CreateTableRecipes extends EntityMigration
+class CreateRecipesTable extends EntityMigration
 {
     public function up()
     {
@@ -33,6 +33,7 @@ class CreateTableRecipes extends EntityMigration
                 'null'       => false,
             ],
         ]);
+
         parent::tenetFields();
         parent::auditableFields();
 

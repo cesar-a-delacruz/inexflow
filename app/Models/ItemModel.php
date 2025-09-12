@@ -3,34 +3,25 @@
 namespace App\Models;
 
 use App\Entities\Item;
-use CodeIgniter\Model;
 
-class ItemModel extends Model
+class ItemModel extends AuditableModel
 {
     protected $table = 'items';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = false;
     protected $returnType = Item::class;
-    protected $useSoftDeletes = true;
 
     protected $allowedFields = [
         'id',
         'business_id',
-        'category_id',
         'name',
         'type',
         'cost',
         'selling_price',
         'stock',
         'min_stock',
-        'measure_unit',
+        'measure_unit_id',
     ];
-
-    protected $useTimestamps = true;
-    protected $dateFormat = 'datetime';
-    protected $createdField = 'created_at';
-    protected $updatedField = 'updated_at';
-    protected $deletedField = 'deleted_at';
 
     /** Busca todos los items con su categoría asociada por su negocio
      * @return array<Item>

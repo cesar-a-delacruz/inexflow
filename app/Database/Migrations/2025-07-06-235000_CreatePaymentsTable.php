@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use App\Database\EntityMigration;
 
-class CreateTableRecords extends EntityMigration
+class CreatePaymentsTable extends EntityMigration
 {
     public function up()
     {
@@ -12,44 +12,31 @@ class CreateTableRecords extends EntityMigration
             'id' => [
                 'type'           => 'SERIAL',
             ],
-            'product_id' => [
-                'type' => 'BIGINT',
-                'unsigned' => true,
-                'null' => false,
-            ],
             'transaction_id' => [
                 'type' => 'BIGINT',
                 'unsigned' => true,
                 'null' => false,
             ],
-            'unit_price' => [
-                'type'       => 'DECIMAL',
-                'constraint' => '10,2',
-                'null'       => false,
+            'payment_method' => [
+                'type'       => 'ENUM',
+                'constraint' => ['cash', 'card', 'transfer'],
+                'null'       => true,
             ],
-            'quantity' => [
-                'type'       => 'SMALLINT',
-                'unsigned' => true,
-                'null'       => false,
-            ],
-            'subtotal' => [
+            'amount' => [
                 'type'       => 'DECIMAL',
                 'constraint' => '10,2',
                 'null'       => false,
             ],
         ]);
-
         parent::tenetFields();
         parent::auditableFields();
-
         $this->forge->addKey('id', true);
         $this->forge->addForeignKey('transaction_id', 'transactions', 'id');
-        $this->forge->addForeignKey('product_id', 'items', 'id');
-        $this->forge->createTable('records');
+        $this->forge->createTable('payments');
     }
 
     public function down()
     {
-        $this->forge->dropTable('records');
+        $this->forge->dropTable('payments');
     }
 }

@@ -2,16 +2,15 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
 use App\Entities\User;
+use App\Models\AuditableModel;
 
-class UserModel extends Model
+class UserModel extends AuditableModel
 {
     protected $table            = 'users';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = false;
     protected $returnType       = User::class;
-    protected $useSoftDeletes   = true;
 
     protected $allowedFields = [
         'id',
@@ -22,12 +21,6 @@ class UserModel extends Model
         'business_id',
         'is_active'
     ];
-
-    protected $useTimestamps = true;
-    protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
-    protected $deletedField  = 'deleted_at';
 
     /** Busca un usuario por su correo */
     public function findByEmail(string $email): ?User

@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use App\Database\EntityMigration;
 
-class CreateTableCategoriesItems extends EntityMigration
+class CreateCategoriesItemsTable extends EntityMigration
 {
     public function up()
     {
