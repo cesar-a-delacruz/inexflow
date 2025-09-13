@@ -35,6 +35,11 @@ class CreateTransactionsTable extends EntityMigration
                 'constraint' => 255,
                 'null' => true,
             ],
+            'total' => [
+                'type'       => 'DECIMAL',
+                'constraint' => '10,2',
+                'null'       => false,
+            ],
             'due_date' => [
                 'type' => 'DATE',
                 'null' => true,

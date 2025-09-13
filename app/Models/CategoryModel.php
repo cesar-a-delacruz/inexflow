@@ -2,29 +2,21 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
 use App\Entities\Category;
+use App\Models\AuditableModel;
 
-class CategoryModel extends Model
+class CategoryModel extends AuditableModel
 {
     protected $table            = 'categories';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = Category::class;
-    protected $useSoftDeletes   = true;
 
     protected $allowedFields    = [
         'business_id',
         'number',
         'name',
-        'type',
     ];
-
-    protected $useTimestamps = true;
-    protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
-    protected $deletedField  = 'deleted_at';
 
     /** Busca todos las categorías por su negocio
      * @return array<Contact>

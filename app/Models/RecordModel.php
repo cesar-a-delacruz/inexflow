@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
+use App\Models\AuditableModel;
 use App\Entities\Record;
 
-class RecordModel extends Model
+class RecordModel extends AuditableModel
 {
     protected $table = 'records';
     protected $primaryKey = 'id';
@@ -13,22 +13,14 @@ class RecordModel extends Model
     protected $returnType = Record::class;
 
     protected $allowedFields = [
+        'id',
         'business_id',
-        'description',
-        'category',
-        'amount',
-        'type',
-        'unit_price',
-        'item_id',
-        'subtotal',
+        'product_id',
         'transaction_id',
+        'unit_price',
+        'quantity',
+        'subtotal',
     ];
-
-    protected $useTimestamps = true;
-    protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField = 'updated_at';
-    protected $deletedField = 'deleted_at';
 
     /** Busca todos los registros con sus transacción asociada
      * @return array<Record>
