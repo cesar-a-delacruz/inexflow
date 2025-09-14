@@ -46,7 +46,6 @@ if (session()->getFlashdata('success')): ?>
             <?php endif; ?>
         </div>
         <div class="col-12 col-md-6">
-
             <?= view_cell('FormInputCell', [
                 'name' => 'stock',
                 'type' => 'number',
@@ -71,46 +70,10 @@ if (session()->getFlashdata('success')): ?>
                 'options' => $measure_units,
                 'default' => $item->measure_unit_id,
             ]) ?>
-
         </div>
-
-
-        <div class="d-grid">
-            <button type="submit" class="btn btn-success mx-auto" style="width: 35%;">Guardar Info</button>
-        </div>
+    </div>
+    <div class="d-grid">
+        <button type="submit" class="btn btn-success mx-auto" style="width: 35%;">Guardar Info</button>
+    </div>
 </form>
-<script>
-    const inputStock = document.getElementById("input-stock");
-    const inputMinStock = document.getElementById("input-min_stock");
-    const inputMeasureUnit = document.getElementById("input-measure_unit");
-    const $typeSelect = document.getElementById("select-type");
-    const inputs = [inputStock, inputMinStock, inputMeasureUnit];
-
-    function activateStock(element, event) {
-        let isProduct = true;
-        if (event instanceof Event) {
-            isProduct = event.target.value === "product";
-        } else if (typeof event === 'string') {
-            isProduct = event === "product";
-        }
-        for (const input of inputs) {
-            if (!input) continue;
-            input.disabled = !isProduct;
-            input.value = null;
-            if (input.name === 'measure_unit') input.value = 'unidad';
-        }
-
-    }
-    if ($typeSelect)
-        activateStock(null, $typeSelect.value);
-
-    function activatePrice(element, event) {
-        const selectedOption = event.target.selectedOptions[0].text;
-        const itemType = selectedOption.substring(0, selectedOption.lastIndexOf("|")).trim();
-        const inputSellingPrice = document.querySelector("input[name='selling_price' ]");
-
-        inputSellingPrice.disabled = itemType === "Ingreso" ? false : true;
-        inputSellingPrice.placeholder = itemType === "Ingreso" ? 0.75 : "";
-    }
-</script>
 <?= $this->endSection() ?>

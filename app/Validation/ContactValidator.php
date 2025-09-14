@@ -26,13 +26,12 @@ class ContactValidator
                 'max_length' => 'El teléfono no puede exceder 50 caracteres'
             ],
         ],
-        'type' => [
-            'rules' => 'required|in_list[customer,provider]',
+        'address' => [
+            'rules' => 'permit_empty|max_length[50]',
             'errors' => [
-                'required' => 'El tipo es requerido',
-                'in_list' => 'El Tipo solo puede ser proveedor o cliente'
+                'max_length' => 'La direccion no puede exceder 50 caracteres'
             ],
-        ],
+        ]
     ];
     public $update = [
         'email' => [

@@ -16,7 +16,7 @@
 
 <div class="d-flex align-items-center gap-2">
     <a href="/tenants/<?= $segment ?>/new" class="btn btn-outline-primary d-flex gap-1 align-items-center float-none">
-        Agregar <?= $type->label() ?>
+        Agregar Empleado
         <svg class="bi flex-shrink-0" role="img" width="20" height="20">
             <use href="/assets/svg/miscellaniaSprite.svg#fe-plus" />
         </svg>
@@ -30,34 +30,30 @@
                 <th></th>
                 <th>Nombre</th>
                 <th>Email</th>
-                <th>Teléfono</th>
-                <th>Direccion</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            <?php if (!empty($contacts)): ?>
-                <?php foreach ($contacts as $i => $contact): ?>
+            <?php if (!empty($employees)): ?>
+                <?php foreach ($employees as $i => $employee): ?>
                     <tr>
                         <td><?= $i + 1 ?></td>
-                        <td><?= $contact->name ?></td>
-                        <td><?= $contact->email ?></td>
-                        <td><?= $contact->phone ?></td>
-                        <td><?= $contact->address ?></td>
+                        <td><?= $employee->name ?></td>
+                        <td><?= $employee->email ?></td>
                         <td>
                             <div class="btn-group">
-                                <a class="btn btn-outline-primary" type="button" title="Ver informacion de Elemento" href="/tenants/<?= $segment . '/' . $contact->id ?>">
+                                <a class="btn btn-outline-primary" type="button" title="Ver informacion de Elemento" href="/tenants/<?= $segment . '/' . $employee->id ?>">
                                     <svg class="bi flex-shrink-0" role="img" aria-label="Ver informacion de Elemento" width="24" height="24">
                                         <use href="/assets/svg/miscellaniaSprite.svg#fe-info" />
                                     </svg>
                                 </a>
-                                <a class="btn btn-primary" type="button" title="Editra Elemento" href="/tenants/<?= $segment . '/' . $contact->id ?>/edit">
+                                <a class="btn btn-primary" type="button" title="Editra Elemento" href="/tenants/<?= $segment . '/' . $employee->id ?>/edit">
                                     <svg class="bi flex-shrink-0" role="img" aria-label="Editra Elemento" width="24" height="24">
                                         <use href="/assets/svg/miscellaniaSprite.svg#fe-edit" />
                                     </svg>
                                 </a>
                                 <button type="button" class="btn btn-danger" title="Eliminar Elemento" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal" data-bs-id="<?= $contact->id ?>" data-bs-name="<?= $contact->name ?>">
+                                    data-bs-target="#exampleModal" data-bs-id="<?= $employee->id ?>" data-bs-name="<?= $employee->name ?>">
                                     <svg class="bi flex-shrink-0" role="img" aria-label="Eliminar Elemento" width="24" height="24">
                                         <use href="/assets/svg/miscellaniaSprite.svg#fe-trash" />
                                     </svg>
@@ -78,12 +74,12 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar <?= $type->label() ?></h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar Empleado</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p class="modal-message h6"></p>
-                <p class="text-danger">Al eliminar un <?= $type->label() ?> toda informacio relacionada a esta sera eliminada permanentemnte</p>
+                <p class="text-danger">Al eliminar un Empleado toda informacio relacionada a esta sera eliminada permanentemnte</p>
                 <form action="" data-segment="<?= $segment ?>" id="form-delete-element" method="POST">
                     <input type="hidden" name="_method" value="DELETE">
                 </form>

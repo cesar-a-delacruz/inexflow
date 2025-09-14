@@ -80,7 +80,7 @@ class ItemValidator
             ],
         ],
         'measure_unit' => [
-            'rules' => 'permit_empty|max_length[20]',
+            'rules' => '|max_length[20]',
             'errors' => [
                 'max_length' => 'La unidad de medidad no debe ser mayor a 20 caracteres',
             ],

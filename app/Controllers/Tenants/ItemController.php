@@ -2,15 +2,15 @@
 
 namespace App\Controllers\Tenants;
 
+use App\Controllers\BaseController;
 use App\Controllers\RestController;
 use App\Entities\Item;
-use App\Entities\MeasureUnit;
 use App\Enums\ItemType;
 use App\Models\ItemModel;
 use App\Models\MeasureUnitModel;
 use App\Validation\ItemValidator;
 
-abstract class ItemController extends RestController
+abstract class ItemController extends BaseController implements RestController
 {
     protected static array $segments = [
         ItemType::Product->value => 'products',
@@ -31,7 +31,7 @@ abstract class ItemController extends RestController
 
     public function index()
     {
-        $items = $this->model->findAllByBusinesIdAndType(session('business_id'), $this->type);
+        $items = $this->model->findAllByBusinessIdAndType(session('business_id'), $this->type);
 
         helper('number');
 
@@ -129,9 +129,6 @@ abstract class ItemController extends RestController
         if (!$this->validate($this->formValidator->create)) {
             return redirect()->back()->withInput();
         }
-
-        $this->model = new ItemModel();
-
         $post = $this->request->getPost();
 
         $post['business_id'] = session('business_id');
@@ -152,7 +149,7 @@ abstract class ItemController extends RestController
     {
         $this->formValidator = new ItemValidator();
 
-        if (!$this->validate($this->formValidator->update)) {
+        if (!$this->validate($this->formValidator->create)) {
             return redirect()->back()->withInput();
         }
 
