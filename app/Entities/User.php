@@ -3,22 +3,22 @@
 namespace App\Entities;
 
 use App\Entities\AuditableEntity;
+use App\Entities\Cast\EnumCast;
 
 class User extends AuditableEntity
 {
+    protected $tenant = true;
     protected $casts = [
         'id' => 'uuid',
         'name' => 'string',
         'email' => 'string',
-        'role' => 'enum[App\Enums\UserRole]',
         'password_hash' => 'string',
-        'business_id' => 'uuid',
+        'role' => 'enum[App\Enums\UserRole]',
         'is_active'   => 'boolean',
     ];
 
     protected $castHandlers = [
-        'uuid' => Cast\UuidCast::class,
-        'enum' => Cast\EnumCast::class,
+        'enum' => EnumCast::class,
     ];
 
     /** Guarda la contraseña encriptada del usuario */

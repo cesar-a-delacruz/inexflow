@@ -41,13 +41,13 @@ class CreateItemsTable extends EntityMigration
                 'type'    => 'INT',
                 'unsigned' => true,
                 'default' => 0,
-                'null'    => true,
+                'null'    => false,
             ],
             'min_stock' => [
                 'type'    => 'INT',
                 'unsigned' => true,
                 'default' => 10,
-                'null'    => true,
+                'null'    => false,
             ],
             'measure_unit_id' => [
                 'type'       => 'BIGINT',

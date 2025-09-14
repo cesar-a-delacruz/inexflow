@@ -11,12 +11,9 @@ class Transaction extends AuditableEntity
 
     protected $casts = [
         'id' => 'int',
-        'number' => 'string',
-        'contact_id' => '?int',
-        'payment_status' => 'enum[App\Enums\PaymentStatus]',
-        'description' => '?string',
-        'total' => 'float',
-        'due_date' => '?datetime',
+        'transaction_id' => 'int',
+        'payment_method' => 'enum[App\Enums\PaymentMethod]',
+        'amount' => 'float',
     ];
     protected $castHandlers = [
         'enum' => EnumCast::class,

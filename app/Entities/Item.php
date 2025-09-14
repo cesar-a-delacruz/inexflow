@@ -3,13 +3,14 @@
 namespace App\Entities;
 
 use App\Entities\AuditableEntity;
+use app\Entities\Cast\EnumCast;
 
 class Item extends AuditableEntity
 {
+    protected $tenant = true;
 
     protected $casts = [
         'id' => 'int',
-        'business_id' => 'uuid',
         'name' => 'string',
         'type' => 'enum[App\Enums\ItemType]',
         'cost' => 'float',
@@ -20,8 +21,7 @@ class Item extends AuditableEntity
     ];
 
     protected $castHandlers = [
-        'uuid' => Cast\UuidCast::class,
-        'enum' => Cast\EnumCast::class,
+        'enum' => EnumCast::class,
     ];
 
     /** Muestra propiedades si tienen valor  */

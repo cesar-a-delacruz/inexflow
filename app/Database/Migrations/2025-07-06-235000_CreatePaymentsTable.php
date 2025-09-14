@@ -20,7 +20,7 @@ class CreatePaymentsTable extends EntityMigration
             'payment_method' => [
                 'type'       => 'ENUM',
                 'constraint' => ['cash', 'card', 'transfer'],
-                'null'       => true,
+                'null'       => false,
             ],
             'amount' => [
                 'type'       => 'DECIMAL',
@@ -30,6 +30,7 @@ class CreatePaymentsTable extends EntityMigration
         ]);
         parent::tenantFields();
         parent::auditableFields();
+
         $this->forge->addKey('id', true);
         $this->forge->addForeignKey('transaction_id', 'transactions', 'id');
         $this->forge->createTable('payments');
