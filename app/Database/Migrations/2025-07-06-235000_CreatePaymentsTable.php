@@ -28,7 +28,7 @@ class CreatePaymentsTable extends EntityMigration
                 'null'       => false,
             ],
         ]);
-        parent::tenetFields();
+        parent::tenantFields();
         parent::auditableFields();
         $this->forge->addKey('id', true);
         $this->forge->addForeignKey('transaction_id', 'transactions', 'id');

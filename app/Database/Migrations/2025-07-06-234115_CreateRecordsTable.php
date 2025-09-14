@@ -39,7 +39,7 @@ class CreateRecordsTable extends EntityMigration
             ],
         ]);
 
-        parent::tenetFields();
+        parent::tenantFields();
         parent::auditableFields();
 
         $this->forge->addKey('id', true);

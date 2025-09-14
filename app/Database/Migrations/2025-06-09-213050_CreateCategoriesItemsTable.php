@@ -22,7 +22,7 @@ class CreateCategoriesItemsTable extends EntityMigration
             ],
         ]);
 
-        parent::tenetFields();
+        parent::tenantFields();
 
         $this->forge->addKey(['category_id', 'item_id'], true);
         $this->forge->addForeignKey('category_id', 'items', 'id');

@@ -2,27 +2,23 @@
 
 namespace App\Entities;
 
-use CodeIgniter\Entity\Entity;
+use App\Entities\AuditableEntity;
 
-class User extends Entity
+class User extends AuditableEntity
 {
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
-
     protected $casts = [
         'id' => 'uuid',
         'name' => 'string',
         'email' => 'string',
-        'role' => 'string',
+        'role' => 'enum[App\Enums\UserRole]',
         'password_hash' => 'string',
         'business_id' => 'uuid',
         'is_active'   => 'boolean',
-        'created_at'  => 'datetime',
-        'updated_at'  => 'datetime',
-        'deleted_at'  => 'datetime'
     ];
 
     protected $castHandlers = [
-        'uuid' => Cast\UuidCast::class
+        'uuid' => Cast\UuidCast::class,
+        'enum' => Cast\EnumCast::class,
     ];
 
     /** Guarda la contraseña encriptada del usuario */
@@ -47,16 +43,7 @@ class User extends Entity
     /** Verifica si el usuario está activo */
     public function isActive(): bool
     {
-        return $this->is_active === true;
-    }
-
-    /** Muestra el rol del usuario en español */
-    public function displayRole(): string
-    {
-        return match ($this->role) {
-            'admin' => 'Administrador',
-            'businessman' => 'Empresario'
-        };
+        return $this->is_active;
     }
 
     /** Muestra el estado de actividad del usuario en español */
