@@ -12,11 +12,11 @@ class BusinessesSeeder extends Seeder
     public function run()
     {
         $model = new BusinessModel();
-        $model->insert(new Business([
+        $data = new Business([
             'id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
-            'name' => '',
-            'phone' => '66667777',
-            'owner_id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '2'),
-        ]));
+            'name' => 'Sopas de Aurora',
+            'phone' => '6714-1802',
+        ]);
+        $model->insert($data);
     }
 }

@@ -8,7 +8,7 @@ class ServiceModel extends AuditableModel
 {
     protected $table = 'services';
     protected $primaryKey = 'id';
-    protected $useAutoIncrement = false;
+    protected $useAutoIncrement = true;
     protected $returnType = Service::class;
 
     protected $allowedFields = [

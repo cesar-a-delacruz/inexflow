@@ -2,11 +2,14 @@
 
 namespace App\Entities;
 
-use App\Entities\AuditableEntity;
+use App\Entities\Cast\UuidCast;
+use CodeIgniter\Entity\Entity;
 
-class Record extends AuditableEntity
+class Record extends Entity
 {
-    protected $tenant = true;
+    protected $castHandlers = [
+        'uuid' => UuidCast::class,
+    ];
 
     protected $casts = [
         'id' => 'int',
@@ -15,7 +18,12 @@ class Record extends AuditableEntity
         'unit_price' => 'float',
         'quantity' => 'int',
         'subtotal' => 'float',
+        'business_id' => 'uuid',
+        'created_at'  => 'datetime',
+        'updated_at'  => 'datetime',
+        'deleted_at'  => '?datetime'
     ];
+
 
     /** Muestra la cantidad del registro si tiene valor */
     public function displayAmount(): string

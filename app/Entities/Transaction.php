@@ -2,13 +2,17 @@
 
 namespace App\Entities;
 
-use App\Entities\AuditableEntity;
 use App\Entities\Cast\EnumCast;
+use App\Entities\Cast\UuidCast;
+use CodeIgniter\Entity\Entity;
 
-class Transaction extends AuditableEntity
+class Transaction extends Entity
 {
-    protected $tenant = true;
 
+    protected $castHandlers = [
+        'enum' => EnumCast::class,
+        'uuid' => UuidCast::class
+    ];
     protected $casts = [
         'id' => 'int',
         'number' => 'string',
@@ -17,8 +21,9 @@ class Transaction extends AuditableEntity
         'description' => '?string',
         'total' => 'float',
         'due_date' => '?datetime',
-    ];
-    protected $castHandlers = [
-        'enum' => EnumCast::class,
+        'business_id' => 'uuid',
+        'created_at'  => 'datetime',
+        'updated_at'  => 'datetime',
+        'deleted_at'  => '?datetime'
     ];
 }

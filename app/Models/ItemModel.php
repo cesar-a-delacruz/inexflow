@@ -8,7 +8,7 @@ class ItemModel extends AuditableModel
 {
     protected $table = 'items';
     protected $primaryKey = 'id';
-    protected $useAutoIncrement = false;
+    protected $useAutoIncrement = true;
     protected $returnType = Item::class;
 
     protected $allowedFields = [

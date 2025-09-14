@@ -2,13 +2,17 @@
 
 namespace App\Entities;
 
-use App\Entities\AuditableEntity;
 use App\Entities\Cast\EnumCast;
+use App\Entities\Cast\UuidCast;
+use CodeIgniter\Entity\Entity;
 
-class Service extends AuditableEntity
+class Service extends Entity
 {
-    protected $tenant = true;
 
+    protected $castHandlers = [
+        'enum' => EnumCast::class,
+        'uuid' => UuidCast::class,
+    ];
     protected $casts = [
         'id' => 'int',
         'name' => 'string',
@@ -16,11 +20,12 @@ class Service extends AuditableEntity
         'cost' => 'float',
         'selling_price' => '?float',
         'measure_unit_id' => 'int',
+        'business_id' => 'uuid',
+        'created_at'  => 'datetime',
+        'updated_at'  => 'datetime',
+        'deleted_at'  => '?datetime'
     ];
 
-    protected $castHandlers = [
-        'enum' => EnumCast::class,
-    ];
 
     /** Muestra propiedades si tienen valor  */
     public function displayProperty(string $property): string

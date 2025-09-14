@@ -9,7 +9,7 @@ class ContactModel extends AuditableModel
 {
     protected $table = 'contacts';
     protected $primaryKey = 'id';
-    protected $useAutoIncrement = false;
+    protected $useAutoIncrement = true;
     protected $returnType = Contact::class;
 
     protected $allowedFields = [
