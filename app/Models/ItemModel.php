@@ -39,7 +39,7 @@ class ItemModel extends AuditableModel
     /** 
      * @return array<Item>
      */
-    public function findAllByBusinesId(string $businessId): array
+    public function findAllByBusinessId(string $businessId): array
     {
         return $this
             ->where('business_id', uuid_to_bytes($businessId))
@@ -48,7 +48,7 @@ class ItemModel extends AuditableModel
     /** 
      * @return array<Item>
      */
-    public function findAllByBusinesIdAndType(string $businessId, ItemType $type): array
+    public function findAllByBusinessIdAndType(string $businessId, ItemType $type): array
     {
         return $this
             ->select('items.*, mu.value as measure_unit_value')

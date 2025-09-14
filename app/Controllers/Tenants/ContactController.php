@@ -2,16 +2,14 @@
 
 namespace App\Controllers\Tenants;
 
+use App\Controllers\BaseController;
 use App\Controllers\RestController;
 use App\Entities\Contact;
-use App\Entities\Item;
 use App\Enums\ContactType;
 use App\Models\ContactModel;
-use App\Models\ItemModel;
 use App\Validation\ContactValidator;
-use App\Validation\ItemValidator;
 
-abstract class ContactController extends RestController
+abstract class ContactController extends BaseController implements RestController
 {
     protected static array $segments = [
         ContactType::Customer->value => 'customers',
@@ -31,7 +29,7 @@ abstract class ContactController extends RestController
 
     public function index()
     {
-        $contacts = $this->model->findAllByBusinesIdAndType(session('business_id'), $this->type);
+        $contacts = $this->model->findAllByBusinessIdAndType(session('business_id'), $this->type);
 
         return view(
             'Tenants/Contact/index',
@@ -55,8 +53,6 @@ abstract class ContactController extends RestController
         if ($contact->type !== $this->type) {
             return redirect()->to('tenants/' . self::$segments[$contact->type->value] . '/' . $contact->id);
         }
-
-        helper('number');
 
         return view(
             'Tenants/Contact/show',

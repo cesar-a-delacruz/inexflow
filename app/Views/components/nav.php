@@ -28,6 +28,12 @@
                 'active' => $segments2 === 'dashboard',
             ],
             [
+                'href' => '/tenants/employees',
+                'svg' => 'fe-users',
+                'label' => 'Empleados',
+                'active' => $segments2 === 'employees',
+            ],
+            [
                 'href' => '/tenants/business',
                 'svg' => 'fe-bar-chart',
                 'label' => 'Negocio',

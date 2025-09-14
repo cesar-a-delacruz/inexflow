@@ -27,6 +27,7 @@ $routes->group('tenants', ['namespace' => 'App\Controllers\Tenants', 'filter' =>
     $routes->resource('supplies', ['controller' => 'SupplyController']);
     $routes->resource('providers', ['controller' => 'ProviderController']);
     $routes->resource('customers', ['controller' => 'CustomerController']);
+    $routes->resource('employees', ['controller' => 'EmployeeController']);
 
 
     // $routes->resource('items', ['controller' => 'ItemController']);

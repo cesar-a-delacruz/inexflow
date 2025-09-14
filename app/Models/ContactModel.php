@@ -35,7 +35,7 @@ class ContactModel extends AuditableModel
     /** 
      * @return array<Contact>
      */
-    public function findAllByBusinesIdAndType(string $businessId, ContactType $type): array
+    public function findAllByBusinessIdAndType(string $businessId, ContactType $type): array
     {
         return $this
             ->where('business_id', uuid_to_bytes($businessId))

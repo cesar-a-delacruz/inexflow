@@ -17,6 +17,7 @@
             'dashboard' => 'Dashboard',
             'user' => 'Usuario',
             'tenants' => 'Negocio',
+            'employees' => 'Empleados',
         ];
         ?>
 
