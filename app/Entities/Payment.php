@@ -5,7 +5,7 @@ namespace App\Entities;
 use App\Entities\AuditableEntity;
 use App\Entities\Cast\EnumCast;
 
-class Transaction extends AuditableEntity
+class Payment extends AuditableEntity
 {
     protected $tenant = true;
 
