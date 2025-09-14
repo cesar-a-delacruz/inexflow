@@ -10,13 +10,14 @@ enum ItemType: string implements Displayable
     use DisplayableTrait;
 
     case Product = 'product';
-    case Supplies = 'supplies';
+    case Supply = 'supply';
+    // case Supplies = 'supplies';
 
     public static function labelFromValue(string $value): string
     {
         return match ($value) {
             'product' => 'Producto',
-            'supplies' => 'Suplemento',
+            'supply' => 'Suministro',
         };
     }
 

@@ -11,6 +11,6 @@ class FormSelectCell extends Cell
     public bool|null $required = null;
     public bool|null $readonly = null;
     public array $options = [];
-    public string $default = '';
+    public string|int|null|float $default = '';
     public string|null $onchange = null;
 }

@@ -9,11 +9,15 @@
             'item' => 'Elemento',
             'items' => 'Elementos',
             'new' => 'Nuevo',
+            'edit' => 'Editar',
             'contacts' => 'Contactos',
             'transactions' => 'Transacciones',
             'business' => 'Negocio',
             'dashboard' => 'Dashboard',
             'user' => 'Usuario',
+            'supplies' => 'Suministros',
+            'products' => 'Productos',
+            'tenants' => 'Negocio',
         ];
         ?>
 

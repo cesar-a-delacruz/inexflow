@@ -40,10 +40,16 @@
                 'active' => $segments2 === 'transactions',
             ],
             [
-                'href' => '/tenants/items',
+                'href' => '/tenants/products',
                 'svg' => 'fe-layer',
-                'label' => 'Elementos',
-                'active' => $segments2 === 'items',
+                'label' => 'Productos',
+                'active' => $segments2 === 'products',
+            ],
+            [
+                'href' => '/tenants/supplies',
+                'svg' => 'fe-layer',
+                'label' => 'Suministros',
+                'active' => $segments2 === 'supplies',
             ],
             [
                 'href' => '/tenants/contacts',

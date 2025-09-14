@@ -12,7 +12,8 @@ if (session()->getFlashdata('success')): ?>
     </div>
 <?php endif; ?>
 
-<form action="/tenants/<?= $segment ?>" method="POST" class="needs-validation" novalidate>
+<form action="/tenants/<?= $segment . '/' . $item->id ?>" method="POST" class="needs-validation" novalidate>
+    <input type="hidden" name="_method" value="PUT">
     <div class="row">
         <div class="col-12 col-md-6">
             <?= view_cell('FormInputCell', [
@@ -20,6 +21,7 @@ if (session()->getFlashdata('success')): ?>
                 'label' => 'Nombre',
                 'placeholder' => "Aguacate",
                 'required' => true,
+                'default' => $item->name,
             ]) ?>
             <?= view_cell('FormInputCell', [
                 'name' => 'cost',
@@ -29,6 +31,7 @@ if (session()->getFlashdata('success')): ?>
                 'min' => '0.01',
                 'step' => '0.01',
                 'required' => true,
+                'default' => $item->cost,
             ]) ?>
             <?php if ($type === ItemType::Product): ?>
                 <?= view_cell('FormInputCell', [
@@ -38,6 +41,7 @@ if (session()->getFlashdata('success')): ?>
                     'placeholder' => "075",
                     'min' => '0',
                     'step' => '0.01',
+                    'default' => $item->selling_price,
                 ]) ?>
             <?php endif; ?>
         </div>
@@ -50,6 +54,7 @@ if (session()->getFlashdata('success')): ?>
                 'placeholder' => "20",
                 'min' => '1',
                 'step' => '1',
+                'default' => $item->stock,
             ]) ?>
             <?= view_cell('FormInputCell', [
                 'name' => 'min_stock',
@@ -58,18 +63,20 @@ if (session()->getFlashdata('success')): ?>
                 'placeholder' => "20",
                 'min' => '1',
                 'step' => '1',
+                'default' => $item->min_stock,
             ]) ?>
             <?= view_cell('FormSelectCell', [
                 'name' => 'measure_unit_id',
                 'label' => 'Unidad de Medida',
                 'options' => $measure_units,
+                'default' => $item->measure_unit_id,
             ]) ?>
 
         </div>
 
 
         <div class="d-grid">
-            <button type="submit" class="btn btn-success mx-auto" style="width: 35%;">Registrar</button>
+            <button type="submit" class="btn btn-success mx-auto" style="width: 35%;">Guardar Info</button>
         </div>
 </form>
 <script>
