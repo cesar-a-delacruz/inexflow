@@ -9,7 +9,7 @@ class RecipesModel extends AuditableModel
 {
     protected $table = 'recipes';
     protected $primaryKey = 'id';
-    protected $useAutoIncrement = false;
+    protected $useAutoIncrement = true;
     protected $returnType = Recipes::class;
 
     protected $allowedFields = [

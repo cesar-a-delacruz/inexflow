@@ -8,7 +8,7 @@ class ItemModel extends AuditableModel
 {
     protected $table = 'items';
     protected $primaryKey = 'id';
-    protected $useAutoIncrement = false;
+    protected $useAutoIncrement = true;
     protected $returnType = Item::class;
 
     protected $allowedFields = [
@@ -33,6 +33,15 @@ class ItemModel extends AuditableModel
             ->where('items.business_id', uuid_to_bytes($business_id))
             ->where("((items.type = 'product' AND items.stock > 0 ) OR items.type = 'service')")
             ->join('categories c', 'c.business_id = items.business_id AND c.id = items.category_id')
+            ->findAll();
+    }
+    /** 
+     * @return array<Item>
+     */
+    public function findAllByBusinesId(string $businessId): array
+    {
+        return $this
+            ->where('business_id', uuid_to_bytes($businessId))
             ->findAll();
     }
 }

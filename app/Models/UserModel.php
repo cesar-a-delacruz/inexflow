@@ -27,6 +27,13 @@ class UserModel extends AuditableModel
     {
         return $this->where('email', $email)->first();
     }
+    /**
+     * @return array<User>
+     */
+    public function findAllByBusiness(string $businessId): array
+    {
+        return $this->where('business_id', uuid_to_bytes($businessId))->findAll();
+    }
 
     /** Verifica si el conteo de usuarios con el correo y que no tengan el id brindados es mayor a 0 */
     public function emailUnique(string $email, string $user_id): bool

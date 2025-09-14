@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use App\Entities\Services;
+use App\Entities\Service;
 
 class ServiceModel extends AuditableModel
 {
     protected $table = 'services';
     protected $primaryKey = 'id';
-    protected $useAutoIncrement = false;
-    protected $returnType = Services::class;
+    protected $useAutoIncrement = true;
+    protected $returnType = Service::class;
 
     protected $allowedFields = [
         'id',

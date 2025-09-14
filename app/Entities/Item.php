@@ -2,12 +2,12 @@
 
 namespace App\Entities;
 
-use App\Entities\AuditableEntity;
-use app\Entities\Cast\EnumCast;
+use CodeIgniter\Entity\Entity;
+// use app\Entities\Cast\EnumCast;
+// use App\Entities\Cast\UuidCast;
 
-class Item extends AuditableEntity
+class Item extends Entity
 {
-    protected $tenant = true;
 
     protected $casts = [
         'id' => 'int',
@@ -18,10 +18,15 @@ class Item extends AuditableEntity
         'stock' => 'int',
         'min_stock' => 'int',
         'measure_unit_id' => 'int',
+        'business_id' => 'uuid',
+        'created_at'  => 'datetime',
+        'updated_at'  => 'datetime',
+        'deleted_at'  => '?datetime'
     ];
 
     protected $castHandlers = [
-        'enum' => EnumCast::class,
+        'enum' => Cast\EnumCast::class,
+        'uuid' => Cast\UuidCast::class,
     ];
 
     /** Muestra propiedades si tienen valor  */

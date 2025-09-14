@@ -9,7 +9,7 @@ class MeasureUnitModel extends Model
 {
     protected $table = 'measure_units';
     protected $primaryKey = 'id';
-    protected $useAutoIncrement = false;
+    protected $useAutoIncrement = true;
     protected $returnType = MeasureUnit::class;
     protected $useSoftDeletes = false;
     protected $useTimestamps = false;

@@ -6,21 +6,18 @@ use App\Entities\Cast\EnumCast;
 use App\Entities\Cast\UuidCast;
 use CodeIgniter\Entity\Entity;
 
-class Transaction extends Entity
+class Payment extends Entity
 {
 
     protected $castHandlers = [
         'enum' => EnumCast::class,
-        'uuid' => UuidCast::class
+        'uuid' => UuidCast::class,
     ];
     protected $casts = [
         'id' => 'int',
-        'number' => 'string',
-        'contact_id' => '?int',
-        'payment_status' => 'enum[App\Enums\PaymentStatus]',
-        'description' => '?string',
-        'total' => 'float',
-        'due_date' => '?datetime',
+        'transaction_id' => 'int',
+        'payment_method' => 'enum[App\Enums\PaymentMethod]',
+        'amount' => 'float',
         'business_id' => 'uuid',
         'created_at'  => 'datetime',
         'updated_at'  => 'datetime',

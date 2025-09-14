@@ -1,54 +1,55 @@
 <nav class="nav nav-pills flex-column gap-2">
     <?php
-    $segments = service('uri')->getSegment(1);
+    $segments1 = service('uri')->getSegment(1);
+    $segments2 = service('uri')->getSegment(2);
     $username = session()->get('name') ?? 'No tiene nombre';
     $links = [
         [
-            'href' => '/user',
+            'href' => '/profile',
             'svg' => 'fe-user',
             'label' => $username,
-            'active' => $segments === 'user',
+            'active' => $segments1 === 'profile',
         ],
     ];
     if (session()->get('role') === 'admin') {
         $links[] = [
-            'href' => '/users',
+            'href' => '/admin/users',
             'svg' => 'fe-users',
             'label' => 'Usuarios',
-            'active' => $segments === 'users',
+            'active' => $segments2 === 'users',
         ];
     } else {
         array_push(
             $links,
             [
-                'href' => '/dashboard',
+                'href' => '/tenants/dashboard',
                 'svg' => 'fe-layout',
                 'label' => 'Dashboard',
-                'active' => $segments === 'dashboard',
+                'active' => $segments2 === 'dashboard',
             ],
             [
-                'href' => '/business',
+                'href' => '/tenants/business',
                 'svg' => 'fe-bar-chart',
                 'label' => 'Negocio',
-                'active' => $segments === 'business',
+                'active' => $segments2 === 'business',
             ],
             [
-                'href' => '/transactions',
+                'href' => '/tenants/transactions',
                 'svg' => 'fe-boock',
                 'label' => 'Transacciones',
-                'active' => $segments === 'transactions',
+                'active' => $segments2 === 'transactions',
             ],
             [
-                'href' => '/items',
+                'href' => '/tenants/items',
                 'svg' => 'fe-layer',
                 'label' => 'Elementos',
-                'active' => $segments === 'items',
+                'active' => $segments2 === 'items',
             ],
             [
-                'href' => '/contacts',
+                'href' => '/tenants/contacts',
                 'svg' => 'fe-users',
                 'label' => 'Contactos',
-                'active' => $segments === 'contacts',
+                'active' => $segments2 === 'contacts',
             ],
         );
     }

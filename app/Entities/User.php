@@ -2,12 +2,16 @@
 
 namespace App\Entities;
 
-use App\Entities\AuditableEntity;
 use App\Entities\Cast\EnumCast;
+use App\Entities\Cast\UuidCast;
+use CodeIgniter\Entity\Entity;
 
-class User extends AuditableEntity
+class User extends Entity
 {
-    protected $tenant = true;
+    protected $castHandlers = [
+        'enum' => EnumCast::class,
+        'uuid' => UuidCast::class,
+    ];
     protected $casts = [
         'id' => 'uuid',
         'name' => 'string',
@@ -15,11 +19,12 @@ class User extends AuditableEntity
         'password_hash' => 'string',
         'role' => 'enum[App\Enums\UserRole]',
         'is_active'   => 'boolean',
+        'business_id' => '?uuid',
+        'created_at'  => 'datetime',
+        'updated_at'  => 'datetime',
+        'deleted_at'  => '?datetime'
     ];
 
-    protected $castHandlers = [
-        'enum' => EnumCast::class,
-    ];
 
     /** Guarda la contraseña encriptada del usuario */
     public function setPassword(string $password)

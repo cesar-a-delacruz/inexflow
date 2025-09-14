@@ -2,12 +2,16 @@
 
 namespace App\Entities;
 
-use App\Entities\AuditableEntity;
 use App\Entities\Cast\EnumCast;
+use App\Entities\Cast\UuidCast;
+use CodeIgniter\Entity\Entity;
 
-class Contact extends AuditableEntity
+class Contact extends Entity
 {
-    protected $tenant = true;
+    protected $castHandlers = [
+        'enum' => EnumCast::class,
+        'uuid' => UuidCast::class,
+    ];
 
     protected $casts = [
         'id' => 'int',
@@ -16,9 +20,9 @@ class Contact extends AuditableEntity
         'phone' => '?string',
         'address' => '?string',
         'type' => 'enum[App\Enums\ContactType]',
-    ];
-
-    protected $castHandlers = [
-        'enum' => EnumCast::class
+        'business_id' => 'uuid',
+        'created_at'  => 'datetime',
+        'updated_at'  => 'datetime',
+        'deleted_at'  => '?datetime'
     ];
 }

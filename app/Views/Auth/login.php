@@ -9,7 +9,7 @@
                     <h2 class="card-title text-center mb-4">Iniciar Sesión</h2>
 
 
-                    <form method="POST" action="/" class="needs-validation" novalidate>
+                    <form method="POST" action="/auth/login" class="needs-validation" novalidate>
                         <?php $emailValid = !!validation_show_error('email') ?>
                         <div class="form-floating mb-3">
                             <input type="email" class="form-control <?= $emailValid ? 'is-invalid' : null ?>" require

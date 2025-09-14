@@ -9,12 +9,13 @@ class BaseSeeder extends Seeder
 {
     public function run()
     {
-        new UsersSeeder($this->config)->run();
         new BusinessesSeeder($this->config)->run();
-        new CategoriesSeeder($this->config)->run();
+        new UsersSeeder($this->config)->run();
+        new MeasureUnitsSeeder($this->config)->run();
         new ItemsSeeder($this->config)->run();
-        new ContactsSeeder($this->config)->run();
-        new TransactionsSeeder($this->config)->run();
-        new RecordsSeeder($this->config)->run();
+        // new CategoriesSeeder($this->config)->run();
+        // new ContactsSeeder($this->config)->run();
+        // new TransactionsSeeder($this->config)->run();
+        // new RecordsSeeder($this->config)->run();
     }
 }

@@ -2,18 +2,19 @@
 
 namespace App\Entities;
 
-use App\Entities\AuditableEntity;
+use App\Entities\Cast\UuidCast;
+use CodeIgniter\Entity\Entity;
 
-class Business extends AuditableEntity
+class Business extends Entity
 {
 
+    protected $castHandlers = ['uuid' => UuidCast::class];
     protected $casts = [
         'id' => 'uuid',
         'name' => 'string',
         'phone' => 'string',
-    ];
-
-    protected $castHandlers = [
-        'uuid' => Cast\UuidCast::class
+        'created_at'  => 'datetime',
+        'updated_at'  => 'datetime',
+        'deleted_at'  => '?datetime'
     ];
 }
