@@ -67,7 +67,7 @@ if (session()->getFlashdata('success')): ?>
                   </svg>
                 </a>
                 <button type="button" class="btn btn-danger" title="Eliminar Elemento" data-bs-toggle="modal"
-                  data-bs-target="#exampleModal" data-bs-item-id="<?= $item->id ?>" data-bs-item-name="<?= $item->name ?>">
+                  data-bs-target="#exampleModal" data-bs-id="<?= $item->id ?>" data-bs-name="<?= $item->name ?>">
                   <svg class="bi flex-shrink-0" role="img" aria-label="Eliminar Elemento" width="24" height="24">
                     <use href="/assets/svg/miscellaniaSprite.svg#fe-trash" />
                   </svg>
@@ -78,7 +78,7 @@ if (session()->getFlashdata('success')): ?>
         <?php endforeach; ?>
       <?php else: ?>
         <tr>
-          <td colspan="9" class="text-center">No hay productos o servicios registrados.</td>
+          <td colspan="9" class="text-center">No hay elementos registrados.</td>
         </tr>
       <?php endif; ?>
     </tbody>
@@ -127,16 +127,14 @@ if (session()->getFlashdata('success')): ?>
     const segment = modalDeleteForm.getAttribute('data-segment')
     exampleModal.addEventListener('show.bs.modal', event => {
       const button = event.relatedTarget
-      const itemId = button.getAttribute('data-bs-item-id')
-      const itemName = button.getAttribute('data-bs-item-name')
-      // If necessary, you could initiate an Ajax request here
-      // and then do the updating in a callback.
+      const id = button.getAttribute('data-bs-id')
+      const name = button.getAttribute('data-bs-name')
 
       const modalTitle = exampleModal.querySelector('.modal-title')
       const modalMessage = exampleModal.querySelector('.modal-body .modal-message')
 
-      modalMessage.textContent = `¿Estas seguro de que deseas eliminar ${itemName}?`
-      modalDeleteForm.action = `/tenants/${segment}/${itemId}`
+      modalMessage.textContent = `¿Estas seguro de que deseas eliminar ${name}?`
+      modalDeleteForm.action = `/tenants/${segment}/${id}`
     })
     exampleModal.addEventListener('hide.bs.modal', event => {
       modalDeleteForm.action = "";

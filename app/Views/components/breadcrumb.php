@@ -6,17 +6,16 @@
         $last = count($segments) - 1;
 
         $normalice = [
-            'item' => 'Elemento',
-            'items' => 'Elementos',
+            'supplies' => 'Suministros',
+            'products' => 'Productos',
             'new' => 'Nuevo',
             'edit' => 'Editar',
-            'contacts' => 'Contactos',
+            'providers' => 'Proveedores',
+            'customers' => 'Clientes',
             'transactions' => 'Transacciones',
             'business' => 'Negocio',
             'dashboard' => 'Dashboard',
             'user' => 'Usuario',
-            'supplies' => 'Suministros',
-            'products' => 'Productos',
             'tenants' => 'Negocio',
         ];
         ?>

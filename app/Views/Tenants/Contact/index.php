@@ -1,79 +1,124 @@
 <?= $this->extend('layouts/dashboard') ?>
 
 <?= $this->section('content') ?>
-<div class="container mt-4">
-    <a href="/contacts/new" class="btn btn-primary mb-3">Añadir Contacto</a>
+<?php if (session()->getFlashdata('success')): ?>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <?= session()->getFlashdata('success') ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+<?php endif; ?>
+<?php if (session()->getFlashdata('error')): ?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <?= session()->getFlashdata('error') ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+<?php endif; ?>
 
-    <?php if (session()->getFlashdata('success')): ?>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <?= session()->getFlashdata('success') ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-        </div>
-    <?php endif; ?>
-    <?php if (session()->getFlashdata('error')): ?>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <?= session()->getFlashdata('error') ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-        </div>
-    <?php endif; ?>
+<div class="d-flex align-items-center gap-2">
+    <a href="/tenants/<?= $segment ?>/new" class="btn btn-outline-primary d-flex gap-1 align-items-center float-none">
+        Agregar <?= $type->label() ?>
+        <svg class="bi flex-shrink-0" role="img" width="20" height="20">
+            <use href="/assets/svg/miscellaniaSprite.svg#fe-plus" />
+        </svg>
+    </a>
+</div>
 
+<div class="table-responsive">
     <table id="showtable" class="table table-striped table-hover table-bordered">
-        <thead class="table-dark">
+        <thead class="table-secondary">
             <tr>
                 <th></th>
                 <th>Nombre</th>
                 <th>Email</th>
                 <th>Teléfono</th>
-                <th>Tipo</th>
+                <th>Direccion</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             <?php if (!empty($contacts)): ?>
-                <?php for ($i = 0; $i < count($contacts); $i++): ?>
+                <?php foreach ($contacts as $i => $contact): ?>
                     <tr>
                         <td><?= $i + 1 ?></td>
-                        <td><?= $contacts[$i]->name ?></td>
-                        <td><?= $contacts[$i]->email ?></td>
-                        <td><?= $contacts[$i]->phone ?></td>
-                        <td><?= $contacts[$i]->displayType() ?></td>
+                        <td><?= $contact->name ?></td>
+                        <td><?= $contact->email ?></td>
+                        <td><?= $contact->phone ?></td>
+                        <td><?= $contact->address ?></td>
                         <td>
                             <div class="btn-group">
-                                <button class="btn btn-success btn-sm" onclick="location.assign('/contacts/<?= uuid_to_string($contacts[$i]->id) ?>')">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit">
-                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                <a class="btn btn-outline-primary" type="button" title="Ver informacion de Elemento" href="/tenants/<?= $segment . '/' . $contact->id ?>">
+                                    <svg class="bi flex-shrink-0" role="img" aria-label="Ver informacion de Elemento" width="24" height="24">
+                                        <use href="/assets/svg/miscellaniaSprite.svg#fe-info" />
                                     </svg>
-                                </button>
-                                <button class="btn btn-danger" onclick="openDialog('/contacts/','<?= uuid_to_string($contacts[$i]->id) ?>')">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2">
-                                        <polyline points="3 6 5 6 21 6"></polyline>
-                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                        <line x1="10" y1="11" x2="10" y2="17"></line>
-                                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                                </a>
+                                <a class="btn btn-primary" type="button" title="Editra Elemento" href="/tenants/<?= $segment . '/' . $contact->id ?>/edit">
+                                    <svg class="bi flex-shrink-0" role="img" aria-label="Editra Elemento" width="24" height="24">
+                                        <use href="/assets/svg/miscellaniaSprite.svg#fe-edit" />
+                                    </svg>
+                                </a>
+                                <button type="button" class="btn btn-danger" title="Eliminar Elemento" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal" data-bs-id="<?= $contact->id ?>" data-bs-name="<?= $contact->name ?>">
+                                    <svg class="bi flex-shrink-0" role="img" aria-label="Eliminar Elemento" width="24" height="24">
+                                        <use href="/assets/svg/miscellaniaSprite.svg#fe-trash" />
                                     </svg>
                                 </button>
                             </div>
                         </td>
                     </tr>
-                <?php endfor; ?>
+                <?php endforeach; ?>
             <?php else: ?>
                 <tr>
-                    <td colspan="6" class="text-center">No hay contactos registrados.</td>
+                    <td colspan="9" class="text-center">No hay elementos registrados.</td>
                 </tr>
             <?php endif; ?>
         </tbody>
     </table>
 </div>
-<dialog class="delete">
-    <h5>¿Estas seguro de que deseas eliminar este contacto?</h5>
-    <form action="" method="POST">
-        <input type="hidden" name="_method" value="DELETE">
-        <button type="submit" class="btn btn-danger btn-sm">Sí</button>
-        <button class="btn btn-secondary btn-sm" onclick="closeDialog(this, event)">No</button>
-    </form>
-</dialog>
-<script src="/assets/js/delete-dialog.js"></script>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar <?= $type->label() ?></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-message h6"></p>
+                <p class="text-danger">Al eliminar un <?= $type->label() ?> toda informacio relacionada a esta sera eliminada permanentemnte</p>
+                <form action="" data-segment="<?= $segment ?>" id="form-delete-element" method="POST">
+                    <input type="hidden" name="_method" value="DELETE">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" form="form-delete-element" class="btn btn-danger d-flex align-items-center gap-2">
+                    Eliminar
+                    <svg class="bi flex-shrink-0" role="img" aria-label="Eliminar Elemento" width="20" height="20">
+                        <use href="/assets/svg/miscellaniaSprite.svg#fe-trash" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const exampleModal = document.getElementById('exampleModal')
+    if (exampleModal) {
+        /**@type HTMLFormElment */
+        const modalDeleteForm = exampleModal.querySelector(".modal-body form")
+        const segment = modalDeleteForm.getAttribute('data-segment')
+        exampleModal.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget
+            const id = button.getAttribute('data-bs-id')
+            const name = button.getAttribute('data-bs-name')
+
+            const modalTitle = exampleModal.querySelector('.modal-title')
+            const modalMessage = exampleModal.querySelector('.modal-body .modal-message')
+
+            modalMessage.textContent = `¿Estas seguro de que deseas eliminar ${name}?`
+            modalDeleteForm.action = `/tenants/${segment}/${id}`
+        })
+        exampleModal.addEventListener('hide.bs.modal', event => {
+            modalDeleteForm.action = "";
+        })
+    }
+</script>
 <?= $this->endSection() ?>

@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
-use App\Entities\Recipes;
+use App\Entities\Recipe;
 use App\Models\AuditableModel;
 
-class RecipesModel extends AuditableModel
+class RecipeModel extends AuditableModel
 {
     protected $table = 'recipes';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType = Recipes::class;
+    protected $returnType = Recipe::class;
 
     protected $allowedFields = [
         'id',

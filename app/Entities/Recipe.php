@@ -5,7 +5,7 @@ namespace App\Entities;
 use App\Entities\Cast\UuidCast;
 use CodeIgniter\Entity\Entity;
 
-class Recipes extends Entity
+class Recipe extends Entity
 {
 
     protected $castHandlers = [

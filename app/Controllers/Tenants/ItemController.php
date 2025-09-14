@@ -4,7 +4,6 @@ namespace App\Controllers\Tenants;
 
 use App\Controllers\RestController;
 use App\Entities\Item;
-use App\Entities\MeasureUnit;
 use App\Enums\ItemType;
 use App\Models\ItemModel;
 use App\Models\MeasureUnitModel;
@@ -129,9 +128,6 @@ abstract class ItemController extends RestController
         if (!$this->validate($this->formValidator->create)) {
             return redirect()->back()->withInput();
         }
-
-        $this->model = new ItemModel();
-
         $post = $this->request->getPost();
 
         $post['business_id'] = session('business_id');
@@ -152,7 +148,7 @@ abstract class ItemController extends RestController
     {
         $this->formValidator = new ItemValidator();
 
-        if (!$this->validate($this->formValidator->update)) {
+        if (!$this->validate($this->formValidator->create)) {
             return redirect()->back()->withInput();
         }
 

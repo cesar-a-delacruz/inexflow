@@ -2,7 +2,7 @@
     <?php
     $segments1 = service('uri')->getSegment(1);
     $segments2 = service('uri')->getSegment(2);
-    $username = session()->get('name') ?? 'No tiene nombre';
+    $username = session('user_name') ?? 'No tiene nombre';
     $links = [
         [
             'href' => '/profile',
@@ -52,10 +52,16 @@
                 'active' => $segments2 === 'supplies',
             ],
             [
-                'href' => '/tenants/contacts',
+                'href' => '/tenants/customers',
                 'svg' => 'fe-users',
-                'label' => 'Contactos',
-                'active' => $segments2 === 'contacts',
+                'label' => 'Clientes',
+                'active' => $segments2 === 'customers',
+            ],
+            [
+                'href' => '/tenants/providers',
+                'svg' => 'fe-users',
+                'label' => 'Proveedores',
+                'active' => $segments2 === 'providers',
             ],
         );
     }
