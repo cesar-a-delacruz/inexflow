@@ -2,7 +2,6 @@
 
 namespace App\Database\Migrations;
 
-use App\Database\AuditableMigrate;
 use App\Database\EntityMigration;
 
 class CreateBusinessesTable extends EntityMigration

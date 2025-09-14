@@ -39,7 +39,7 @@ class CreateContactsTable extends EntityMigration
                 'null'       => false,
             ],
         ]);
-        parent::tenetFields();
+        parent::tenantFields();
         parent::auditableFields();
 
         $this->forge->addKey('id', true);

@@ -2,35 +2,23 @@
 
 namespace App\Entities;
 
-use CodeIgniter\Entity\Entity;
+use App\Entities\AuditableEntity;
+use App\Entities\Cast\EnumCast;
 
-class Contact extends Entity
+class Contact extends AuditableEntity
 {
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    protected $tenant = true;
 
     protected $casts = [
-        'id' => 'uuid',
-        'business_id' => 'uuid',
+        'id' => 'int',
         'name' => 'string',
-        'email' => 'string',
-        'phone' => 'string',
-        'address' => 'string',
-        'type' => 'string',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'deleted_at' => '?datetime',
+        'email' => '?string',
+        'phone' => '?string',
+        'address' => '?string',
+        'type' => 'enum[App\Enums\ContactType]',
     ];
 
     protected $castHandlers = [
-        'uuid' => Cast\UuidCast::class
+        'enum' => EnumCast::class
     ];
-
-    /** Muestra el tipo de contacto en español */
-    public function displayType(): string
-    {
-        return match ($this->type) {
-            'customer' => 'Cliente',
-            'provider' => 'Proveedor',
-        };
-    }
 }

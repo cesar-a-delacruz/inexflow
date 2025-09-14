@@ -2,30 +2,19 @@
 
 namespace App\Entities;
 
-use CodeIgniter\Entity\Entity;
+use App\Entities\AuditableEntity;
 
-class Record extends Entity
+class Record extends AuditableEntity
 {
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    protected $tenant = true;
 
     protected $casts = [
-        'id' => 'integer',
-        'business_id' => 'uuid',
-        'category' => 'string',
-        'description' => 'string',
-        'amount' => '?integer',
-        'type' => 'string',
-        'unit_price' => '?integer',
-        'item_id' => 'uuid',
+        'id' => 'int',
+        'product_id' => 'int',
+        'transaction_id' => 'int',
+        'unit_price' => 'float',
+        'quantity' => 'int',
         'subtotal' => 'float',
-        'transaction_id' => 'uuid',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'deleted_at' => '?datetime',
-    ];
-
-    protected $castHandlers = [
-        'uuid' => Cast\UuidCast::class
     ];
 
     /** Muestra la cantidad del registro si tiene valor */

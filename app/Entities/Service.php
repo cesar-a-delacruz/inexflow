@@ -3,9 +3,9 @@
 namespace App\Entities;
 
 use App\Entities\AuditableEntity;
-use app\Entities\Cast\EnumCast;
+use App\Entities\Cast\EnumCast;
 
-class Item extends AuditableEntity
+class Service extends AuditableEntity
 {
     protected $tenant = true;
 
@@ -15,8 +15,6 @@ class Item extends AuditableEntity
         'type' => 'enum[App\Enums\ItemType]',
         'cost' => 'float',
         'selling_price' => '?float',
-        'stock' => 'int',
-        'min_stock' => 'int',
         'measure_unit_id' => 'int',
     ];
 

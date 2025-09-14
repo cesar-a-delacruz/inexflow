@@ -24,7 +24,7 @@ abstract class EntityMigration extends Migration
             ],
         ]);
     }
-    protected function tenetFields()
+    protected function tenantFields()
     {
         $this->forge->addField([
             'business_id' => [
