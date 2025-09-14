@@ -3,16 +3,12 @@
 namespace App\Entities;
 
 use CodeIgniter\Entity\Entity;
-use app\Entities\Cast\EnumCast;
-use App\Entities\Cast\UuidCast;
+// use app\Entities\Cast\EnumCast;
+// use App\Entities\Cast\UuidCast;
 
 class Item extends Entity
 {
 
-    protected $castHandlers = [
-        'enum' => EnumCast::class,
-        'uuid' => UuidCast::class,
-    ];
     protected $casts = [
         'id' => 'int',
         'name' => 'string',
@@ -28,6 +24,10 @@ class Item extends Entity
         'deleted_at'  => '?datetime'
     ];
 
+    protected $castHandlers = [
+        'enum' => Cast\EnumCast::class,
+        'uuid' => Cast\UuidCast::class,
+    ];
 
     /** Muestra propiedades si tienen valor  */
     public function displayProperty(string $property): string

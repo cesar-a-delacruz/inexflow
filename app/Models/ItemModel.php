@@ -35,4 +35,13 @@ class ItemModel extends AuditableModel
             ->join('categories c', 'c.business_id = items.business_id AND c.id = items.category_id')
             ->findAll();
     }
+    /** 
+     * @return array<Item>
+     */
+    public function findAllByBusinesId(string $businessId): array
+    {
+        return $this
+            ->where('business_id', uuid_to_bytes($businessId))
+            ->findAll();
+    }
 }

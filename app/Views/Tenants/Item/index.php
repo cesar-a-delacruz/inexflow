@@ -7,7 +7,6 @@
 </div>
 <?php
 
-use App\Enums\CategoryType;
 use App\Enums\ItemType;
 
 if (session()->getFlashdata('success')): ?>
@@ -27,7 +26,6 @@ if (session()->getFlashdata('success')): ?>
     <thead class="table-secondary">
       <tr>
         <th></th>
-        <th>Categoría</th>
         <th>Nombre</th>
         <th>Tipo</th>
         <th>Costo</th>
@@ -41,7 +39,6 @@ if (session()->getFlashdata('success')): ?>
         <?php foreach ($items as $i => $item): ?>
           <tr>
             <td><?= $i + 1 ?></td>
-            <td><?= CategoryType::labelFromValue($item->category_type) . ' | ' . $item->category_name ?></td>
             <td><?= $item->name ?></td>
             <td><?= $item->type->label() ?></td>
             <td><?= $item->displayCost() ?></td>
@@ -55,13 +52,13 @@ if (session()->getFlashdata('success')): ?>
             </td>
             <td>
               <div class="btn-group">
-                <a class="btn btn-outline-primary" type="button" title="Editra Elemento" href="/items/<?= $item->id->toString() ?>">
+                <a class="btn btn-outline-primary" type="button" title="Editra Elemento" href="/items/<?= $item->id ?>">
                   <svg class="bi flex-shrink-0" role="img" aria-label="Editra Elemento" width="24" height="24">
                     <use href="/assets/svg/miscellaniaSprite.svg#fe-edit" />
                   </svg>
                 </a>
                 <button type="button" class="btn btn-danger" title="Eliminar Elemento" data-bs-toggle="modal"
-                  data-bs-target="#exampleModal" data-bs-item-id="<?= $item->id->toString() ?>" data-bs-item-name="<?= $item->name ?>">
+                  data-bs-target="#exampleModal" data-bs-item-id="<?= $item->id ?>" data-bs-item-name="<?= $item->name ?>">
                   <svg class="bi flex-shrink-0" role="img" aria-label="Eliminar Elemento" width="24" height="24">
                     <use href="/assets/svg/miscellaniaSprite.svg#fe-trash" />
                   </svg>
