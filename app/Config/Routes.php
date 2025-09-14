@@ -20,11 +20,15 @@ $routes->group('auth', ['namespace' => 'App\Controllers\Auth'], static function 
 $routes->group('tenants', ['namespace' => 'App\Controllers\Tenants', 'filter' => 'role:businessman'], static function ($routes) {
     $routes->get('/', 'Home::index');
     $routes->get('business', 'BusinessController::index');
-    $routes->resource('users', ['controller' => 'UserController']);
-    $routes->resource('items', ['controller' => 'ItemController']);
-    $routes->resource('items', ['controller' => 'ItemController']);
-});
 
+
+    $routes->resource('users', ['controller' => 'UserController']);
+    $routes->resource('products', ['controller' => 'ProductController']);
+    $routes->resource('supplies', ['controller' => 'SupplyController']);
+
+
+    // $routes->resource('items', ['controller' => 'ItemController']);
+});
 
 // Grupo Admin
 $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'role:admin'], static function ($routes) {

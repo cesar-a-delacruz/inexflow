@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Entities\Item;
+use App\Enums\ItemType;
 
 class ItemModel extends AuditableModel
 {
@@ -42,6 +43,18 @@ class ItemModel extends AuditableModel
     {
         return $this
             ->where('business_id', uuid_to_bytes($businessId))
+            ->findAll();
+    }
+    /** 
+     * @return array<Item>
+     */
+    public function findAllByBusinesIdAndType(string $businessId, ItemType $type): array
+    {
+        return $this
+            ->select('items.*, mu.value as measure_unit_value')
+            ->where('business_id', uuid_to_bytes($businessId))
+            ->where('type', $type->value)
+            ->join('measure_units mu', 'mu.id = items.measure_unit_id')
             ->findAll();
     }
 }

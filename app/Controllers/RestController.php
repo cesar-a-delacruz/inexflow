@@ -2,19 +2,35 @@
 
 namespace App\Controllers;
 
-use \CodeIgniter\HTTP\RequestInterface;
-use \CodeIgniter\HTTP\ResponseInterface;
-use CodeIgniter\Model;
-use \Psr\Log\LoggerInterface;
-
 abstract class RestController extends BaseController
 {
 
-    public abstract function index();
-    public abstract function new();
-    public abstract function create();
-    public abstract function show($id);
-    public abstract function edit($id);
-    public abstract function update($id);
-    public abstract function delete($id);
+    public function index()
+    {
+        echo "index";
+    }
+    public function new()
+    {
+        echo "new";
+    }
+    public function create()
+    {
+        echo "create";
+    }
+    public function show($id)
+    {
+        echo "show";
+    }
+    public function edit($id)
+    {
+        echo "edit";
+    }
+    public function update($id)
+    {
+        echo "update";
+    }
+    public function delete($id)
+    {
+        echo "delete";
+    }
 }

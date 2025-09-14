@@ -1,10 +1,6 @@
 <?= $this->extend('layouts/dashboard') ?>
 
 <?= $this->section('content') ?>
-<div class="button-container">
-  <a href="/items/new" class="btn btn-primary">Registrar Item</a>
-  <a href="/categories" class="btn btn-success">Ver Categorías</a>
-</div>
 <?php
 
 use App\Enums\ItemType;
@@ -21,15 +17,26 @@ if (session()->getFlashdata('success')): ?>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
   </div>
 <?php endif; ?>
+
+<div class="d-flex align-items-center gap-2">
+  <a href="/tenants/<?= $segment ?>/new" class="btn btn-outline-primary d-flex gap-1 align-items-center float-none">
+    Agregar <?= $type->label() ?>
+    <svg class="bi flex-shrink-0" role="img" width="20" height="20">
+      <use href="/assets/svg/miscellaniaSprite.svg#fe-plus" />
+    </svg>
+  </a>
+</div>
+
 <div class="table-responsive">
   <table id="showtable" class="table table-striped table-hover table-bordered">
     <thead class="table-secondary">
       <tr>
         <th></th>
         <th>Nombre</th>
-        <th>Tipo</th>
         <th>Costo</th>
-        <th>Precio de Venta</th>
+        <?php if ($type === ItemType::Product): ?>
+          <th>Precio de Venta</th>
+        <?php endif; ?>
         <th>Cantidad</th>
         <th>Acciones</th>
       </tr>
@@ -40,19 +47,21 @@ if (session()->getFlashdata('success')): ?>
           <tr>
             <td><?= $i + 1 ?></td>
             <td><?= $item->name ?></td>
-            <td><?= $item->type->label() ?></td>
             <td><?= $item->displayCost() ?></td>
-            <td><?= $item->displaySellingPrice() ?></td>
+            <?php if ($type === ItemType::Product): ?>
+              <td><?= $item->displaySellingPrice() ?></td>
+            <?php endif; ?>
             <td>
-              <?php if ($item->type === ItemType::Product): ?>
-                <?= $item->displayProperty('stock') ?> <sub><?= $item->displayProperty('measure_unit') ?></sub>
-              <?php else: ?>
-                --
-              <?php endif; ?>
+              <?= $item->displayProperty('stock') ?> <sub><?= $item->measure_unit_value ?></sub>
             </td>
             <td>
               <div class="btn-group">
-                <a class="btn btn-outline-primary" type="button" title="Editra Elemento" href="/items/<?= $item->id ?>">
+                <a class="btn btn-outline-primary" type="button" title="Ver informacion de Elemento" href="/tenants/<?= $segment . '/' . $item->id ?>">
+                  <svg class="bi flex-shrink-0" role="img" aria-label="Ver informacion de Elemento" width="24" height="24">
+                    <use href="/assets/svg/miscellaniaSprite.svg#fe-info" />
+                  </svg>
+                </a>
+                <a class="btn btn-primary" type="button" title="Editra Elemento" href="/tenants/<?= $segment . '/' . $item->id ?>/edit">
                   <svg class="bi flex-shrink-0" role="img" aria-label="Editra Elemento" width="24" height="24">
                     <use href="/assets/svg/miscellaniaSprite.svg#fe-edit" />
                   </svg>
@@ -79,13 +88,13 @@ if (session()->getFlashdata('success')): ?>
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar Elemento</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar <?= $type->label() ?></h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <p class="modal-message h6"></p>
-        <p class="text-danger">Al eliminar un elemento toda informacio relacionada a esta sera eliminada permanentemnte</p>
-        <form action="" id="form-delete-element" method="POST">
+        <p class="text-danger">Al eliminar un <?= $type->label() ?> toda informacio relacionada a esta sera eliminada permanentemnte</p>
+        <form action="" data-segment="<?= $segment ?>" id="form-delete-element" method="POST">
           <input type="hidden" name="_method" value="DELETE">
         </form>
       </div>
@@ -93,18 +102,29 @@ if (session()->getFlashdata('success')): ?>
         <button type="submit" form="form-delete-element" class="btn btn-danger d-flex align-items-center gap-2">
           Eliminar
           <svg class="bi flex-shrink-0" role="img" aria-label="Eliminar Elemento" width="20" height="20">
-            <use xlink:href="#fe-trash" />
+            <use href="/assets/svg/miscellaniaSprite.svg#fe-trash" />
           </svg>
         </button>
       </div>
     </div>
   </div>
 </div>
+<?php if (!empty($items)): ?>
+  <?php foreach ($items as $item): ?>
+    <?php if ($item->stock < $item->min_stock): ?>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        alerta <a href="<?= '/tenants/' . $segment . '/' . $item->id ?>" class="alert-link"><?= $item->name ?></a> tiene poco
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+      </div>
+    <?php endif; ?>
+  <?php endforeach; ?>
+<?php endif; ?>
 <script>
   const exampleModal = document.getElementById('exampleModal')
   if (exampleModal) {
     /**@type HTMLFormElment */
     const modalDeleteForm = exampleModal.querySelector(".modal-body form")
+    const segment = modalDeleteForm.getAttribute('data-segment')
     exampleModal.addEventListener('show.bs.modal', event => {
       const button = event.relatedTarget
       const itemId = button.getAttribute('data-bs-item-id')
@@ -116,7 +136,7 @@ if (session()->getFlashdata('success')): ?>
       const modalMessage = exampleModal.querySelector('.modal-body .modal-message')
 
       modalMessage.textContent = `¿Estas seguro de que deseas eliminar ${itemName}?`
-      modalDeleteForm.action = `/items/${itemId}`
+      modalDeleteForm.action = `/tenants/${segment}/${itemId}`
     })
     exampleModal.addEventListener('hide.bs.modal', event => {
       modalDeleteForm.action = "";

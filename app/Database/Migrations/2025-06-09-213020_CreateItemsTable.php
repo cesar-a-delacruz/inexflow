@@ -21,7 +21,7 @@ class CreateItemsTable extends EntityMigration
                 'type'    => 'ENUM',
                 'constraint' => [
                     'product',
-                    'supplies',
+                    'supply',
                 ],
                 'default'    => 'product',
                 'null'    => false,
