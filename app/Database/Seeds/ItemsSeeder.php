@@ -16,7 +16,7 @@ class ItemsSeeder extends Seeder
         $model->insert(new Item([
             'business_id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
             'name' => 'Pollo',
-            'type' => ItemType::Supplies,
+            'type' => ItemType::Supply,
             'cost' => 0.75,
             'stock' => 8,
             'min_stock' => 3,
@@ -25,7 +25,7 @@ class ItemsSeeder extends Seeder
         $model->insert(new Item([
             'business_id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
             'name' => 'Arroz',
-            'type' => ItemType::Supplies,
+            'type' => ItemType::Supply,
             'cost' => 0.64,
             'stock' => 8,
             'min_stock' => 4,

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Entities\Service;
+use App\Enums\ServiceType;
 
 class ServiceModel extends AuditableModel
 {
@@ -31,6 +32,18 @@ class ServiceModel extends AuditableModel
             ->where('services.business_id', uuid_to_bytes($business_id))
             ->where("((services.type = 'product' AND services.stock > 0 ) OR services.type = 'service')")
             ->join('categories c', 'c.business_id = services.business_id AND c.id = services.category_id')
+            ->findAll();
+    }
+    /** 
+     * @return array<Service>
+     */
+    public function findAllByBusinessIdAndType(string $businessId, ServiceType $type): array
+    {
+        return $this
+            ->select('services.*, mu.value as measure_unit_value')
+            ->where('business_id', uuid_to_bytes($businessId))
+            ->where('type', $type->value)
+            ->join('measure_units mu', 'mu.id = services.measure_unit_id')
             ->findAll();
     }
 }

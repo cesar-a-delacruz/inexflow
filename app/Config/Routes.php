@@ -28,6 +28,8 @@ $routes->group('tenants', ['namespace' => 'App\Controllers\Tenants', 'filter' =>
     $routes->resource('providers', ['controller' => 'ProviderController']);
     $routes->resource('customers', ['controller' => 'CustomerController']);
     $routes->resource('employees', ['controller' => 'EmployeeController']);
+    $routes->resource('services/income', ['controller' => 'IncomeServicesController']);
+    $routes->resource('services/expose', ['controller' => 'ExposeServicesController']);
 
 
     // $routes->resource('items', ['controller' => 'ItemController']);
