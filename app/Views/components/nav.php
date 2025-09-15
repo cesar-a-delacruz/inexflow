@@ -67,6 +67,12 @@ if (session()->get('role') === 'admin') {
                     'active' => $segments2 === 'products',
                 ],
                 [
+                    'href' => '/tenants/services/expose',
+                    'svg' => 'fe-apron',
+                    'label' => 'Servicio-salida',
+                    'active' => $segments2 === 'services' && service('uri')->getSegment(3) === 'expose',
+                ],
+                [
                     'href' => '/tenants/supplies',
                     'svg' => 'fe-codepen',
                     'label' => 'Suministros',
@@ -83,6 +89,12 @@ if (session()->get('role') === 'admin') {
                     'svg' => 'fe-truck',
                     'label' => 'Proveedores',
                     'active' => $segments2 === 'providers',
+                ],
+                [
+                    'href' => '/tenants/services/income',
+                    'svg' => 'fe-money',
+                    'label' => 'Servicio-entrada',
+                    'active' => $segments2 === 'services' && service('uri')->getSegment(3) === 'income',
                 ],
             ]
         ]

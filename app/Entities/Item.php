@@ -3,8 +3,6 @@
 namespace App\Entities;
 
 use CodeIgniter\Entity\Entity;
-// use app\Entities\Cast\EnumCast;
-// use App\Entities\Cast\UuidCast;
 
 class Item extends Entity
 {
