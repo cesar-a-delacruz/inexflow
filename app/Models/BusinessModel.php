@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Entities\Business;
-use App\Models\AuditableModel;
+use App\Models\EntityModel;
 
-class BusinessModel extends AuditableModel
+/**
+ * @extends EntityModel<Business>
+ */
+class BusinessModel extends EntityModel
 {
     protected $table = 'businesses';
-    protected $primaryKey = 'id';
     protected $useAutoIncrement = false;
     protected $returnType = Business::class;
 

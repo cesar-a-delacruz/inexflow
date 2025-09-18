@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use App\Models\AuditableModel;
 use App\Entities\Payment;
+use App\Models\EntityModel;
 
-class PaymentsModel extends AuditableModel
+/**
+ * @extends EntityModel<Payment>
+ */
+class PaymentsModel extends EntityModel
 {
     protected $table = 'payments';
-    protected $primaryKey = 'id';
-    protected $useAutoIncrement = true;
     protected $returnType = Payment::class;
 
     protected $allowedFields = [

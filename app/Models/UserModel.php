@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Entities\User;
-use App\Models\AuditableModel;
+use App\Models\EntityModel;
 
-class UserModel extends AuditableModel
+/**
+ * @extends EntityModel<User>
+ */
+class UserModel extends EntityModel
 {
     protected $table            = 'users';
-    protected $primaryKey       = 'id';
-    protected $useAutoIncrement = false;
     protected $returnType       = User::class;
 
     protected $allowedFields = [

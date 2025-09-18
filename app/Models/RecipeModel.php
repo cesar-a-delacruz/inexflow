@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Entities\Recipe;
-use App\Models\AuditableModel;
+use App\Models\EntityModel;
 
-class RecipeModel extends AuditableModel
+/**
+ * @extends EntityModel<Recipe>
+ */
+class RecipeModel extends EntityModel
 {
     protected $table = 'recipes';
-    protected $primaryKey = 'id';
-    protected $useAutoIncrement = true;
     protected $returnType = Recipe::class;
 
     protected $allowedFields = [

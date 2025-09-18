@@ -4,12 +4,12 @@ namespace App\Models;
 
 use App\Entities\CategoryItem;
 use App\Models\AuditableModel;
-
-class CategoryItemsModel extends AuditableModel
+/**
+ * @extends EntityModel<CategoryItem>
+ */
+class CategoryItemsModel extends EntityModel
 {
     protected $table            = 'categories_items';
-    protected $primaryKey       = 'id';
-    protected $useAutoIncrement = true;
     protected $returnType       = CategoryItem::class;
 
     protected $allowedFields    = [

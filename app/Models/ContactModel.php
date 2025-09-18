@@ -4,13 +4,14 @@ namespace App\Models;
 
 use App\Entities\Contact;
 use App\Enums\ContactType;
-use App\Models\AuditableModel;
+use App\Models\EntityModel;
 
-class ContactModel extends AuditableModel
+/**
+ * @extends EntityModel<Contact>
+ */
+class ContactModel extends EntityModel
 {
     protected $table = 'contacts';
-    protected $primaryKey = 'id';
-    protected $useAutoIncrement = true;
     protected $returnType = Contact::class;
 
     protected $allowedFields = [
