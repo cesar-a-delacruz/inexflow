@@ -4,12 +4,14 @@ namespace App\Models;
 
 use App\Entities\Service;
 use App\Enums\ServiceType;
+use App\Models\EntityModel;
 
-class ServiceModel extends AuditableModel
+/**
+ * @extends EntityModel<Service>
+ */
+class ServiceModel extends EntityModel
 {
     protected $table = 'services';
-    protected $primaryKey = 'id';
-    protected $useAutoIncrement = true;
     protected $returnType = Service::class;
 
     protected $allowedFields = [

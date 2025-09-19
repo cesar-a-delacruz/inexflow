@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use App\Models\AuditableModel;
 use App\Entities\Record;
+use App\Models\EntityModel;
 
-class RecordModel extends AuditableModel
+/**
+ * @extends EntityModel<Record>
+ */
+class RecordModel extends EntityModel
 {
     protected $table = 'records';
-    protected $primaryKey = 'id';
-    protected $useAutoIncrement = true;
     protected $returnType = Record::class;
 
     protected $allowedFields = [

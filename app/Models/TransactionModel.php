@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use App\Models\AuditableModel;
 use App\Entities\Transaction;
+use App\Models\EntityModel;
 
-class TransactionModel extends AuditableModel
+/**
+ * @extends EntityModel<Transaction>
+ */
+class TransactionModel extends EntityModel
 {
     protected $table = 'transactions';
-    protected $primaryKey = 'id';
-    protected $useAutoIncrement = true;
     protected $returnType = Transaction::class;
 
     protected $allowedFields = [

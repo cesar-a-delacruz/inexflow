@@ -4,12 +4,14 @@ namespace App\Models;
 
 use App\Entities\Item;
 use App\Enums\ItemType;
+use App\Models\EntityModel;
 
-class ItemModel extends AuditableModel
+/**
+ * @extends EntityModel<Item>
+ */
+class ItemModel extends EntityModel
 {
     protected $table = 'items';
-    protected $primaryKey = 'id';
-    protected $useAutoIncrement = true;
     protected $returnType = Item::class;
 
     protected $allowedFields = [

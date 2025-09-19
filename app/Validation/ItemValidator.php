@@ -2,12 +2,15 @@
 
 namespace App\Validation;
 
+use App\Entities\Item;
+
 /**
  * Son reglas de validación y mensajes de error utilizados en los formularios de App\Views\Item
+ * @extends CRUDValidator<Item>
  */
-class ItemValidator
+class ItemValidator extends CRUDValidator
 {
-    public $create = [
+    public array $create = [
         'name' => [
             'rules' => 'required',
             'errors' => [
@@ -51,7 +54,7 @@ class ItemValidator
             ],
         ],
     ];
-    public $update = [
+    public array $update = [
         'cost' => [
             'rules' => 'permit_empty|greater_than_equal_to[0]',
             'errors' => [
