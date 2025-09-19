@@ -5,7 +5,7 @@ namespace App\Enums;
 use App\Enums\Observable\Displayable;
 use App\Enums\Observable\DisplayableTrait;
 
-enum ServiceType: string implements Displayable
+enum TransactionType: string implements Displayable
 {
     use DisplayableTrait;
 

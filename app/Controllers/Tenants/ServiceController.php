@@ -6,7 +6,7 @@ use App\Controllers\BaseController;
 use App\Controllers\RestController;
 use App\Entities\Item;
 use App\Enums\ItemType;
-use App\Enums\ServiceType;
+use App\Enums\TransactionType;
 use App\Models\ItemModel;
 use App\Models\MeasureUnitModel;
 use App\Models\ServiceModel;
@@ -15,16 +15,16 @@ use App\Validation\ItemValidator;
 abstract class ServiceController extends BaseController implements RestController
 {
     protected static array $segments = [
-        ServiceType::Income->value => 'entrada',
-        ServiceType::Expense->value => 'salida',
+        TransactionType::Income->value => 'entrada',
+        TransactionType::Expense->value => 'salida',
     ];
     protected ServiceModel $model;
     protected MeasureUnitModel $measureUnitModel;
     protected ItemValidator $formValidator;
-    protected ServiceType $type;
+    protected TransactionType $type;
     protected string $segment;
 
-    public function __construct(ServiceType $type)
+    public function __construct(TransactionType $type)
     {
         $this->type = $type;
         $this->segment = self::$segments[$type->value];

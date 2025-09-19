@@ -16,7 +16,7 @@ class Service extends Entity
     protected $casts = [
         'id' => 'int',
         'name' => 'string',
-        'type' => 'enum[App\Enums\SeviceType]',
+        'type' => 'enum[App\Enums\TransactionType]',
         'cost' => 'float',
         'selling_price' => '?float',
         'measure_unit_id' => 'int',
