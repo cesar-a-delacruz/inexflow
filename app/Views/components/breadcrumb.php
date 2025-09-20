@@ -12,12 +12,13 @@
             'edit' => 'Editar',
             'providers' => 'Proveedores',
             'customers' => 'Clientes',
-            'transactions' => 'Transacciones',
             'business' => 'Negocio',
             'dashboard' => 'Dashboard',
             'user' => 'Usuario',
             'tenants' => 'Negocio',
             'employees' => 'Empleados',
+            'orders' => 'Ordenes',
+            'purchases' => 'Compras'
         ];
         ?>
 

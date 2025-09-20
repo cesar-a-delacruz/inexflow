@@ -30,7 +30,7 @@ $routes->group('tenants', ['namespace' => 'App\Controllers\Tenants', 'filter' =>
     $routes->resource('income-services', ['controller' => 'IncomeServicesController']);
     $routes->resource('expense-services', ['controller' => 'ExposeServicesController']);
     $routes->resource('orders', ['controller' => 'OrderController']);
-    $routes->resource('purchase', ['controller' => 'PurchaseController']);
+    $routes->resource('purchases', ['controller' => 'PurchaseController']);
 
 
     // $routes->resource('items', ['controller' => 'ItemController']);
