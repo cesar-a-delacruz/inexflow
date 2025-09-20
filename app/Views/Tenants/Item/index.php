@@ -19,8 +19,8 @@ if (session()->getFlashdata('success')): ?>
 <?php endif; ?>
 
 <div class="d-flex align-items-center gap-2">
-  <a href="/tenants/<?= $segment ?>/new" class="btn btn-outline-primary d-flex gap-1 align-items-center float-none">
-    Agregar <?= $type->label() ?>
+  <a href="<?= $segment ?>/new" class="btn btn-outline-primary d-flex gap-1 align-items-center float-none">
+    Agregar <?= $segmentName ?>
     <svg class="bi flex-shrink-0" role="img" width="20" height="20">
       <use href="/assets/svg/miscellaniaSprite.svg#fe-plus" />
     </svg>
@@ -56,12 +56,12 @@ if (session()->getFlashdata('success')): ?>
             </td>
             <td>
               <div class="btn-group">
-                <a class="btn btn-outline-primary" type="button" title="Ver informacion de Elemento" href="/tenants/<?= $segment . '/' . $item->id ?>">
+                <a class="btn btn-outline-primary" type="button" title="Ver informacion de Elemento" href="<?= $segment . '/' . $item->id ?>">
                   <svg class="bi flex-shrink-0" role="img" aria-label="Ver informacion de Elemento" width="24" height="24">
                     <use href="/assets/svg/miscellaniaSprite.svg#fe-info" />
                   </svg>
                 </a>
-                <a class="btn btn-primary" type="button" title="Editra Elemento" href="/tenants/<?= $segment . '/' . $item->id ?>/edit">
+                <a class="btn btn-primary" type="button" title="Editra Elemento" href="<?= $segment . '/' . $item->id ?>/edit">
                   <svg class="bi flex-shrink-0" role="img" aria-label="Editra Elemento" width="24" height="24">
                     <use href="/assets/svg/miscellaniaSprite.svg#fe-edit" />
                   </svg>
@@ -88,12 +88,12 @@ if (session()->getFlashdata('success')): ?>
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar <?= $type->label() ?></h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar <?= $segmentName ?></h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <p class="modal-message h6"></p>
-        <p class="text-danger">Al eliminar un <?= $type->label() ?> toda informacio relacionada a esta sera eliminada permanentemnte</p>
+        <p class="text-danger">Al eliminar un <?= $segmentName ?> toda informacio relacionada a esta sera eliminada permanentemnte</p>
         <form action="" data-segment="<?= $segment ?>" id="form-delete-element" method="POST">
           <input type="hidden" name="_method" value="DELETE">
         </form>
@@ -113,7 +113,7 @@ if (session()->getFlashdata('success')): ?>
   <?php foreach ($items as $item): ?>
     <?php if ($item->stock < $item->min_stock): ?>
       <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        alerta <a href="<?= '/tenants/' . $segment . '/' . $item->id ?>" class="alert-link"><?= $item->name ?></a> tiene poco
+        alerta <a href="<?= $segment . '/' . $item->id ?>" class="alert-link"><?= $item->name ?></a> tiene poco
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
       </div>
     <?php endif; ?>
@@ -134,7 +134,7 @@ if (session()->getFlashdata('success')): ?>
       const modalMessage = exampleModal.querySelector('.modal-body .modal-message')
 
       modalMessage.textContent = `¿Estas seguro de que deseas eliminar ${name}?`
-      modalDeleteForm.action = `/tenants/${segment}/${id}`
+      modalDeleteForm.action = `${segment}/${id}`
     })
     exampleModal.addEventListener('hide.bs.modal', event => {
       modalDeleteForm.action = "";

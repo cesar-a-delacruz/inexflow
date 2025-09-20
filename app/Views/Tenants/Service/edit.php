@@ -12,7 +12,7 @@ if (session()->getFlashdata('success')): ?>
     </div>
 <?php endif; ?>
 
-<form action="/tenants/<?= $segment . '/' . $item->id ?>" method="POST" class="needs-validation" novalidate>
+<form action="<?= $segment . '/' . $item->id ?>" method="POST" class="needs-validation" novalidate>
     <input type="hidden" name="_method" value="PUT">
     <div class="row">
         <div class="col-12 col-md-6">

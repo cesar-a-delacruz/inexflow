@@ -2,34 +2,38 @@
 
 namespace App\Controllers\Tenants;
 
-use App\Controllers\BaseController;
 use App\Controllers\CRUDController;
 use App\Controllers\RestController;
-use App\Entities\Item;
-use App\Enums\ItemType;
-use App\Models\ItemModel;
+use App\Entities\Transaction;
+use App\Enums\TransactionType;
+use App\Models\TransactionModel;
 use App\Models\MeasureUnitModel;
-use App\Validation\ItemValidator;
+use App\Validation\TransactionValidator;
 
 /**
- * @extends CRUDController<Item, ItemModel, ItemValidator>
+ * @extends CRUDController<Transaction, TransactionModel, TransactionValidator>
  */
-abstract class ItemController extends CRUDController implements RestController
+abstract class TransactionController extends CRUDController implements RestController
 {
     protected MeasureUnitModel $measureUnitModel;
-    protected ItemType $type;
-    protected function typeToSegment(?ItemType $type = null): string
+    protected TransactionType $type;
+
+    protected function typeToSegment(?TransactionType $itemType = null): string
     {
-        return match ($type ?? $this->type) {
-            ItemType::Product => '/tenants/products',
-            ItemType::Supply => '/tenants/supplies',
+        return match ($itemType ?? $this->type) {
+            TransactionType::Income => '/tenants/orders',
+            TransactionType::Expense => '/tenants/transactions/expenses',
         };
     }
 
-    public function __construct(ItemType $type)
+    public function __construct(TransactionType $type)
     {
         $this->type = $type;
-        parent::__construct((new ItemModel()), $this->typeToSegment(), ItemValidator::class, 'tenants/item/', $type->label());
+        $segmentName = match ($type) {
+            TransactionType::Income => 'Orden',
+            TransactionType::Expense => 'Compra',
+        };
+        parent::__construct((new TransactionModel()), $this->typeToSegment(), TransactionValidator::class, 'tenants/transaction', $segmentName);
     }
 
     public function index()
@@ -60,6 +64,7 @@ abstract class ItemController extends CRUDController implements RestController
             return redirect()->to($this->typeToSegment($item->type) . '/' . $item->id);
         }
 
+        helper('number');
 
         return parent::view(
             'show',
@@ -132,13 +137,13 @@ abstract class ItemController extends CRUDController implements RestController
 
         $post['business_id'] = session('business_id');
 
-        $item = new Item($post);
+        $item = new Transaction($post);
 
         $item->type = $this->type;
 
-        if ($this->type === ItemType::Supply) {
-            $item->selling_price = null;
-        }
+        // if ($this->type === TransactionType::Supply) {
+        //     $item->selling_price = null;
+        // }
 
         $item->id = $this->model->insert($item);
 
@@ -156,25 +161,25 @@ abstract class ItemController extends CRUDController implements RestController
 
         $post['type'] = $this->type->value;
 
-        $item = new Item($post);
+        $item = new Transaction($post);
 
         $item->type = $this->type;
 
-        if ($this->type === ItemType::Supply) {
-            $item->selling_price = null;
-        }
+        // if ($this->type === TransactionType::Supply) {
+        //     $item->selling_price = null;
+        // }
 
         $this->model->update($id, $item);
 
-        return redirect()->to($this->segment . '/' . $id . '/edit')->with('success', $this->segmentName . ' actualizado exitosamente, <a href="' . $this->segment . '/' . $id . '" class="alert-link">Ver</a>');
+        return redirect()->to($this->segment . '/' . $id . '/edit')->with('success', $this->segment . ' actualizado exitosamente, <a href="' . $this->segment . '/' . $id . '" class="alert-link">Ver</a>');
     }
 
     public function delete($id)
     {
         if ($this->model->delete($id)) {
-            return redirect()->to($this->segment)->with('success',  $this->segmentName . ' eliminado exitosamente');
+            return redirect()->to($this->segment)->with('success',  $this->segment . ' eliminado exitosamente');
         } else {
-            return redirect()->to($this->segment)->with('error', 'No se pudo eliminar el ' . $this->segmentName);
+            return redirect()->to($this->segment)->with('error', 'No se pudo eliminar el ' . $this->segment);
         }
     }
 }

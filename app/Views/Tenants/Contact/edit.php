@@ -8,7 +8,7 @@
     </div>
 <?php endif; ?>
 
-<form action="/tenants/<?= $segment . '/' . $contact->id ?>" method="POST" class="needs-validation" novalidate>
+<form action="<?= $segment . '/' . $item->id ?>" method="POST" class="needs-validation" novalidate>
     <input type="hidden" name="_method" value="PUT">
     <div class="row">
         <div class="col-12 col-md-6">
@@ -17,14 +17,14 @@
                 'label' => 'Nombre',
                 'placeholder' => "Aguacate",
                 'required' => true,
-                'default' => $contact->name,
+                'default' => $item->name,
             ]) ?>
             <?= view_cell('FormInputCell', [
                 'name' => 'email',
                 'type' => 'email',
                 'label' => 'Correo electronico',
                 'placeholder' => "example@email.com",
-                'default' => $contact->email,
+                'default' => $item->email,
             ]) ?>
 
         </div>
@@ -34,13 +34,13 @@
                 'type' => 'phone',
                 'label' => 'Telefono',
                 'placeholder' => "6458-5269",
-                'default' => $contact->phone,
+                'default' => $item->phone,
             ]) ?>
             <?= view_cell('FormInputCell', [
                 'name' => 'address',
                 'label' => 'Direccion',
                 'placeholder' => "Panama, Bocas del Toro, Finca 6",
-                'default' => $contact->address,
+                'default' => $item->address,
             ]) ?>
         </div>
     </div>

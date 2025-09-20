@@ -1,52 +1,25 @@
-<?= $this->extend('layouts/dashboard') ?>
-
-<?= $this->section('content') ?>
-<?php if (session()->getFlashdata('success')): ?>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <?= session()->getFlashdata('success') ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-    </div>
-<?php endif; ?>
-<?php if (session()->getFlashdata('error')): ?>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <?= session()->getFlashdata('error') ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-    </div>
-<?php endif; ?>
-
-<div class="d-flex align-items-center gap-2">
-    <a href="<?= $segment ?>/new" class="btn btn-outline-primary d-flex gap-1 align-items-center float-none">
-        Agregar <?= $segmentName ?>
-        <svg class="bi flex-shrink-0" role="img" width="20" height="20">
-            <use href="/assets/svg/miscellaniaSprite.svg#fe-plus" />
-        </svg>
-    </a>
-</div>
-
 <div class="table-responsive">
     <table id="showtable" class="table table-striped table-hover table-bordered">
         <thead class="table-secondary">
             <tr>
-                <th></th>
-                <th>Nombre</th>
-                <th>Email</th>
-                <th>Teléfono</th>
-                <th>Direccion</th>
+                <th> </th>
+                <?php foreach ($headModel as $label): ?>
+                    <th><?= $label ?></th>
+                <?php endforeach; ?>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            <?php if (!empty($items)): ?>
-                <?php foreach ($items as $i => $item): ?>
+            <?php if (!empty($bodyModel)): ?>
+                <?php foreach ($bodyModel as $i => $row): ?>
                     <tr>
                         <td><?= $i + 1 ?></td>
-                        <td><?= $item->name ?></td>
-                        <td><?= $item->email ?></td>
-                        <td><?= $item->phone ?></td>
-                        <td><?= $item->address ?></td>
+                        <?php foreach ($row as $key => $label): ?>
+                            <td><?= $label ?></td>
+                        <?php endforeach; ?>
                         <td>
                             <div class="btn-group">
-                                <a class="btn btn-outline-primary" type="button" title="Ver informacion de Elemento" href="<?= $segment . '/' . $item->id ?>">
+                                <a class="btn btn-outline-primary" type="button" title="Ver informacion de Elemento" href="<?= $segment . '/' .  $item->id ?>">
                                     <svg class="bi flex-shrink-0" role="img" aria-label="Ver informacion de Elemento" width="24" height="24">
                                         <use href="/assets/svg/miscellaniaSprite.svg#fe-info" />
                                     </svg>
@@ -57,7 +30,7 @@
                                     </svg>
                                 </a>
                                 <button type="button" class="btn btn-danger" title="Eliminar Elemento" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal" data-bs-id="<?= $item->id ?>" data-bs-name="<?= $item->name ?>">
+                                    data-bs-target="#exampleModal" data-bs-id="<?= $row->id ?>" data-bs-name="<?= $segmentName ?>">
                                     <svg class="bi flex-shrink-0" role="img" aria-label="Eliminar Elemento" width="24" height="24">
                                         <use href="/assets/svg/miscellaniaSprite.svg#fe-trash" />
                                     </svg>
@@ -84,7 +57,7 @@
             <div class="modal-body">
                 <p class="modal-message h6"></p>
                 <p class="text-danger">Al eliminar un <?= $segmentName ?> toda informacio relacionada a esta sera eliminada permanentemnte</p>
-                <form action="" data-segment="<?= $segment ?>" id="form-delete-element" method="POST">
+                <form action="" data-segment=<?= $segment ?> id="form-delete-element" method="POST">
                     <input type="hidden" name="_method" value="DELETE">
                 </form>
             </div>
@@ -110,15 +83,11 @@
             const id = button.getAttribute('data-bs-id')
             const name = button.getAttribute('data-bs-name')
 
-            const modalTitle = exampleModal.querySelector('.modal-title')
             const modalMessage = exampleModal.querySelector('.modal-body .modal-message')
 
             modalMessage.textContent = `¿Estas seguro de que deseas eliminar ${name}?`
             modalDeleteForm.action = `${segment}/${id}`
         })
-        exampleModal.addEventListener('hide.bs.modal', event => {
-            modalDeleteForm.action = "";
-        })
+        exampleModal.addEventListener('hide.bs.modal', (e) => (modalDeleteForm.action = ""))
     }
 </script>
-<?= $this->endSection() ?>

@@ -26,13 +26,13 @@ abstract class CRUDController extends BaseController
     /** @var class-string<V> */
     protected string $validatorClass;
 
-    /** @var string[] */
-    protected array $segments = [];
+    protected string $segment;
 
     /**
      * Path de las views
      */
     protected string $resourcePath;
+    protected string $segmentName;
 
     /**
      * @param M $model
@@ -40,12 +40,13 @@ abstract class CRUDController extends BaseController
      * @param class-string<V> $validatorClass
      * @param string $resourcePath
      */
-    public function __construct(Model $model, string $segment, string $validatorClass, string $resourcePath)
+    public function __construct(Model $model, string $segment, string $validatorClass, string $resourcePath, string $segmentName)
     {
         $this->validatorClass = $validatorClass;
         $this->model = $model;
-        $this->segments[] = $segment;
+        $this->segment = $segment;
         $this->resourcePath = $resourcePath;
+        $this->segmentName = $segmentName;
     }
     /**
      * Construlle el Validator mediante el $validatorClass, se tiene que llamar antes de usar el $validator
@@ -55,21 +56,14 @@ abstract class CRUDController extends BaseController
         $this->validator = new $this->validatorClass;
     }
 
-    /**
-     * Construlle el pathname del controllador
-     */
-    protected function buildSegments(?string $name = null): string
-    {
-        $path = implode('/', $this->segments);
-        return $name ? $path . '/' . $name : $path;
-    }
 
     /**
      * metodo auxiliar para renderizar views, agrega el segment y el resourcePath
      */
     protected function view(?string $resource = null, array $data = [], array $options = []): string
     {
-        $data['segment'] = end($this->segments);
+        $data['segment'] = $this->segment;
+        $data['segmentName'] = $this->segmentName;
         return view(
             $this->resourcePath . '/' . $resource,
             $data,
