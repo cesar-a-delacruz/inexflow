@@ -19,8 +19,8 @@ if (session()->getFlashdata('success')): ?>
 <?php endif; ?>
 
 <div class="d-flex align-items-center gap-2">
-  <a href="/tenants/<?= $segment ?>/new" class="btn btn-outline-primary d-flex gap-1 align-items-center float-none">
-    Agregar <?= $type->label() ?>
+  <a href="<?= $segment ?>/new" class="btn btn-outline-primary d-flex gap-1 align-items-center float-none">
+    Agregar <?= $segmentName ?>
     <svg class="bi flex-shrink-0" role="img" width="20" height="20">
       <use href="/assets/svg/miscellaniaSprite.svg#fe-plus" />
     </svg>
@@ -42,30 +42,30 @@ if (session()->getFlashdata('success')): ?>
       </tr>
     </thead>
     <tbody>
-      <?php if (!empty($services)): ?>
-        <?php foreach ($services as $i => $service): ?>
+      <?php if (!empty($items)): ?>
+        <?php foreach ($items as $i => $item): ?>
           <tr>
             <td><?= $i + 1 ?></td>
-            <td><?= $service->name ?></td>
-            <td><?= $service->displayCost() ?></td>
+            <td><?= $item->name ?></td>
+            <td><?= $item->displayCost() ?></td>
             <?php if ($type === TransactionType::Expense): ?>
-              <td><?= $service->displaySellingPrice() ?></td>
+              <td><?= $item->displaySellingPrice() ?></td>
             <?php endif; ?>
-            <td><?= $service->measure_unit_value ?></td>
+            <td><?= $item->measure_unit_value ?></td>
             <td>
               <div class="btn-group">
-                <a class="btn btn-outline-primary" type="button" title="Ver informacion de Elemento" href="/tenants/<?= $segment . '/' . $service->id ?>">
+                <a class="btn btn-outline-primary" type="button" title="Ver informacion de Elemento" href="<?= $segment . '/' . $item->id ?>">
                   <svg class="bi flex-shrink-0" role="img" aria-label="Ver informacion de Elemento" width="24" height="24">
                     <use href="/assets/svg/miscellaniaSprite.svg#fe-info" />
                   </svg>
                 </a>
-                <a class="btn btn-primary" type="button" title="Editra Elemento" href="/tenants/<?= $segment . '/' . $service->id ?>/edit">
+                <a class="btn btn-primary" type="button" title="Editra Elemento" href="<?= $segment . '/' . $item->id ?>/edit">
                   <svg class="bi flex-shrink-0" role="img" aria-label="Editra Elemento" width="24" height="24">
                     <use href="/assets/svg/miscellaniaSprite.svg#fe-edit" />
                   </svg>
                 </a>
                 <button type="button" class="btn btn-danger" title="Eliminar Elemento" data-bs-toggle="modal"
-                  data-bs-target="#exampleModal" data-bs-id="<?= $service->id ?>" data-bs-name="<?= $service->name ?>">
+                  data-bs-target="#exampleModal" data-bs-id="<?= $item->id ?>" data-bs-name="<?= $item->name ?>">
                   <svg class="bi flex-shrink-0" role="img" aria-label="Eliminar Elemento" width="24" height="24">
                     <use href="/assets/svg/miscellaniaSprite.svg#fe-trash" />
                   </svg>
@@ -86,12 +86,12 @@ if (session()->getFlashdata('success')): ?>
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar <?= $type->label() ?></h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar <?= $segmentName ?></h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <p class="modal-message h6"></p>
-        <p class="text-danger">Al eliminar un <?= $type->label() ?> toda informacio relacionada a esta sera eliminada permanentemnte</p>
+        <p class="text-danger">Al eliminar un <?= $segmentName ?> toda informacio relacionada a esta sera eliminada permanentemnte</p>
         <form action="" data-segment="<?= $segment ?>" id="form-delete-element" method="POST">
           <input type="hidden" name="_method" value="DELETE">
         </form>
@@ -122,7 +122,7 @@ if (session()->getFlashdata('success')): ?>
       const modalMessage = exampleModal.querySelector('.modal-body .modal-message')
 
       modalMessage.textContent = `¿Estas seguro de que deseas eliminar ${name}?`
-      modalDeleteForm.action = `/tenants/${segment}/${id}`
+      modalDeleteForm.action = `${segment}/${id}`
     })
     exampleModal.addEventListener('hide.bs.modal', event => {
       modalDeleteForm.action = "";

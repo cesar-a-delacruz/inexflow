@@ -27,4 +27,8 @@ class Transaction extends Entity
         'updated_at'  => 'datetime',
         'deleted_at'  => '?datetime'
     ];
+    public function displayTotal(): string
+    {
+        return number_to_currency($this->total, 'PAB', 'es_PA', 2);
+    }
 }

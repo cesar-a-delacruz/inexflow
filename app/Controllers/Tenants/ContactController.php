@@ -2,41 +2,42 @@
 
 namespace App\Controllers\Tenants;
 
-use App\Controllers\BaseController;
+use App\Controllers\CRUDController;
 use App\Controllers\RestController;
 use App\Entities\Contact;
 use App\Enums\ContactType;
 use App\Models\ContactModel;
 use App\Validation\ContactValidator;
+/*
+ * @extends CRUDController<Contact, ContactModel, ContactValidator>
+*/
 
-abstract class ContactController extends BaseController implements RestController
+abstract class ContactController extends CRUDController implements RestController
 {
-    protected static array $segments = [
-        ContactType::Customer->value => 'customers',
-        ContactType::Provider->value => 'providers',
-    ];
-    protected ContactModel $model;
-    protected ContactValidator $formValidator;
     protected ContactType $type;
-    protected string $segment;
+    protected function typeToSegment(?ContactType $type = null): string
+    {
+        return match ($type ?? $this->type) {
+            ContactType::Provider => '/tenants/providers',
+            ContactType::Customer => '/tenants/customers',
+        };
+    }
 
     public function __construct(ContactType $type)
     {
         $this->type = $type;
-        $this->segment = self::$segments[$type->value];
-        $this->model = new ContactModel();
+        parent::__construct((new ContactModel()), $this->typeToSegment(), ContactValidator::class, 'tenants/contact/', $type->label());
     }
 
     public function index()
     {
-        $contacts = $this->model->findAllByBusinessIdAndType(session('business_id'), $this->type);
+        $items = $this->model->findAllByBusinessIdAndType(session('business_id'), $this->type);
 
-        return view(
-            'Tenants/Contact/index',
+        return parent::view(
+            'index',
             [
-                'title' => $this->type->label(),
-                'contacts' => $contacts,
-                'segment' => $this->segment,
+                'title' => $this->segmentName,
+                'items' => $items,
                 'type' => $this->type,
             ]
         );
@@ -44,44 +45,42 @@ abstract class ContactController extends BaseController implements RestControlle
 
     public function show($id)
     {
-        $contact = $this->model->find($id);
+        $item = $this->model->find($id);
 
-        if (!$contact) {
-            return redirect()->to('tenants/' . $this->segment);
+        if (!$item) {
+            return redirect()->to($this->segment);
         }
 
-        if ($contact->type !== $this->type) {
-            return redirect()->to('tenants/' . self::$segments[$contact->type->value] . '/' . $contact->id);
+        if ($item->type !== $this->type) {
+            return redirect()->to($this->typeToSegment($item->type) . '/' . $item->id);
         }
 
-        return view(
-            'Tenants/Contact/show',
+        return parent::view(
+            'show',
             [
-                'title' => $this->type->label() . ' - ' . $contact->name,
-                'segment' => $this->segment,
-                'contact' => $contact
+                'title' => $this->segmentName . ' - ' . $item->name,
+                'item' => $item
             ],
         );
     }
 
     public function edit($id)
     {
-        $contact = $this->model->find($id);
+        $item = $this->model->find($id);
 
-        if (!$contact) {
-            return redirect()->to('tenants/' . $this->segment);
+        if (!$item) {
+            return redirect()->to($this->segment);
         }
 
-        if ($contact->type !== $this->type) {
-            return redirect()->to('tenants/' . self::$segments[$contact->type->value] . '/' . $contact->id . '/edit');
+        if ($item->type !== $this->type) {
+            return redirect()->to($this->typeToSegment($item->type) . '/' . $item->id . '/edit');
         }
 
-        return view(
-            'Tenants/Contact/edit',
+        return parent::view(
+            'edit',
             [
-                'title' => $this->type->label() . ' - ' . $contact->name,
-                'contact' => $contact,
-                'segment' => $this->segment,
+                'title' => $this->segmentName . ' - ' . $item->name,
+                'item' => $item,
                 'type' => $this->type,
             ]
         );
@@ -89,20 +88,19 @@ abstract class ContactController extends BaseController implements RestControlle
 
     public function new()
     {
-        return view(
-            'Tenants/Contact/new',
+        return parent::view(
+            'new',
             [
-                'title' => $this->type->label(),
-                'segment' => $this->segment,
+                'title' => $this->segmentName,
                 'type' => $this->type,
             ]
         );
     }
     public function create()
     {
-        $this->formValidator = new ContactValidator();
+        $this->buildValidator();
 
-        if (!$this->validate($this->formValidator->create)) {
+        if (!$this->validate($this->validator->create)) {
             return redirect()->back()->withInput();
         }
 
@@ -110,20 +108,20 @@ abstract class ContactController extends BaseController implements RestControlle
 
         $post['business_id'] = session('business_id');
 
-        $contact = new Contact($post);
+        $item = new Contact($post);
 
-        $contact->type = $this->type;
+        $item->type = $this->type;
 
-        $contact->id = $this->model->insert($contact, true);
+        $item->id = $this->model->insert($item, true);
 
-        return redirect()->to('/tenants/' . $this->segment . '/new')->with('success', 'Elemento creado exitosamente ' . $contact->name . ', <a href="/tenants/' . $this->segment . '/' . $contact->id . '" class="alert-link">Ver</a>');
+        return redirect()->to($this->segment . '/new')->with('success', 'Elemento creado exitosamente ' . $item->name . ', <a href="' . $this->segment . '/' . $item->id . '" class="alert-link">Ver</a>');
     }
 
     public function update($id)
     {
-        $this->formValidator = new ContactValidator();
+        $this->buildValidator();
 
-        if (!$this->validate($this->formValidator->create)) {
+        if (!$this->validate($this->validator->create)) {
             return redirect()->back()->withInput();
         }
 
@@ -131,22 +129,21 @@ abstract class ContactController extends BaseController implements RestControlle
 
         $post['type'] = $this->type->value;
 
-        $contact = new Contact($post);
+        $item = new Contact($post);
 
-        $contact->type = $this->type;
+        $item->type = $this->type;
 
-        $this->model->update($id, $contact);
+        $this->model->update($id, $item);
 
-        return redirect()->to('/tenants/' . $this->segment . '/' . $id . '/edit')->with('success', $this->type->label() . ' actualizado exitosamente, <a href="/tenants/' . $this->segment . '/' . $id . '" class="alert-link">Ver</a>');
+        return redirect()->to($this->segment . '/' . $id . '/edit')->with('success', $this->segmentName . ' actualizado exitosamente, <a href="' . $this->segment . '/' . $id . '" class="alert-link">Ver</a>');
     }
 
     public function delete($id)
     {
-        echo 'delete';
         if ($this->model->delete($id)) {
-            return redirect()->to('/tenants/' . $this->segment)->with('success',  $this->type->label() . ' eliminado exitosamente');
+            return redirect()->to($this->segment)->with('success',  $this->segmentName . ' eliminado exitosamente');
         } else {
-            return redirect()->to('/tenants/' . $this->segment)->with('error', 'No se pudo eliminar el ' . $this->type->label());
+            return redirect()->to($this->segment)->with('error', 'No se pudo eliminar el ' . $this->segmentName);
         }
     }
 }

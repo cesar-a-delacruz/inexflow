@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 <div class="d-flex align-items-center gap-2">
-    <a href="/tenants/<?= $segment . '/' . $contact->id ?>/edit" class="btn btn-outline-primary d-flex gap-1 align-items-center float-none">
+    <a href="<?= $segment . '/' . $item->id ?>/edit" class="btn btn-outline-primary d-flex gap-1 align-items-center float-none">
         Editar
         <svg class="bi flex-shrink-0" role="img" width="20" height="20">
             <use href="/assets/svg/miscellaniaSprite.svg#fe-edit" />
@@ -11,7 +11,7 @@
 </div>
 
 <pre>
-    <?php print_r($contact); ?>
+    <?php print_r($item); ?>
 </pre>
 
 <?= $this->endSection() ?>

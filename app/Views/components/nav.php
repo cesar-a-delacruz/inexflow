@@ -50,10 +50,16 @@ if (session()->get('role') === 'admin') {
                     'active' => $segments2 === 'employees',
                 ],
                 [
-                    'href' => '/tenants/transactions',
+                    'href' => '/tenants/purchase',
                     'svg' => 'fe-boock',
-                    'label' => 'Transacciones',
-                    'active' => $segments2 === 'transactions',
+                    'label' => 'Compras',
+                    'active' => $segments2 === 'purchase',
+                ],
+                [
+                    'href' => '/tenants/orders',
+                    'svg' => 'fe-boock',
+                    'label' => 'Ordenes',
+                    'active' => $segments2 === 'orders',
                 ],
             ]
         ],
@@ -67,10 +73,10 @@ if (session()->get('role') === 'admin') {
                     'active' => $segments2 === 'products',
                 ],
                 [
-                    'href' => '/tenants/services/expose',
+                    'href' => '/tenants/expense-services',
                     'svg' => 'fe-apron',
                     'label' => 'Servicio-salida',
-                    'active' => $segments2 === 'services' && service('uri')->getSegment(3) === 'expose',
+                    'active' => $segments2 === 'expense-services',
                 ],
                 [
                     'href' => '/tenants/supplies',
@@ -91,10 +97,10 @@ if (session()->get('role') === 'admin') {
                     'active' => $segments2 === 'providers',
                 ],
                 [
-                    'href' => '/tenants/services/income',
+                    'href' => '/tenants/income-services',
                     'svg' => 'fe-money',
                     'label' => 'Servicio-entrada',
-                    'active' => $segments2 === 'services' && service('uri')->getSegment(3) === 'income',
+                    'active' => $segments2 === 'income-services',
                 ],
             ]
         ]

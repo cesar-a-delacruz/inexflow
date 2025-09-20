@@ -2,47 +2,46 @@
 
 namespace App\Controllers\Tenants;
 
-use App\Controllers\BaseController;
+use App\Controllers\CRUDController;
 use App\Controllers\RestController;
-use App\Entities\Item;
-use App\Enums\ItemType;
+use App\Entities\Service;
 use App\Enums\TransactionType;
-use App\Models\ItemModel;
-use App\Models\MeasureUnitModel;
 use App\Models\ServiceModel;
-use App\Validation\ItemValidator;
+use App\Models\MeasureUnitModel;
+use App\Validation\ServiceValidator;
 
-abstract class ServiceController extends BaseController implements RestController
+/**
+ * @extends CRUDController<Service, ServiceModel, ServiceValidator>
+ */
+abstract class ServiceController extends CRUDController implements RestController
 {
-    protected static array $segments = [
-        TransactionType::Income->value => 'entrada',
-        TransactionType::Expense->value => 'salida',
-    ];
-    protected ServiceModel $model;
     protected MeasureUnitModel $measureUnitModel;
-    protected ItemValidator $formValidator;
     protected TransactionType $type;
-    protected string $segment;
+    protected function typeToSegment(?TransactionType $type = null): string
+    {
+        return match ($type ?? $this->type) {
+            TransactionType::Income => '/tenants/income-services',
+            TransactionType::Expense => '/tenants/expense-services',
+        };
+    }
 
     public function __construct(TransactionType $type)
     {
         $this->type = $type;
-        $this->segment = self::$segments[$type->value];
-        $this->model = new ServiceModel();
+        parent::__construct((new ServiceModel()), $this->typeToSegment(), ServiceValidator::class, 'tenants/service/', $type->label());
     }
 
     public function index()
     {
-        $services = $this->model->findAllByBusinessIdAndType(session('business_id'), $this->type);
+        $items = $this->model->findAllByBusinessIdAndType(session('business_id'), $this->type);
 
         helper('number');
 
-        return view(
-            'Tenants/Service/index',
+        return parent::view(
+            'index',
             [
-                'title' => $this->type->label(),
-                'services' => $services,
-                'segment' => $this->segment,
+                'title' => $this->segmentName,
+                'items' => $items,
                 'type' => $this->type,
             ]
         );
@@ -53,20 +52,18 @@ abstract class ServiceController extends BaseController implements RestControlle
         $item = $this->model->find($id);
 
         if (!$item) {
-            return redirect()->to('tenants/' . $this->segment);
+            return redirect()->to($this->segment);
         }
 
         if ($item->type !== $this->type) {
-            return redirect()->to('tenants/' . self::$segments[$item->type->value] . '/' . $item->id);
+            return redirect()->to($this->typeToSegment($item->type) . '/' . $item->id);
         }
 
-        helper('number');
 
-        return view(
-            'Tenants/Item/show',
+        return parent::view(
+            'show',
             [
-                'title' => $this->type->label() . ' - ' . $item->name,
-                'segment' => $this->segment,
+                'title' => $this->segmentName . ' - ' . $item->name,
                 'item' => $item
             ],
         );
@@ -77,11 +74,11 @@ abstract class ServiceController extends BaseController implements RestControlle
         $item = $this->model->find($id);
 
         if (!$item) {
-            return redirect()->to('tenants/' . $this->segment);
+            return redirect()->to($this->segment);
         }
 
         if ($item->type !== $this->type) {
-            return redirect()->to('tenants/' . self::$segments[$item->type->value] . '/' . $item->id . '/edit');
+            return redirect()->to($this->typeToSegment($item->type) . '/' . $item->id . '/edit');
         }
 
         $this->measureUnitModel = new MeasureUnitModel();
@@ -92,13 +89,12 @@ abstract class ServiceController extends BaseController implements RestControlle
             $measure_units[$unit->id] = $unit->value;
         }
 
-        return view(
-            'Tenants/Item/edit',
+        return parent::view(
+            'edit',
             [
-                'title' => $this->type->label() . ' - ' . $item->name,
+                'title' => $this->segmentName . ' - ' . $item->name,
                 'item' => $item,
                 'measure_units' => $measure_units,
-                'segment' => $this->segment,
                 'type' => $this->type,
             ]
         );
@@ -114,44 +110,44 @@ abstract class ServiceController extends BaseController implements RestControlle
             $measure_units[$unit->id] = $unit->value;
         }
 
-        return view(
-            'Tenants/Item/new',
+        return parent::view(
+            'new',
             [
-                'title' => $this->type->label(),
+                'title' => $this->segmentName,
                 'measure_units' => $measure_units,
-                'segment' => $this->segment,
                 'type' => $this->type,
             ]
         );
     }
     public function create()
     {
-        $this->formValidator = new ItemValidator();
+        $this->buildValidator();
 
-        if (!$this->validate($this->formValidator->create)) {
+        if (!$this->validate($this->validator->create)) {
             return redirect()->back()->withInput();
         }
+
         $post = $this->request->getPost();
 
         $post['business_id'] = session('business_id');
 
-        $item = new Item($post);
+        $item = new Service($post);
 
         $item->type = $this->type;
 
-        if ($this->type === ItemType::Supply) {
-            $item->selling_price = null;
-        }
+        // if ($this->type === TransactionType::Supply) {
+        //     $item->selling_price = null;
+        // }
 
-        $item->id = $this->model->insert($item, true);
+        $item->id = $this->model->insert($item);
 
-        return redirect()->to('/tenants/' . $this->segment . '/new')->with('success', 'Elemento creado exitosamente ' . $item->name . ', <a href="/tenants/' . $this->segment . '/' . $item->id . '" class="alert-link">Ver</a>');
+        return redirect()->to($this->segment . '/new')->with('success', 'Elemento creado exitosamente ' . $item->name . ', <a href="' . $this->segment . '/' . $item->id . '" class="alert-link">Ver</a>');
     }
     public function update($id)
     {
-        $this->formValidator = new ItemValidator();
+        $this->buildValidator();
 
-        if (!$this->validate($this->formValidator->create)) {
+        if (!$this->validate($this->validator->create)) {
             return redirect()->back()->withInput();
         }
 
@@ -159,26 +155,25 @@ abstract class ServiceController extends BaseController implements RestControlle
 
         $post['type'] = $this->type->value;
 
-        $item = new Item($post);
+        $item = new Service($post);
 
         $item->type = $this->type;
 
-        if ($this->type === ItemType::Supply) {
-            $item->selling_price = null;
-        }
+        // if ($this->type === TransactionType::Supply) {
+        //     $item->selling_price = null;
+        // }
 
         $this->model->update($id, $item);
 
-        return redirect()->to('/tenants/' . $this->segment . '/' . $id . '/edit')->with('success', $this->type->label() . ' actualizado exitosamente, <a href="/tenants/' . $this->segment . '/' . $id . '" class="alert-link">Ver</a>');
+        return redirect()->to($this->segment . '/' . $id . '/edit')->with('success', $this->segmentName . ' actualizado exitosamente, <a href="' . $this->segment . '/' . $id . '" class="alert-link">Ver</a>');
     }
 
     public function delete($id)
     {
-        echo 'delete';
         if ($this->model->delete($id)) {
-            return redirect()->to('/tenants/' . $this->segment)->with('success',  $this->type->label() . ' eliminado exitosamente');
+            return redirect()->to($this->segment)->with('success',  $this->segmentName . ' eliminado exitosamente');
         } else {
-            return redirect()->to('/tenants/' . $this->segment)->with('error', 'No se pudo eliminar el ' . $this->type->label());
+            return redirect()->to($this->segment)->with('error', 'No se pudo eliminar el ' . $this->segmentName);
         }
     }
 }
