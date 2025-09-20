@@ -2,10 +2,13 @@
 
 namespace App\Validation;
 
+use App\Entities\Contact;
+
 /**
  * Son reglas de validación y mensajes de error utilizados en los formularios de App\Views\Contact
+ * @extends CRUDValidator<Contact>
  */
-class ContactValidator
+class ContactValidator extends CRUDValidator
 {
     public $create = [
         'name' => [

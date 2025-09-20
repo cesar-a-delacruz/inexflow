@@ -2,10 +2,13 @@
 
 namespace App\Validation;
 
+use App\Entities\Record;
+
 /**
  * Son reglas de validación y mensajes de error utilizados en los formularios de App\Views\Transaction en los campos "records"
+ * @extends CRUDValidator<Record>
  */
-class RecordValidator
+class RecordValidator extends CRUDValidator
 {
     public $create = [
         'records' => [

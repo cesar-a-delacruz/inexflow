@@ -1,10 +1,15 @@
 <?php
+
 namespace App\Validation;
+
+use App\Entities\User;
 
 /**
  * Son reglas de validación y mensajes de error utilizados en los formularios de App\Views\User
+ * @extends CRUDValidator<User>
  */
-class UserValidator {
+class UserValidator extends CRUDValidator
+{
     public $create = [
         'name' => [
             'rules' => 'required|max_length[50]',
