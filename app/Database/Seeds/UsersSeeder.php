@@ -30,5 +30,14 @@ class UsersSeeder extends Seeder
             'role' => UserRole::Businessman,
             'is_active' => true,
         ]));
+        $model->insert(new User([
+            'id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '3'),
+            'business_id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
+            'name' => 'Ericka abrego',
+            'email' => 'ericka.abrego@utp.ac.pa',
+            'password' => '123456',
+            'role' => UserRole::Businessman,
+            'is_active' => true,
+        ]));
     }
 }

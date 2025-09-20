@@ -35,6 +35,12 @@ class CreateTransactionsTable extends EntityMigration
                 'constraint' => 255,
                 'null' => true,
             ],
+            'type' => [
+                'type'    => 'ENUM',
+                'constraint' => ['income', 'expense'],
+                'default'    => 'expense',
+                'null'    => false,
+            ],
             'total' => [
                 'type'       => 'DECIMAL',
                 'constraint' => '10,2',

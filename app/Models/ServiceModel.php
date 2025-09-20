@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Entities\Service;
-use App\Enums\ServiceType;
+use App\Enums\TransactionType;
 use App\Models\EntityModel;
 
 /**
@@ -39,7 +39,7 @@ class ServiceModel extends EntityModel
     /** 
      * @return array<Service>
      */
-    public function findAllByBusinessIdAndType(string $businessId, ServiceType $type): array
+    public function findAllByBusinessIdAndType(string $businessId, TransactionType $type): array
     {
         return $this
             ->select('services.*, mu.value as measure_unit_value')

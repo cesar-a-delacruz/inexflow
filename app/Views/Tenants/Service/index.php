@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 <?php
 
-use App\Enums\ServiceType;
+use App\Enums\TransactionType;
 
 if (session()->getFlashdata('success')): ?>
   <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -34,7 +34,7 @@ if (session()->getFlashdata('success')): ?>
         <th></th>
         <th>Nombre</th>
         <th>Costo</th>
-        <?php if ($type === ServiceType::Expense): ?>
+        <?php if ($type === TransactionType::Expense): ?>
           <th>Precio de Venta</th>
         <?php endif; ?>
         <th>Cantidad</th>
@@ -48,7 +48,7 @@ if (session()->getFlashdata('success')): ?>
             <td><?= $i + 1 ?></td>
             <td><?= $service->name ?></td>
             <td><?= $service->displayCost() ?></td>
-            <?php if ($type === ServiceType::Expense): ?>
+            <?php if ($type === TransactionType::Expense): ?>
               <td><?= $service->displaySellingPrice() ?></td>
             <?php endif; ?>
             <td><?= $service->measure_unit_value ?></td>
