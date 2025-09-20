@@ -22,7 +22,7 @@ abstract class TransactionController extends CRUDController implements RestContr
     {
         return match ($itemType ?? $this->type) {
             TransactionType::Income => '/tenants/orders',
-            TransactionType::Expense => '/tenants/transactions/expenses',
+            TransactionType::Expense => '/tenants/purchases',
         };
     }
 

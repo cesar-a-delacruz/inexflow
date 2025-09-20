@@ -50,10 +50,10 @@ if (session()->get('role') === 'admin') {
                     'active' => $segments2 === 'employees',
                 ],
                 [
-                    'href' => '/tenants/purchase',
+                    'href' => '/tenants/purchases',
                     'svg' => 'fe-boock',
                     'label' => 'Compras',
-                    'active' => $segments2 === 'purchase',
+                    'active' => $segments2 === 'purchases',
                 ],
                 [
                     'href' => '/tenants/orders',
