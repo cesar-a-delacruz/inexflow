@@ -20,6 +20,7 @@ class Transaction extends Entity
         'payment_status' => 'enum[App\Enums\PaymentStatus]',
         'description' => '?string',
         'total' => 'float',
+        'type' => 'enum[App\Enums\TransactionType]',
         'due_date' => '?datetime',
         'business_id' => 'uuid',
         'created_at'  => 'datetime',
