@@ -10,7 +10,7 @@ class ReportModel extends Model
 {
     protected $table = 'transactions';
     protected $primaryKey = 'id';
-    protected $useAutoIncrement = false;
+    protected $useAutoIncrement = true;
     protected $returnType = 'array';
     protected $useSoftDeletes = true;
 

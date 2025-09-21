@@ -24,8 +24,8 @@
     <?php if (isset($list)): ?>
         <datalist id="<?= $name ?>-list">
             <?php foreach ($list as $option): ?>
-                <option value="<?= $option ?>">
-                <?php endforeach; ?>
+                <option value="<?= $option ?>"><?= $option ?></option>
+            <?php endforeach; ?>
         </datalist>
     <?php endif; ?>
 
