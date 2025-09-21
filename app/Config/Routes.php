@@ -9,8 +9,7 @@ $routes->environment('development', static function ($routes) {
 $routes->get('/', 'Home::index');
 
 // Grupo Auth
-$routes->group('auth', ['namespace' => 'App\Controllers\Auth'], static function ($routes) {
-    $routes->get('/', 'Home::index');
+$routes->group('auth', ['namespace' => 'App\Controllers'], static function ($routes) {
     $routes->get('login', 'AuthController::login', ['as' => 'login']);
     $routes->post('login', 'AuthController::attemptLogin');
     $routes->get('logout', 'AuthController::logout', ['as' => 'logout']);
@@ -45,8 +44,8 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'ro
 });
 
 // Perfil del usuario
-$routes->group('profile', ['namespace' => 'App\Controllers\User', 'filter' => 'role'], static function ($routes) {
-    $routes->get('/', 'UserController::profile');
+$routes->group('profile', ['namespace' => 'App\Controllers', 'filter' => 'role'], static function ($routes) {
+    $routes->get('/', 'ProfileController::profile');
 });
 
 // Rutas de User

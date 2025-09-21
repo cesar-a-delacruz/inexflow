@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controllers\User;
+namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\UserModel;
 
-class UserController extends BaseController
+class ProfileController extends BaseController
 {
     protected UserModel $model;
 
@@ -17,7 +17,7 @@ class UserController extends BaseController
     public function profile()
     {
         return view(
-            'User/profile',
+            'user/profile',
             [
                 'title' => 'Información Personal',
                 'user' => $this->model->find(uuid_to_bytes(session('user_id')))

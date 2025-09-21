@@ -2,7 +2,6 @@
 
 namespace App\Controllers\Tenants;
 
-use App\Controllers\BaseController;
 use App\Controllers\CRUDController;
 use App\Controllers\RestController;
 use App\Entities\Item;
