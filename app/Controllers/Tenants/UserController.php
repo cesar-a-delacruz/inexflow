@@ -16,7 +16,7 @@ class UserController extends RestController
     public function index()
     {
         return view(
-            'Tenants/User/index',
+            'tenants/user/index',
             [
                 'title' => 'Usuarios del negocio',
                 'user' => $this->model->findAllByBusiness(session('business_id'))

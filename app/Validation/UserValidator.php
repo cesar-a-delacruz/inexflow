@@ -3,6 +3,7 @@
 namespace App\Validation;
 
 use App\Entities\User;
+use ArrayAccess;
 
 /**
  * Son reglas de validación y mensajes de error utilizados en los formularios de App\Views\User
@@ -10,7 +11,7 @@ use App\Entities\User;
  */
 class UserValidator extends CRUDValidator
 {
-    public $create = [
+    public array $create = [
         'name' => [
             'rules' => 'required|max_length[50]',
             'errors' => [
@@ -40,7 +41,7 @@ class UserValidator extends CRUDValidator
             ],
         ],
     ];
-    public $update = [
+    public array $update = [
         'name' => [
             'rules' => 'permit_empty|max_length[50]',
             'errors' => [
@@ -55,7 +56,7 @@ class UserValidator extends CRUDValidator
             ],
         ],
     ];
-    public $delete = [
+    public array $delete = [
         'password' => [
             'rules' => 'required|valid_password[id]',
             'errors' => [
@@ -65,7 +66,7 @@ class UserValidator extends CRUDValidator
         ]
     ];
 
-    public $login = [
+    public array $login = [
         'email' => [
             'rules' => 'required|valid_email|email_exists|is_active',
             'errors' => [
@@ -83,7 +84,7 @@ class UserValidator extends CRUDValidator
             ],
         ]
     ];
-    public $recovery = [
+    public array $recovery = [
         'email' => [
             'rules' => 'required|valid_email|email_exists|is_active',
             'errors' => [

@@ -19,7 +19,7 @@ class BusinessController extends BaseController
     public function index()
     {
         $business = $this->model->find(uuid_to_bytes(session('business_id')));
-        return view('Tenants/Business/show', [
+        return view('tenants/business/show', [
             'title' => 'Negocio - ' . $business->name,
             'business' => $business,
         ]);

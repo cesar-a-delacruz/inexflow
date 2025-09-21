@@ -24,7 +24,7 @@ class EmployeeController extends BaseController implements RestController
         $employees = $this->model->findAllByBusiness(session('business_id'));
 
         return view(
-            'Tenants/Employee/index',
+            'tenants/employee/index',
             [
                 'title' => 'Empleados',
                 'employees' => $employees,

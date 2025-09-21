@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Auth;
+namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Enums\UserRole;
@@ -28,7 +28,7 @@ class AuthController extends BaseController
 
     public function login()
     {
-        return view('/Auth/login', ['title' => 'Login']);
+        return view('/auth/login', ['title' => 'Login']);
     }
 
     public function attemptLogin()
