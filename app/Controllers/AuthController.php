@@ -50,7 +50,7 @@ class AuthController extends BaseController
             'user_name' => $user->name,
             'user_email' => $user->email,
             'user_role' => $user->role->value,
-            'business_id' => $user->business_id->toString(),
+            'business_id' => $user->business_id ? $user->business_id->toString() : null,
             'current_page' => $init_page
         ]);
 
