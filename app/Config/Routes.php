@@ -6,7 +6,7 @@ $routes->environment('development', static function ($routes) {
 });
 
 // Rutas públicas
-$routes->get('/', 'Home::index');
+$routes->get('/', 'Home::index', ['filter' => 'role']);
 
 // Grupo Auth
 $routes->group('auth', ['namespace' => 'App\Controllers'], static function ($routes) {
