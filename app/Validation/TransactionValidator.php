@@ -2,10 +2,13 @@
 
 namespace App\Validation;
 
+use App\Entities\Transaction;
+
 /**
  * Son reglas de validación y mensajes de error utilizados en los formularios de App\Views\Transaction
+ * @extends CRUDValidator<Transaction>
  */
-class TransactionValidator
+class TransactionValidator extends CRUDValidator
 {
     public $create = [
         'due_date' => [

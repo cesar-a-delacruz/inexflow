@@ -2,10 +2,13 @@
 
 namespace App\Validation;
 
+use App\Entities\Contact;
+
 /**
  * Son reglas de validación y mensajes de error utilizados en los formularios de App\Views\Contact
+ * @extends CRUDValidator<Contact>
  */
-class ContactValidator
+class ContactValidator extends CRUDValidator
 {
     public $create = [
         'name' => [
@@ -26,13 +29,12 @@ class ContactValidator
                 'max_length' => 'El teléfono no puede exceder 50 caracteres'
             ],
         ],
-        'type' => [
-            'rules' => 'required|in_list[customer,provider]',
+        'address' => [
+            'rules' => 'permit_empty|max_length[50]',
             'errors' => [
-                'required' => 'El tipo es requerido',
-                'in_list' => 'El Tipo solo puede ser proveedor o cliente'
+                'max_length' => 'La direccion no puede exceder 50 caracteres'
             ],
-        ],
+        ]
     ];
     public $update = [
         'email' => [

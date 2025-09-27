@@ -2,47 +2,72 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
-use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
+use App\Validation\CRUDValidator;
+use CodeIgniter\Entity\Entity;
+use CodeIgniter\Model;
 
+/**
+ * @template T of Entity
+ * @template M of Model<T>
+ * @template V of CRUDValidator<T>
+ * @extends BaseController
+ */
 abstract class CRUDController extends BaseController
 {
-    protected string $businessId;
-    protected $model;
-    protected string $controllerPath;
 
+    /** @var M */
+    protected Model $model;
 
-    public function __construct(string $controllerPath)
+    /** validador de forms, se tiene que llamar a buildValidator() antes de usar
+     *  @var V 
+     */
+    protected $validator;
+
+    /** @var class-string<V> */
+    protected string $validatorClass;
+
+    protected string $segment;
+
+    /**
+     * Path de las views
+     */
+    protected string $resourcePath;
+    protected string $segmentName;
+
+    /**
+     * @param M $model
+     * @param string $segment
+     * @param class-string<V> $validatorClass
+     * @param string $resourcePath
+     */
+    public function __construct(Model $model, string $segment, string $validatorClass, string $resourcePath, string $segmentName)
     {
-        $this->controllerPath = $controllerPath;
+        $this->validatorClass = $validatorClass;
+        $this->model = $model;
+        $this->segment = $segment;
+        $this->resourcePath = $resourcePath;
+        $this->segmentName = $segmentName;
+    }
+    /**
+     * Construlle el Validator mediante el $validatorClass, se tiene que llamar antes de usar el $validator
+     */
+    protected function buildValidator()
+    {
+        $this->validator = new $this->validatorClass;
     }
 
-    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
+
+    /**
+     * metodo auxiliar para renderizar views, agrega el segment y el resourcePath
+     */
+    protected function view(?string $resource = null, array $data = [], array $options = []): string
     {
-        parent::initController($request, $response, $logger);
-
-        $this->businessId = $this->session->get('business_id');
-
-        // si en la session no hay negocio algo anda mal, esto despues se tiene que cambiar
-        if (!$this->businessId) {
-            return redirect()->to('business/new');
-        }
-
-        //si no tiene id no debe poder hacer nada
-        if (!$this->session->get('id')) {
-            return redirect()->to('/');
-        }
-
-        // los admisn no deben de estra en esta seccion, luego se hace el de ellos.
-        if ($this->session->get('role') !== 'businessman') {
-            return redirect()->to('/');
-        }
-
-        //esta se debe ejecutar en cada metodo para tener el pacth correcto, ej: /items/new o transacions/show
-        $this->session->set('current_page', $this->controllerPath);
-
-        // más cosas 
+        $data['segment'] = $this->segment;
+        $data['segmentName'] = $this->segmentName;
+        return view(
+            $this->resourcePath . '/' . $resource,
+            $data,
+            $options
+        );
     }
 }

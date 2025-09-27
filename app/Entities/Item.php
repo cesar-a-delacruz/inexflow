@@ -6,27 +6,25 @@ use CodeIgniter\Entity\Entity;
 
 class Item extends Entity
 {
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     protected $casts = [
-        'id' => 'uuid',
-        'business_id' => 'uuid',
-        'category_id' => 'int',
+        'id' => 'int',
         'name' => 'string',
         'type' => 'enum[App\Enums\ItemType]',
         'cost' => 'float',
         'selling_price' => '?float',
         'stock' => 'int',
         'min_stock' => 'int',
-        'measure_unit' => 'string',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'deleted_at' => '?datetime',
+        'measure_unit_id' => 'int',
+        'business_id' => 'uuid',
+        'created_at'  => 'datetime',
+        'updated_at'  => 'datetime',
+        'deleted_at'  => '?datetime'
     ];
 
     protected $castHandlers = [
-        'uuid' => Cast\UuidCast::class,
         'enum' => Cast\EnumCast::class,
+        'uuid' => Cast\UuidCast::class,
     ];
 
     /** Muestra propiedades si tienen valor  */

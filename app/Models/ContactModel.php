@@ -3,15 +3,16 @@
 namespace App\Models;
 
 use App\Entities\Contact;
-use CodeIgniter\Model;
+use App\Enums\ContactType;
+use App\Models\EntityModel;
 
-class ContactModel extends Model
+/**
+ * @extends EntityModel<Contact>
+ */
+class ContactModel extends EntityModel
 {
     protected $table = 'contacts';
-    protected $primaryKey = 'id';
-    protected $useAutoIncrement = false;
     protected $returnType = Contact::class;
-    protected $useSoftDeletes = true;
 
     protected $allowedFields = [
         'id',
@@ -23,11 +24,6 @@ class ContactModel extends Model
         'type'
     ];
 
-    protected $useTimestamps = true;
-    protected $dateFormat = 'datetime';
-    protected $createdField = 'created_at';
-    protected $updatedField = 'updated_at';
-    protected $deletedField = 'deleted_at';
 
     /** Busca todos los contactos por su negocio
      * @return array<Contact>
@@ -35,5 +31,16 @@ class ContactModel extends Model
     public function findAllByBusiness(string $business_id): array
     {
         return $this->where('business_id', uuid_to_bytes($business_id))->findAll();
+    }
+
+    /** 
+     * @return array<Contact>
+     */
+    public function findAllByBusinessIdAndType(string $businessId, ContactType $type): array
+    {
+        return $this
+            ->where('business_id', uuid_to_bytes($businessId))
+            ->where('type', $type->value)
+            ->findAll();
     }
 }

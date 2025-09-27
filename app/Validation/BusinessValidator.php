@@ -2,10 +2,14 @@
 
 namespace App\Validation;
 
+use App\Entities\Business;
+
 /**
  * Son reglas de validación y mensajes de error utilizados en los formularios de App\Views\Business
+ * @extends CRUDValidator<Business>
  */
-class BusinessValidator {
+class BusinessValidator extends CRUDValidator
+{
     public $create = [
         'name' => [
             'rules' => 'required|max_length[75]',

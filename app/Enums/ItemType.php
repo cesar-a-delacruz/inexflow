@@ -9,18 +9,20 @@ enum ItemType: string implements Displayable
 {
     use DisplayableTrait;
 
-    case Service = 'service';
     case Product = 'product';
-    case Ingredients = 'ingredients';
-    case Supplies = 'supplies';
+    case Supply = 'supply';
+    // case Supplies = 'supplies';
 
     public static function labelFromValue(string $value): string
     {
         return match ($value) {
-            'service' => 'Servicio',
             'product' => 'Producto',
-            'ingredients' => 'Ingrediente',
-            'supplies' => 'Suplemento',
+            'supply' => 'Suministro',
         };
+    }
+
+    public static function getDefault(): string
+    {
+        return self::Product->value;
     }
 }

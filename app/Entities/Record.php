@@ -2,31 +2,28 @@
 
 namespace App\Entities;
 
+use App\Entities\Cast\UuidCast;
 use CodeIgniter\Entity\Entity;
 
 class Record extends Entity
 {
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    protected $castHandlers = [
+        'uuid' => UuidCast::class,
+    ];
 
     protected $casts = [
-        'id' => 'integer',
-        'business_id' => 'uuid',
-        'category' => 'string',
-        'description' => 'string',
-        'amount' => '?integer',
-        'type' => 'string',
-        'unit_price' => '?integer',
-        'item_id' => 'uuid',
+        'id' => 'int',
+        'product_id' => 'int',
+        'transaction_id' => 'int',
+        'unit_price' => 'float',
+        'quantity' => 'int',
         'subtotal' => 'float',
-        'transaction_id' => 'uuid',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'deleted_at' => '?datetime',
+        'business_id' => 'uuid',
+        'created_at'  => 'datetime',
+        'updated_at'  => 'datetime',
+        'deleted_at'  => '?datetime'
     ];
 
-    protected $castHandlers = [
-        'uuid' => Cast\UuidCast::class
-    ];
 
     /** Muestra la cantidad del registro si tiene valor */
     public function displayAmount(): string

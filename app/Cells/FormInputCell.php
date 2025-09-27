@@ -11,7 +11,7 @@ class FormInputCell extends Cell
     public string $type = 'text';
     public bool|null $required = null;
     public bool|null $readonly = null;
-    public string|null $default = null;
+    public string|int|null|float $default = null;
     public string|null $error = null;
     public string|null $min = null;
     public string|null $max = null;

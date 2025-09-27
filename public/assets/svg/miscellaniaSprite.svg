@@ -20,5 +20,17 @@
             <path fill="currentColor" fill-rule="evenodd"
                 d="M10.657 12.071L5 6.414L6.414 5l5.657 5.657L17.728 5l1.414 1.414l-5.657 5.657l5.657 5.657l-1.414 1.414l-5.657-5.657l-5.657 5.657L5 17.728z"></path>
         </symbol>
+        <symbol viewBox="0 0 24 24" id="fe-info"><!-- Icon
+            from Feather Icon by Megumi Hano -
+            https://github.com/feathericon/feathericon/blob/master/LICENSE -->
+            <path fill="currentColor"
+                d="M12 20a8 8 0 1 0 0-16a8 8 0 0 0 0 16m0 2C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10m-1-11v6h2v-6zm0-4h2v2h-2z" />
+        </symbol>
+        <symbol viewBox="0 0 24 24" id='fe-plus'><!-- Icon
+            from Feather Icon by Megumi Hano -
+            https://github.com/feathericon/feathericon/blob/master/LICENSE -->
+            <path fill="currentColor" fill-rule="evenodd"
+                d="M13 13v7a1 1 0 0 1-2 0v-7H4a1 1 0 0 1 0-2h7V4a1 1 0 0 1 2 0v7h7a1 1 0 0 1 0 2z" />
+        </symbol>
     </defs>
 </svg>

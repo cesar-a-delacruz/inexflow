@@ -48,7 +48,7 @@
         <?= view('components/nav') ?>
 
         <footer class="">
-          <a type="button" class="btn btn-outline-primary btn-md d-flex align-items-center gap-2 " href="/logout">
+          <a type="button" class="btn btn-outline-primary btn-md d-flex align-items-center gap-2 " href="/auth/logout">
             <svg class="bi flex-shrink-0" role="img" width="24" height="24">
               <use href="/assets/svg/navSprite.svg#fe-logout" />
             </svg>
