@@ -1,38 +1,32 @@
 <?php
+
 namespace App\Validation;
+
+use App\Entities\Item;
 
 /**
  * Son reglas de validación y mensajes de error utilizados en los formularios de App\Views\Item
+ * @extends CRUDValidator<Item>
  */
-class ItemValidator {
-    public $create = [
+class ItemValidator extends CRUDValidator
+{
+    public array $create = [
         'name' => [
             'rules' => 'required',
             'errors' => [
                 'required' => 'El nombre es requerido',
             ],
         ],
-        'type' => [
-            'rules' => 'required',
-            'errors' => [
-                'required' => 'El tipo es requerido',
-            ],
-        ],
-        'category_id' => [
-            'rules' => 'required',
-            'errors' => [
-                'required' => 'La categoría es requerida',
-            ],
-        ],
         'cost' => [
-            'rules' => 'required|greater_than_equal_to[0]',
+            'rules' => 'required|decimal|greater_than_equal_to[0]',
             'errors' => [
                 'required' => 'El costo es requerido',
+                'decimal' => 'El costo de venta debe ser un número',
                 'greater_than_equal_to' => 'El costo debe ser mayor o igual a 0',
             ],
         ],
         'selling_price' => [
-            'rules' => 'permit_empty|greater_than_equal_to[0]',
+            'rules' => 'permit_empty|decimal|greater_than_equal_to[0]',
             'errors' => [
                 'decimal' => 'El precio de venta debe ser un número',
                 'greater_than_equal_to' => 'El precio de venta debe ser mayor o igual a 0',
@@ -46,20 +40,21 @@ class ItemValidator {
             ],
         ],
         'min_stock' => [
-            'rules' => 'permit_empty|integer|greater_than_equal_to[0]',
+            'rules' => 'permit_empty|integer|greater_than_equal_to[1]',
             'errors' => [
                 'integer' => 'La cantidad debe ser un número entero',
-                'greater_than_equal_to' => 'La cantidad debe ser mayor o igual a 0',
+                'greater_than_equal_to' => 'La cantidad debe ser mayor o igual a 1',
             ],
         ],
-        'measure_unit' => [
-            'rules' => 'permit_empty|max_length[20]',
+        'measure_unit_id' => [
+            'rules' => 'integer|greater_than_equal_to[1]',
             'errors' => [
-                'max_length' => 'La unidad de medidad no debe ser mayor a 20 caracteres',
+                'integer' => 'La unidad de medida es incorrecta',
+                'greater_than_equal_to' => 'El id de la unidad de medida debe ser mayor o igual a 1',
             ],
         ],
     ];
-    public $update = [
+    public array $update = [
         'cost' => [
             'rules' => 'permit_empty|greater_than_equal_to[0]',
             'errors' => [
@@ -88,7 +83,7 @@ class ItemValidator {
             ],
         ],
         'measure_unit' => [
-            'rules' => 'permit_empty|max_length[20]',
+            'rules' => '|max_length[20]',
             'errors' => [
                 'max_length' => 'La unidad de medidad no debe ser mayor a 20 caracteres',
             ],

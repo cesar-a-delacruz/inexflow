@@ -3,6 +3,7 @@
 namespace App\Database\Seeds;
 
 use App\Entities\Contact;
+use App\Enums\ContactType;
 use App\Models\ContactModel;
 use CodeIgniter\Database\Seeder;
 use Ramsey\Uuid\Uuid;
@@ -13,31 +14,28 @@ class ContactsSeeder extends Seeder
     {
         $model = new ContactModel();
         $model->insert(new Contact([
-            'id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
             'business_id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
             'name' => 'César De La Cruz',
             'email' => 'cesar.delacruz@email.com',
             'phone' => '66778899',
             'address' => 'El Cuadrante',
-            'type' => 'customer',
+            'type' => ContactType::Customer,
         ]));
         $model->insert(new Contact([
-            'id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '2'),
             'business_id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
-            'name' => 'Antonio Chávez',
-            'email' => 'antonio.chavez@email.com',
-            'phone' => '11223344',
-            'address' => 'Almirante',
-            'type' => 'customer',
+            'name' => 'Ericka Abrego',
+            'email' => 'ericka.abrego@email.com',
+            'phone' => '66778899',
+            'address' => 'Finca 11',
+            'type' => ContactType::Customer,
         ]));
         $model->insert(new Contact([
-            'id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '3'),
             'business_id' => Uuid::uuid3(Uuid::NAMESPACE_URL, '1'),
-            'name' => 'Distribuidor',
-            'email' => 'distribuidor@email.com',
-            'phone' => '55669900',
-            'address' => 'David',
-            'type' => 'provider',
+            'name' => 'Vende Pollos S.A.',
+            'email' => 'vende.pollo@email.com',
+            'phone' => '87325655',
+            'address' => 'Finca 4',
+            'type' => ContactType::Provider,
         ]));
     }
 }

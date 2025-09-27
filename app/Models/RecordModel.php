@@ -2,33 +2,26 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
 use App\Entities\Record;
+use App\Models\EntityModel;
 
-class RecordModel extends Model
+/**
+ * @extends EntityModel<Record>
+ */
+class RecordModel extends EntityModel
 {
     protected $table = 'records';
-    protected $primaryKey = 'id';
-    protected $useAutoIncrement = true;
     protected $returnType = Record::class;
 
     protected $allowedFields = [
+        'id',
         'business_id',
-        'description',
-        'category',
-        'amount',
-        'type',
-        'unit_price',
-        'item_id',
-        'subtotal',
+        'product_id',
         'transaction_id',
+        'unit_price',
+        'quantity',
+        'subtotal',
     ];
-
-    protected $useTimestamps = true;
-    protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField = 'updated_at';
-    protected $deletedField = 'deleted_at';
 
     /** Busca todos los registros con sus transacción asociada
      * @return array<Record>

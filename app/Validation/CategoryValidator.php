@@ -4,8 +4,10 @@ namespace App\Validation;
 
 /**
  * Son reglas de validación y mensajes de error utilizados en los formularios de App\Views\Category
+ * @extends CRUDValidator<Category>
  */
-class CategoryValidator {
+class CategoryValidator extends CRUDValidator
+{
     public $create = [
         'name' => [
             'rules' => 'required|unique_in_business',

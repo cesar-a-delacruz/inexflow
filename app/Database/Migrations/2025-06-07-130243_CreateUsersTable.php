@@ -2,9 +2,9 @@
 
 namespace App\Database\Migrations;
 
-use CodeIgniter\Database\Migration;
+use App\Database\EntityMigration;
 
-class CreateUsersTable extends Migration
+class CreateUsersTable extends EntityMigration
 {
     public function up()
     {
@@ -40,22 +40,13 @@ class CreateUsersTable extends Migration
                 'default' => true,
                 'null'    => false,
             ],
-            'created_at' => [
-                'type'    => 'DATETIME',
-                'null'    => false,
-            ],
-            'updated_at' => [
-                'type'    => 'DATETIME',
-                'null'    => false,
-            ],
-            'deleted_at' => [
-                'type' => 'DATETIME',
-                'null' => true,
-            ],
         ]);
 
+        parent::tenantFields();
+        parent::auditableFields();
+
         $this->forge->addKey('id', true);
-        
+
         $this->forge->createTable('users');
     }
 

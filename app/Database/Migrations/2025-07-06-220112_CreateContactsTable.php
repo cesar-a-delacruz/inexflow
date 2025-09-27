@@ -2,23 +2,16 @@
 
 namespace App\Database\Migrations;
 
-use CodeIgniter\Database\Migration;
+use App\Database\EntityMigration;
 
-class CreateContactsTable extends Migration
+class CreateContactsTable extends EntityMigration
 {
 
     public function up()
     {
         $this->forge->addField([
             'id' => [
-                'type'       => 'BINARY',
-                'constraint' => 16,
-                'null'       => false,
-            ],
-            'business_id' => [
-                'type'       => 'BINARY',
-                'constraint' => 16,
-                'null'       => false,
+                'type'       => 'SERIAL',
             ],
             'name' => [
                 'type'       => 'VARCHAR',
@@ -45,23 +38,12 @@ class CreateContactsTable extends Migration
                 'default' => 'customer',
                 'null'       => false,
             ],
-            'created_at' => [
-                'type' => 'DATETIME',
-                'null' => false,
-            ],
-            'updated_at' => [
-                'type' => 'DATETIME',
-                'null' => false,
-            ],
-            'deleted_at' => [
-                'type' => 'DATETIME',
-                'null' => true,
-            ],
         ]);
+        parent::tenantFields();
+        parent::auditableFields();
 
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('business_id', 'businesses', 'id', 'CASCADE', 'RESTRICT');
-        
+
         $this->forge->createTable('contacts');
     }
 

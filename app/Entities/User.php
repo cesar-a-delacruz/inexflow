@@ -2,28 +2,29 @@
 
 namespace App\Entities;
 
+use App\Entities\Cast\EnumCast;
+use App\Entities\Cast\UuidCast;
 use CodeIgniter\Entity\Entity;
 
 class User extends Entity
 {
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
-
+    protected $castHandlers = [
+        'enum' => EnumCast::class,
+        'uuid' => UuidCast::class,
+    ];
     protected $casts = [
         'id' => 'uuid',
         'name' => 'string',
         'email' => 'string',
-        'role' => 'string',
         'password_hash' => 'string',
-        'business_id' => 'uuid',
+        'role' => 'enum[App\Enums\UserRole]',
         'is_active'   => 'boolean',
+        'business_id' => '?uuid',
         'created_at'  => 'datetime',
         'updated_at'  => 'datetime',
-        'deleted_at'  => 'datetime'
+        'deleted_at'  => '?datetime'
     ];
 
-    protected $castHandlers = [
-        'uuid' => Cast\UuidCast::class
-    ];
 
     /** Guarda la contraseña encriptada del usuario */
     public function setPassword(string $password)
@@ -47,16 +48,7 @@ class User extends Entity
     /** Verifica si el usuario está activo */
     public function isActive(): bool
     {
-        return $this->is_active === true;
-    }
-
-    /** Muestra el rol del usuario en español */
-    public function displayRole(): string
-    {
-        return match ($this->role) {
-            'admin' => 'Administrador',
-            'businessman' => 'Empresario'
-        };
+        return $this->is_active;
     }
 
     /** Muestra el estado de actividad del usuario en español */
