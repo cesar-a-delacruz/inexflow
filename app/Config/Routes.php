@@ -18,6 +18,7 @@ $routes->group('user', ['namespace' => 'App\Controllers\CRUD'], static function 
     $routes->get('/', 'UserController::index', ['filter' => 'role:admin']);
     $routes->get('new', 'UserController::new', ['filter' => 'role:admin']);
     $routes->post('new', 'UserController::create', ['filter' => 'role:admin']);
+    $routes->delete('(:segment)', 'UserController::delete/$1', ['filter' => 'role:admin']);
     $routes->get('show', 'UserController::show', ['filter' => 'role']);
     $routes->put('show', 'UserController::update', ['filter' => 'role']);
 });

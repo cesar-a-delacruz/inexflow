@@ -73,7 +73,12 @@ class UserController extends CRUDController
 
         return redirect()->to($this->resourcePath.'show');
     }
-
+    
+    public function delete($id) 
+    {
+        $this->model->delete(uuid_to_bytes($id));
+        return redirect()->to($this->resourcePath);
+    }
+    
     public function edit($id) {}
-    public function delete($id) {}
 }

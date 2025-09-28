@@ -38,7 +38,7 @@ class AuthRules
 
     /** Verifica si la contraseña coincide con el usuario.
      * Si se le pasa el id, busca el usuario para verificarlo, de lo contrario verifica con el
-     * que tienen actualmente. Se usa para incio de seción y eliminación de usuario.
+     * que tienen actualmente. Se usa para incio de sesión y eliminación de usuario.
      */
     public function valid_password(string $password, string $fields, array $data)
     {
