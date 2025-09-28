@@ -2,7 +2,7 @@
 <?= $this->section('content') ?>
 <div class="container mt-4">
     <h1 class="mb-4"><?= $title ?></h1>
-    <a href="/users/new" class="btn btn-primary mb-3">Crear Usuario</a>
+    <a href="/user/new" class="btn btn-primary mb-3">Crear Usuario</a>
 
     <?php if (session()->getFlashdata('success')): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">

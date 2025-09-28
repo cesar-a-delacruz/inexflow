@@ -3,14 +3,16 @@
 namespace App\Controllers\CRUD;
 
 use App\Controllers\CRUDController;
+use App\Entities\User;
 use App\Models\UserModel;
 use App\Validation\UserValidator;
+use Ramsey\Uuid\Uuid;
 
 class UserController extends CRUDController
 {
     public function __construct()
     {
-        parent::__construct(new UserModel(), UserValidator::class, 'user');
+        parent::__construct(new UserModel(), UserValidator::class, 'user/');
     }
 
     public function index()
@@ -35,8 +37,28 @@ class UserController extends CRUDController
         );
     }
     
-    public function new() {}
-    public function create() {}
+    public function new() 
+    {
+        return view(
+            'User/new',
+            [
+                'title' => 'Nuevo usuario'
+            ]
+        );
+    }
+    public function create() 
+    {
+        $this->buildValidator();
+        if (!$this->validate($this->validator->create)) {
+            return redirect()->back()->withInput();
+        }
+        
+        $user = new User($this->request->getPost());
+        $user->id = Uuid::uuid4();
+        $this->model->insert($user);
+
+        return redirect()->to($this->resourcePath);
+    }
     public function edit($id) {}
     public function update($id) {}
     public function delete($id) {}

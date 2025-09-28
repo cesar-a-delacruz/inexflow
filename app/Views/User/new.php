@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 <h1><?= $title ?></h1>
-<form action="/users/new" method="POST" novalidate>
+<form action="/user/new" method="POST" novalidate>
    <?php if (session()->getFlashdata('success')): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <?= session()->getFlashdata('success') ?>
