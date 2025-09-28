@@ -5,14 +5,13 @@ $routes->environment('development', static function ($routes) {
     $routes->get('builder', 'Tools\Builder::index');
 });
 
-// Rutas públicas
 $routes->get('/', 'Home::index', ['filter' => 'role']);
 
-// Grupo Auth
+// auth
 $routes->group('auth', ['namespace' => 'App\Controllers'], static function ($routes) {
-    $routes->get('login', 'AuthController::login', ['as' => 'login']);
-    $routes->post('login', 'AuthController::attemptLogin');
-    $routes->get('logout', 'AuthController::logout', ['as' => 'logout']);
+    $routes->get('login', 'AuthController::login');
+    $routes->post('login', 'AuthController::verify');
+    $routes->get('logout', 'AuthController::logout');
 });
 
 // Grupo multitenancy normales

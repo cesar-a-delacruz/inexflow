@@ -7,8 +7,6 @@
             <div class="card shadow-sm">
                 <div class="card-body p-4">
                     <h2 class="card-title text-center mb-4">Iniciar Sesión</h2>
-
-
                     <form method="POST" action="/auth/login" class="needs-validation" novalidate>
                         <?php $emailValid = !!validation_show_error('email') ?>
                         <div class="form-floating mb-3">

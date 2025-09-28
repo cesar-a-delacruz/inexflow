@@ -2,7 +2,7 @@
 
 namespace Config;
 
-use App\Validation\Rules\{UserRules, CategoryRules};
+use App\Validation\Rules\{UserRules, CategoryRules, AuthRules};
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Validation\StrictRules\CreditCardRules;
 use CodeIgniter\Validation\StrictRules\FileRules;
@@ -28,6 +28,7 @@ class Validation extends BaseConfig
         CreditCardRules::class,
         UserRules::class,
         CategoryRules::class,
+        AuthRules::class,
     ];
 
     /**

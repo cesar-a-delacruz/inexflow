@@ -13,12 +13,11 @@ class RoleFilter implements FilterInterface
     {
         $session = service('session');
         $user_id = $session->get('user_id');
-        $business_id = $session->get('business_id');
         $user_role = $session->get('user_role');
 
         // Si no está logueado, redirigir al login
         if (!$user_id || !$user_role) {
-            return redirect()->route('login');
+            return redirect()->to('/auth/login');
         }
 
         // Si se pasó argumento en el filtro (ej: role:admin)

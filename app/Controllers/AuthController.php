@@ -6,7 +6,7 @@ use App\Controllers\BaseController;
 use App\Enums\UserRole;
 use App\Models\BusinessModel;
 use App\Models\UserModel;
-use App\Validation\UserValidator;
+use App\Validation\AuthValidator;
 
 class AuthController extends BaseController
 {
@@ -18,20 +18,15 @@ class AuthController extends BaseController
     {
         $this->model = new UserModel();
         $this->businessModel = new BusinessModel();
-        $this->formValidator = new UserValidator();
-    }
-
-    public function index()
-    {
-        return view('/home');
+        $this->formValidator = new AuthValidator();
     }
 
     public function login()
     {
-        return view('/auth/login', ['title' => 'Login']);
+        return view('/auth/login', ['title' => 'Iniciar Sesión']);
     }
 
-    public function attemptLogin()
+    public function verify()
     {
         if (!$this->validate($this->formValidator->login)) {
             return redirect()->back()->withInput();
@@ -50,8 +45,7 @@ class AuthController extends BaseController
             'user_name' => $user->name,
             'user_email' => $user->email,
             'user_role' => $user->role->value,
-            'business_id' => $user->business_id ? $user->business_id->toString() : null,
-            'current_page' => $init_page
+            'business_id' => $user->business_id ? $user->business_id->toString() : null
         ]);
 
         return redirect()->to($init_page);
@@ -60,6 +54,6 @@ class AuthController extends BaseController
     public function logout()
     {
         session()->destroy();
-        return redirect()->to('/');
+        return redirect()->to('/auth/login');
     }
 }

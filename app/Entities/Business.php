@@ -7,7 +7,6 @@ use CodeIgniter\Entity\Entity;
 
 class Business extends Entity
 {
-
     protected $castHandlers = ['uuid' => UuidCast::class];
     protected $casts = [
         'id' => 'uuid',
