@@ -1,6 +1,5 @@
 <?php
 
-
 $routes->environment('development', static function ($routes) {
     $routes->get('builder', 'Tools\Builder::index');
 });
@@ -12,6 +11,12 @@ $routes->group('auth', ['namespace' => 'App\Controllers'], static function ($rou
     $routes->get('login', 'AuthController::login');
     $routes->post('login', 'AuthController::verify');
     $routes->get('logout', 'AuthController::logout');
+});
+
+// user
+$routes->group('user', ['namespace' => 'App\Controllers\CRUD'], static function ($routes) {
+    $routes->get('/', 'UserController::index', ['filter' => 'role:admin']);
+    $routes->get('show', 'UserController::show', ['filter' => 'role']);
 });
 
 // Grupo multitenancy normales

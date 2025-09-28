@@ -7,9 +7,9 @@ use CodeIgniter\Entity\Entity;
 use CodeIgniter\Model;
 
 /**
- * @template T of Entity
- * @template M of Model<T>
- * @template V of CRUDValidator<T>
+ * @template E of Entity
+ * @template M of Model<E>
+ * @template V of CRUDValidator<E>
  * @extends BaseController
  */
 abstract class CRUDController extends BaseController
@@ -26,27 +26,21 @@ abstract class CRUDController extends BaseController
     /** @var class-string<V> */
     protected string $validatorClass;
 
-    protected string $segment;
-
     /**
      * Path de las views
      */
     protected string $resourcePath;
-    protected string $segmentName;
 
     /**
      * @param M $model
-     * @param string $segment
      * @param class-string<V> $validatorClass
      * @param string $resourcePath
      */
-    public function __construct(Model $model, string $segment, string $validatorClass, string $resourcePath, string $segmentName)
+    public function __construct(Model $model, string $validatorClass, string $resourcePath)
     {
-        $this->validatorClass = $validatorClass;
         $this->model = $model;
-        $this->segment = $segment;
+        $this->validatorClass = $validatorClass;
         $this->resourcePath = $resourcePath;
-        $this->segmentName = $segmentName;
     }
     /**
      * Construlle el Validator mediante el $validatorClass, se tiene que llamar antes de usar el $validator
@@ -56,18 +50,11 @@ abstract class CRUDController extends BaseController
         $this->validator = new $this->validatorClass;
     }
 
-
-    /**
-     * metodo auxiliar para renderizar views, agrega el segment y el resourcePath
-     */
-    protected function view(?string $resource = null, array $data = [], array $options = []): string
-    {
-        $data['segment'] = $this->segment;
-        $data['segmentName'] = $this->segmentName;
-        return view(
-            $this->resourcePath . '/' . $resource,
-            $data,
-            $options
-        );
-    }
+    public abstract function index();
+    public abstract function new();
+    public abstract function create();
+    public abstract function show($id);
+    public abstract function edit($id);
+    public abstract function update($id);
+    public abstract function delete($id);
 }

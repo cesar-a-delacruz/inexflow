@@ -5,7 +5,7 @@ $username = session('user_name') ?? 'No tiene nombre';
 
 $links = [
     [
-        'href' => '/profile',
+        'href' => '/user/show',
         'svg' => 'fe-user',
         'label' => $username,
         'active' => $segments1 === 'profile',
@@ -16,7 +16,7 @@ $sections = [];
 
 if (session()->get('role') === 'admin') {
     $links[] = [
-        'href' => '/admin/users',
+        'href' => '/user',
         'svg' => 'fe-users',
         'label' => 'Usuarios',
         'active' => $segments2 === 'users',
@@ -42,12 +42,6 @@ if (session()->get('role') === 'admin') {
                     'svg' => 'fe-bar-chart',
                     'label' => 'Negocio',
                     'active' => $segments2 === 'business',
-                ],
-                [
-                    'href' => '/tenants/employees',
-                    'svg' => 'fe-users',
-                    'label' => 'Empleados',
-                    'active' => $segments2 === 'employees',
                 ],
                 [
                     'href' => '/tenants/purchases',

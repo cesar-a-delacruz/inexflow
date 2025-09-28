@@ -36,7 +36,7 @@ class AuthController extends BaseController
         $user = $this->model->findByEmail($post['email']);
 
         $init_page = match ($user->role) {
-            UserRole::Admin => '/admin',
+            UserRole::Admin => '/user',
             UserRole::Businessman => '/tenants'
         };
 
