@@ -80,5 +80,11 @@ class UserController extends CRUDController
         return redirect()->to($this->resourcePath);
     }
     
+    public function activate($id) 
+    {
+        $this->model->toggleActive(uuid_to_bytes($id));
+        return redirect()->to($this->resourcePath);
+    }
+
     public function edit($id) {}
 }

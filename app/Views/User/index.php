@@ -31,13 +31,14 @@
         <tbody>
             <?php if (!empty($users)): ?>
                 <?php for ($i = 0; $i < count($users); $i++): ?>
+                    <?php if ($users[$i]->id->toString() === session()->get('user_id')) continue; ?>
                     <tr>
                         <td><?= $i + 1 ?></td>
                         <td><?= $users[$i]->name ?></td>
                         <td><?= $users[$i]->email ?></td>
                         <td><?= $users[$i]->role->label() ?></td>
                         <td>
-                            <form action="/user/<?= $users[$i]->id ?>/activate" method="POST">
+                            <form action="/user/activation/<?= $users[$i]->id ?>" method="POST">
                                 <input type="hidden" name="_method" value="PUT">
                                 <button type="submit" class="btn btn-warning btn-sm">
                                     <?= $users[$i]->displayIsActive() ?>
