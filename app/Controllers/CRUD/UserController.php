@@ -46,20 +46,34 @@ class UserController extends CRUDController
             ]
         );
     }
+
     public function create() 
     {
         $this->buildValidator();
         if (!$this->validate($this->validator->create)) {
             return redirect()->back()->withInput();
         }
-        
+
         $user = new User($this->request->getPost());
         $user->id = Uuid::uuid4();
         $this->model->insert($user);
 
         return redirect()->to($this->resourcePath);
     }
+
+    public function update($id = null) 
+    {
+        $this->buildValidator();
+        if (!$this->validate($this->validator->update)) {
+            return redirect()->back()->withInput();
+        }
+
+        $user = new User($this->request->getPost());
+        $this->model->update(uuid_to_bytes(session()->get('user_id')), $user);
+
+        return redirect()->to($this->resourcePath.'show');
+    }
+
     public function edit($id) {}
-    public function update($id) {}
     public function delete($id) {}
 }

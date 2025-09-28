@@ -16,9 +16,10 @@ $routes->group('auth', ['namespace' => 'App\Controllers'], static function ($rou
 // user
 $routes->group('user', ['namespace' => 'App\Controllers\CRUD'], static function ($routes) {
     $routes->get('/', 'UserController::index', ['filter' => 'role:admin']);
-    $routes->get('show', 'UserController::show', ['filter' => 'role']);
     $routes->get('new', 'UserController::new', ['filter' => 'role:admin']);
     $routes->post('new', 'UserController::create', ['filter' => 'role:admin']);
+    $routes->get('show', 'UserController::show', ['filter' => 'role']);
+    $routes->put('show', 'UserController::update', ['filter' => 'role']);
 });
 
 // Grupo multitenancy normales

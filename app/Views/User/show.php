@@ -4,7 +4,7 @@
 <h1><?= $title ?></h1>
 <div class="row">
     <div class="col-6">
-        <form action="/user" method="POST" novalidate>
+        <form action="/user/show" method="POST" novalidate>
             <input type="hidden" name="_method" value="PUT">
             <?php if (!empty(validation_errors())): ?>
                 <div class="alert alert-danger"><?= validation_list_errors() ?></div>
@@ -12,7 +12,7 @@
             <?php $nameValid = !!validation_show_error('name') ?>
             <div class="form-floating mb-3">
                 <input type="text" class="form-control <?= $nameValid ? 'is-invalid' : null ?>"
-                    value="<?= $user->name ?>" disabled require
+                    value="<?= $user->name ?>" disabled
                     placeholder="Geovvany Caballero" id="name" name="name">
                 <label for="name">Nombre</label>
                 <?php if ($nameValid): ?>
@@ -24,7 +24,7 @@
             <?php $emailValid = !!validation_show_error('email') ?>
             <div class="form-floating mb-3 ">
                 <input type="email" class="form-control <?= $emailValid ? 'is-invalid' : null ?>"
-                    value="<?= $user->email ?>" disabled require
+                    value="<?= $user->email ?>" disabled
                     placeholder="example@email.com" id="email" name="email">
                 <label for="email">Correo Electronico</label>
                 <?php if ($emailValid): ?>

@@ -42,16 +42,18 @@ class UserValidator extends CRUDValidator
     ];
     public array $update = [
         'name' => [
-            'rules' => 'permit_empty|max_length[50]',
+            'rules' => 'required|max_length[50]',
             'errors' => [
+                'required' => 'El nombre es requerido',
                 'max_length' => 'El nombre no debe tener mas de 50 caracteres',
             ],
         ],
         'email' => [
-            'rules' => 'permit_empty|valid_email|unique_email',
+            'rules' => 'required|valid_email|unique_email',
             'errors' => [
+                'required' => 'El correo es requerido',
                 'valid_email' => 'El correo no es válido',
-                'is_unique' => 'Ya existe un usuario con este correo',
+                'unique_email' => 'Ya existe un usuario con este correo',
             ],
         ],
     ];
