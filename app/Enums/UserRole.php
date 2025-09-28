@@ -15,7 +15,7 @@ enum UserRole: string implements Displayable
     public static function labelFromValue(string $value): string
     {
         return match ($value) {
-            'admin' => 'Admin',
+            'admin' => 'Administrador',
             'businessman' => 'Empresario',
         };
     }
