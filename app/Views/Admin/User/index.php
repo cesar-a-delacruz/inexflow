@@ -35,7 +35,7 @@
                         <td><?= $i + 1 ?></td>
                         <td><?= $users[$i]->name ?></td>
                         <td><?= $users[$i]->email ?></td>
-                        <td><?= $users[$i]->displayRole() ?></td>
+                        <td><?= $users[$i]->role->label() ?></td>
                         <td>
                             <form action="/user/<?= $users[$i]->id ?>/activate" method="POST">
                                 <input type="hidden" name="_method" value="PUT">
